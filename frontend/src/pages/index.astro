@@ -195,23 +195,25 @@ const testimonials = [
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-gradient-to-b from-[#fff7ee] to-white">
+    <section class="py-24 bg-gradient-to-b from-[#fff7ee] to-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[70px] font-light text-black text-center mb-16" style="letter-spacing: -3.50px;">
+        <h2 class="text-[70px] font-light text-black text-center mb-20" style="letter-spacing: -3.50px;">
           Fasilitas yang anda dapatkan.
         </h2>
 
-        <div class="grid grid-cols-3 gap-x-6 gap-y-12">
+        <div class="grid grid-cols-3 gap-x-16 gap-y-16">
           {features.map((feature) => (
-            <div class="text-center">
-              <div class="w-[100px] h-[100px] mx-auto mb-6 flex items-center justify-center">
+            <div class="group flex flex-col items-center text-center">
+              <!-- Icon Container -->
+              <div class="w-[72px] h-[72px] mb-5 flex items-center justify-center rounded-2xl bg-[#f5f5f5] transition-all duration-300 group-hover:bg-[#0096f7]/10 group-hover:scale-110">
                 <img
                   src={feature.icon}
                   alt={feature.title}
-                  class="w-full h-full object-contain"
+                  class="w-10 h-10 object-contain opacity-70 transition-all duration-300 group-hover:opacity-100"
                 />
               </div>
-              <h3 class="text-[29.13px] font-light text-[#313131]" style="letter-spacing: -1.46px;">
+              <!-- Title -->
+              <h3 class="text-[20px] font-normal text-[#313131] leading-tight transition-colors duration-300 group-hover:text-[#0096f7]">
                 {feature.title}
               </h3>
             </div>
