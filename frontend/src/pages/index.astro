@@ -3,12 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
-import FAQSection from '../components/common/FAQSection.astro';
-import TestimonialsSection from '../components/common/TestimonialsSection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
-import PortfolioCard from '../components/common/PortfolioCard.astro';
 
-// Mock data for demonstration
+// Mock data for insights
 const insights = [
   {
     title: "8 Konsep Desain Interior yang Akan Tren di 2026",
@@ -35,6 +32,47 @@ const insights = [
     slug: "8-konsep-desain-interior-2026"
   }
 ];
+
+// Portfolio items
+const portfolios = [
+  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-main.png" },
+  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-2.png" },
+  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-3.png" },
+  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-4.png" }
+];
+
+// Stats data
+const stats = [
+  { number: "100+", label: "Proyek Selesai" },
+  { number: "7+", label: "Tahun Pengalaman" },
+  { number: "98%", label: "Klien Puas" },
+  { number: "25+", label: "Kota di Indonesia" }
+];
+
+// Features data
+const features = [
+  { icon: "/icons/chat.svg", title: "Konsultasi" },
+  { icon: "/icons/3d-modeling.svg", title: "Gambar 3D Modelling" },
+  { icon: "/icons/quality-control.svg", title: "Quality Control" },
+  { icon: "/icons/budget.svg", title: "Rencana Anggaran Biaya" },
+  { icon: "/icons/technical-drawing.svg", title: "Gambar Teknis Arsitektur" },
+  { icon: "/icons/warranty.svg", title: "Garansi" }
+];
+
+// Process steps
+const processSteps = [
+  { number: "01", title: "Konsultasi", description: "Ceritakan kebutuhan dan gaya yang Anda inginkan. Kami dengarkan, kami pahami.", image: "/images/workflow-consult.jpg" },
+  { number: "02", title: "Desain & RAB", description: "Tim kami membuat konsep dan visualisasi 3D. Revisi sampai 3x.", image: "/images/process-design.jpg" },
+  { number: "03", title: "Produksi", description: "Kami produksi furniture dan siapkan material. Anda tinggal menunggu.", image: "/images/process-production.png" },
+  { number: "04", title: "Serah terima", description: "Instalasi selesai, quality check done. Interior impian Anda siap dinikmati.", image: "/images/process-handover.jpg" }
+];
+
+// Testimonials
+const testimonials = [
+  { name: "Pak Budi", role: "Pemilik Rumah", text: "Pelayanan sangat memuaskan, hasil sesuai ekspektasi.", avatar: "/images/avatar-1.svg" },
+  { name: "Ibu Sarah", role: "Pengusaha Cafe", text: "Tim SJD sangat profesional dan responsif.", avatar: "/images/avatar-2.svg" },
+  { name: "Pak Andi", role: "Pemilik Kantor", text: "Desain modern dan berkelas, sangat puas.", avatar: "/images/avatar-3.svg" }
+];
 ---
 
 <BaseLayout
@@ -43,34 +81,36 @@ const insights = [
 >
   <Header />
 
-  <main>
+  <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center overflow-hidden">
+    <section class="relative h-screen min-h-[800px] flex items-center overflow-hidden">
+      <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
           src="/images/hero-background.jpg"
           alt="Modern interior design"
           class="w-full h-full object-cover"
         />
-        <div class="absolute inset-0 bg-gradient-to-b from-[#131313]/90 via-[#131313]/60 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-transparent"></div>
       </div>
 
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10 pt-32 pb-16">
-        <div class="max-w-4xl">
-          <h1 class="text-white mb-12">
-            <div class="text-[clamp(3rem,10vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+      <!-- Content -->
+      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10">
+        <div class="max-w-[800px]">
+          <h1 class="text-white mb-10">
+            <span class="block text-[115.56px] font-light leading-[0.95]" style="letter-spacing: -5.78px;">
               Semua Berawal
-            </div>
-            <div class="text-[clamp(3rem,10vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+            </span>
+            <span class="block text-[115.56px] font-light leading-[0.95]" style="letter-spacing: -5.78px;">
               Dari Rumah.
-            </div>
+            </span>
           </h1>
 
           <a
             href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-center px-10 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"
+            class="inline-flex items-center justify-center px-10 py-4 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"
           >
             Mulai Konsultasi
           </a>
@@ -79,33 +119,35 @@ const insights = [
     </section>
 
     <!-- Introduction Section -->
-    <section class="relative bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee] py-12 md:py-16">
+    <section class="py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-center mb-16 font-[Lexend]">
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">SJD Interior</span>
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">adalah</span>
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">solusi desain lengkap</span>
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">personal</span>
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">dan tanpa</span>
-          <span class="block text-[96px] font-light text-black" style="letter-spacing: -4.8px; line-height: 1;">ribet.</span>
+        <!-- Title -->
+        <h2 class="text-center mb-16">
+          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">SJD Interior adalah</span>
+          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">solusi desain lengkap</span>
+          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">personal dan tanpa</span>
+          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">ribet.</span>
         </h2>
 
-        <!-- Portfolio Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {[1, 2, 3, 4].map((item) => (
-            <div class="relative group rounded-[12px] overflow-hidden border border-[#e5e5e5] aspect-[4/5] bg-gradient-to-b from-[#151515] to-transparent hover:shadow-lg transition-shadow duration-300">
+        <!-- Portfolio Grid - 4 columns -->
+        <div class="grid grid-cols-4 gap-5 mb-12">
+          {portfolios.map((item) => (
+            <div class="relative group rounded-[17px] overflow-hidden aspect-[335/419] cursor-pointer">
               <img
-                src={`/images/portfolio-${item === 1 ? 'main' : item}.png`}
-                alt="Portfolio project"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                src={item.image}
+                alt={item.title}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 group-hover:from-black/80 group-hover:to-black/30 transition-all"></div>
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                <h3 class="text-white text-[35px] font-light mb-2" style="letter-spacing: -1.75px; opacity: 0.9;">
-                  Judul Portfolio<br />Lorem Ipsum
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                <h3 class="text-white text-[35px] font-light leading-[1.1] mb-1" style="letter-spacing: -1.75px;">
+                  {item.title}
                 </h3>
-                <p class="text-white/80 text-[15px] font-light mb-6" style="letter-spacing: -0.75px;">
-                  Nama Kategori
+                <p class="text-white text-[35px] font-light leading-[1.1] mb-2" style="letter-spacing: -1.75px;">
+                  {item.subtitle}
+                </p>
+                <p class="text-white/70 text-[15px] font-light mb-6" style="letter-spacing: -0.75px;">
+                  {item.category}
                 </p>
                 <button class="px-8 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
                   Lihat Project
@@ -115,12 +157,14 @@ const insights = [
           ))}
         </div>
 
+        <!-- Subtitle -->
         <p class="text-center text-[36px] font-light text-black mb-4" style="letter-spacing: -1.80px;">
-          Kami handle semuanya, dari desain hingga furniture. <br />Tersedia sekarang di Jabodetabek.
+          Kami handle semuanya, dari desain hingga furniture.<br />
+          Tersedia sekarang di Jabodetabek.
         </p>
 
         <p class="text-center">
-          <a href="/portfolio" class="text-[20px] font-light text-black hover:underline">
+          <a href="/portfolio" class="text-[20px] font-light text-black hover:underline transition-all">
             Mau lihat hasil kerja kami? Jelajahi portfolio →
           </a>
         </p>
@@ -128,31 +172,33 @@ const insights = [
     </section>
 
     <!-- Stats Section -->
-    <section
-      class="relative py-12 md:py-16 bg-cover bg-center"
-      style="background-image: url('/images/stats-background.png')"
-    >
-      <div class="absolute inset-0 bg-black/40"></div>
+    <section class="relative py-20 overflow-hidden">
+      <!-- Background Image -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="/images/stats-background.png"
+          alt=""
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-black/50"></div>
+      </div>
 
       <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10">
-        <h2 class="text-center mb-8">
-          <div class="text-[clamp(2.5rem,6vw,70px)] font-light text-white leading-tight" style="letter-spacing: -3.50px;">
+        <!-- Title -->
+        <h2 class="text-center mb-4">
+          <span class="block text-[70px] font-light text-white leading-[1.1]" style="letter-spacing: -3.50px;">
             Rumah. Komersial. Kantor. Semua bisa.
-          </div>
-          <div class="text-[clamp(2.5rem,6vw,70px)] font-light text-white leading-tight" style="letter-spacing: -3.50px;">
+          </span>
+          <span class="block text-[70px] font-light text-white leading-[1.1]" style="letter-spacing: -3.50px;">
             Maksimalkan setiap meter ruang Anda.
-          </div>
+          </span>
         </h2>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {[
-            { number: "100+", label: "Proyek Selesai" },
-            { number: "7+", label: "Tahun Pengalaman" },
-            { number: "98%", label: "Klien Puas" },
-            { number: "25+", label: "Kota di Indonesia" }
-          ].map((stat) => (
-            <div class="bg-transparent border border-white rounded-[35px] p-8 text-center shadow-[0px_4px_4px_rgba(0,0,0,0.25)]">
-              <div class="text-[clamp(3rem,7vw,79px)] font-light text-white mb-2" style="letter-spacing: -3.95px;">
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-4 gap-6 mt-16">
+          {stats.map((stat) => (
+            <div class="bg-transparent border border-white rounded-[35px] py-10 px-8 text-center">
+              <div class="text-[79px] font-light text-white leading-none mb-2" style="letter-spacing: -3.95px;">
                 {stat.number}
               </div>
               <div class="text-[28px] font-light text-white" style="letter-spacing: -1.40px;">
@@ -165,27 +211,22 @@ const insights = [
     </section>
 
     <!-- Features Section -->
-    <section class="relative bg-gradient-to-b from-[#fff7ee] to-white py-12 md:py-16">
+    <section class="py-20 bg-gradient-to-b from-[#fff7ee] to-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[clamp(2.5rem,6vw,70px)] font-light text-black text-center mb-16" style="letter-spacing: -3.50px;">
+        <h2 class="text-[70px] font-light text-black text-center mb-16" style="letter-spacing: -3.50px;">
           Fasilitas yang anda dapatkan.
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {[
-            { icon: "/icons/chat.svg", title: "Konsultasi" },
-            { icon: "/icons/3d-modeling.svg", title: "Gambar 3D Modelling" },
-            { icon: "/icons/quality-control.svg", title: "Quality Control" },
-            { icon: "/icons/budget.svg", title: "Rencana Anggaran Biaya" },
-            { icon: "/icons/technical-drawing.svg", title: "Gambar Teknis Arsitektur" },
-            { icon: "/icons/warranty.svg", title: "Garansi" }
-          ].map((feature) => (
+        <div class="grid grid-cols-3 gap-x-6 gap-y-12">
+          {features.map((feature) => (
             <div class="text-center">
-              <img
-                src={feature.icon}
-                alt={feature.title}
-                class="w-20 h-20 mx-auto mb-4"
-              />
+              <div class="w-[100px] h-[100px] mx-auto mb-6 flex items-center justify-center">
+                <img
+                  src={feature.icon}
+                  alt={feature.title}
+                  class="w-full h-full object-contain"
+                />
+              </div>
               <h3 class="text-[29.13px] font-light text-[#313131]" style="letter-spacing: -1.46px;">
                 {feature.title}
               </h3>
@@ -195,64 +236,94 @@ const insights = [
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <TestimonialsSection />
-
-    <!-- Process Steps -->
-    <section class="py-12 md:py-16 bg-white">
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="text-center mb-12">
-          <h2 class="text-[clamp(2.5rem,5.5vw,53.13px)] font-light text-black mb-4" style="letter-spacing: -2.66px;">
+        <h2 class="text-[70px] font-light text-black text-center mb-16" style="letter-spacing: -3.50px;">
+          Apa kata mereka tentang SJD Interior
+        </h2>
+
+        <!-- Testimonials Carousel Container -->
+        <div class="relative">
+          <div class="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
+            {testimonials.map((testimonial) => (
+              <div class="flex-shrink-0 w-[400px] bg-[#f8f8f8] rounded-[24px] p-8">
+                <div class="flex items-center gap-4 mb-6">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    class="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <p class="text-[20px] font-medium text-black">{testimonial.name}</p>
+                    <p class="text-[16px] font-light text-[#757575]">{testimonial.role}</p>
+                  </div>
+                </div>
+                <p class="text-[18px] font-light text-[#424242] leading-relaxed">
+                  "{testimonial.text}"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process Steps Section -->
+    <section class="py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <!-- Title -->
+        <div class="text-center mb-16">
+          <h2 class="text-[53.13px] font-light text-black mb-2" style="letter-spacing: -2.66px;">
             Dapatkan interior impian dalam empat langkah.
           </h2>
-          <p class="text-[clamp(2.5rem,5.5vw,53.13px)] font-light text-[#a7a7a7]" style="letter-spacing: -2.66px;">
+          <p class="text-[53.13px] font-light text-[#a7a7a7]" style="letter-spacing: -2.66px;">
             Secepat 2-8 minggu pengerjaan.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            { number: "01", title: "Konsultasi", description: "Ceritakan kebutuhan dan gaya yang Anda inginkan. Kami dengarkan, kami pahami.", image: "/images/workflow-consult.jpg" },
-            { number: "02", title: "Desain & RAB", description: "Tim kami membuat konsep dan visualisasi 3D. Revisi sampai 3x.", image: "/images/process-design.jpg" },
-            { number: "03", title: "Produksi", description: "Kami produksi furniture dan siapkan material. Anda tinggal menunggu.", image: "/images/process-production.png" },
-            { number: "04", title: "Serah terima", description: "Instalasi selesai, quality check done. Interior impian Anda siap dinikmati.", image: "/images/process-handover.jpg" }
-          ].map((step) => (
+        <!-- Steps Grid -->
+        <div class="grid grid-cols-4 gap-6 mb-16">
+          {processSteps.map((step) => (
             <div class="text-center">
-              <p class="text-[24px] font-light text-white mb-4" style="letter-spacing: -1.20px;">
+              <p class="text-[24px] font-light text-[#c4c4c4] mb-4" style="letter-spacing: -1.20px;">
                 {step.number}
               </p>
               <h3 class="text-[32px] font-light text-black mb-4" style="letter-spacing: -1.60px;">
                 {step.title}
               </h3>
-              <p class="text-[20px] font-normal text-[#929292] leading-[28px] mb-6" style="letter-spacing: -1px;">
+              <p class="text-[20px] font-normal text-[#929292] leading-[1.4] mb-6" style="letter-spacing: -1px;">
                 {step.description}
               </p>
               <img
                 src={step.image}
                 alt={step.title}
-                class="w-full h-auto rounded-[24px] mx-auto"
+                class="w-full aspect-[1/1] object-cover rounded-[24px]"
               />
             </div>
           ))}
         </div>
 
-        <div class="text-center mt-12">
-          <p class="text-[clamp(2rem,4.8vw,46.21px)] font-light text-black mb-2" style="letter-spacing: -2.31px;">
+        <!-- CTA -->
+        <div class="text-center">
+          <p class="text-[46.21px] font-light text-black mb-2" style="letter-spacing: -2.31px;">
             Mau tahu lebih detail?
           </p>
-          <p class="text-[clamp(2rem,4.8vw,46.21px)] font-light text-[#919191] mb-8" style="letter-spacing: -2.31px;">
+          <p class="text-[46.21px] font-light text-[#919191] mb-10" style="letter-spacing: -2.31px;">
             Pelajari proses kerja kami dari awal sampai akhir.
           </p>
           <div class="flex justify-center gap-4">
             <a
               href="/alur-kerja"
-              class="inline-flex items-center justify-center px-8 py-3 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
+              class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
             >
               Cara Kerja
             </a>
             <a
-              href="/hubungi-kami"
-              class="inline-flex items-center justify-center px-8 py-3 text-[21.41px] font-medium text-white bg-[#424242] rounded-full hover:bg-black transition-all duration-300"
+              href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-white bg-[#424242] rounded-full hover:bg-black transition-all duration-300"
             >
               Konsultasi
             </a>
@@ -261,14 +332,14 @@ const insights = [
       </div>
     </section>
 
-    <!-- Insights Section -->
-    <section class="py-12 md:py-16 bg-white">
+    <!-- Insight Section -->
+    <section class="py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[clamp(3.5rem,10vw,103.13px)] font-light text-black text-center mb-12" style="letter-spacing: -5.16px;">
+        <h2 class="text-[103.13px] font-light text-black text-center mb-16" style="letter-spacing: -5.16px;">
           Insight untuk anda.
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-3 gap-6 mb-12">
           {insights.map((insight) => (
             <InsightCard {...insight} />
           ))}
@@ -277,7 +348,7 @@ const insights = [
         <div class="text-center">
           <a
             href="/insight"
-            class="inline-flex items-center justify-center px-8 py-3 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
+            class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
           >
             Lihat Selengkapnya
           </a>
@@ -291,3 +362,14 @@ const insights = [
 
   <Footer />
 </BaseLayout>
+
+<style>
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>
