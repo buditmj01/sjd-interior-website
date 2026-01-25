@@ -225,18 +225,43 @@ import CTASection from '../components/common/CTASection.astro';
               </div>
 
               <div>
-                <h3 class="text-[24px] font-light text-black mb-4" style="letter-spacing: -1.2px;">
-                  Lokasi Kami
-                </h3>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2!2d106.85!3d-6.37!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjInMTIuMCJTIDEwNsKwNTEnMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
-                  width="100%"
-                  height="250"
-                  style="border:0; border-radius: 12px;"
-                  allowFullScreen=""
-                  loading="lazy"
-                  class="shadow-sm"
-                ></iframe>
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-[24px] font-light text-black" style="letter-spacing: -1.2px;">
+                    Lokasi Kami
+                  </h3>
+                  <a
+                    href="https://maps.app.goo.gl/sjdinterior"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 text-[14px] font-medium text-[#0096f7] hover:text-[#0080d4] transition-colors"
+                  >
+                    <span>Buka di Google Maps</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                  </a>
+                </div>
+                <a
+                  href="https://maps.app.goo.gl/sjdinterior"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block relative group"
+                >
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2!2d106.85!3d-6.37!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjInMTIuMCJTIDEwNsKwNTEnMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
+                    width="100%"
+                    height="250"
+                    style="border:0; border-radius: 12px; pointer-events: none;"
+                    allowFullScreen=""
+                    loading="lazy"
+                    class="shadow-sm"
+                  ></iframe>
+                  <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl flex items-center justify-center">
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-4 py-2 rounded-full text-[14px] font-medium text-black shadow-lg">
+                      Klik untuk buka Google Maps
+                    </span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
