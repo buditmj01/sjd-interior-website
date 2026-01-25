@@ -19,15 +19,15 @@ const { title, category, image, slug, location, area, style } = Astro.props;
       <img
         src={image}
         alt={title}
-        class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        class="w-full h-full object-cover transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
       />
 
       <!-- Gradient Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-all duration-500"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:from-black/90"></div>
 
       <!-- Category Badge - Top left -->
       <div class="absolute top-5 left-5">
-        <span class="inline-block px-4 py-2 text-[11px] font-medium text-white bg-white/15 backdrop-blur-md rounded-full uppercase tracking-wider border border-white/20">
+        <span class="inline-block px-4 py-2 text-[11px] font-medium text-white bg-white/15 backdrop-blur-md rounded-full uppercase tracking-wider border border-white/20 transition-all duration-300 ease-out group-hover:bg-white/25">
           {category}
         </span>
       </div>
@@ -35,12 +35,12 @@ const { title, category, image, slug, location, area, style } = Astro.props;
       <!-- Content Overlay - Anchored to bottom -->
       <div class="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
         <!-- Title -->
-        <h3 class="text-[22px] font-medium text-white mb-2 leading-tight transition-transform duration-500 ease-out group-hover:-translate-y-2">
+        <h3 class="text-[22px] font-medium text-white mb-2 leading-tight transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:-translate-y-1">
           {title}
         </h3>
 
         <!-- Info Row - Compact -->
-        <div class="flex flex-wrap items-center gap-3 text-[12px] text-white/80 transition-transform duration-500 ease-out group-hover:-translate-y-2">
+        <div class="flex flex-wrap items-center gap-3 text-[12px] text-white/80 transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] delay-[50ms] group-hover:-translate-y-1">
           {location && (
             <span class="flex items-center gap-1">
               <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,10 +69,10 @@ const { title, category, image, slug, location, area, style } = Astro.props;
         </div>
 
         <!-- View Button - Hidden, shows on hover -->
-        <div class="h-0 overflow-hidden opacity-0 group-hover:h-auto group-hover:opacity-100 group-hover:mt-3 transition-all duration-400 ease-out">
-          <span class="inline-flex items-center gap-2 text-[13px] font-medium text-white">
+        <div class="max-h-0 overflow-hidden opacity-0 group-hover:max-h-[50px] group-hover:opacity-100 group-hover:mt-3 transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] delay-[100ms]">
+          <span class="inline-flex items-center gap-2 text-[13px] font-medium text-white transition-all duration-300 group-hover:gap-3">
             Lihat Project
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </span>
