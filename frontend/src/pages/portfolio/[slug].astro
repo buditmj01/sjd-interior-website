@@ -98,78 +98,94 @@ const relatedProjects = [
     </section>
 
     <!-- Project Details Section -->
-    <section class="py-20 bg-white">
+    <section class="py-16 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="flex gap-16">
+        <div class="flex gap-12">
           <!-- Left Column - Images -->
-          <div class="w-[650px] flex-shrink-0 space-y-[55px]">
+          <div class="w-[55%] flex-shrink-0 space-y-6">
             {project.images.map((image) => (
               <img
                 src={image}
                 alt={project.title}
-                class="w-full h-[650px] object-cover"
+                class="w-full h-auto aspect-square object-cover rounded-lg"
               />
             ))}
           </div>
 
           <!-- Right Column - Project Info -->
-          <div class="flex-1 relative">
-            <!-- Vertical Line -->
-            <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-[#e5e5e5]"></div>
+          <div class="flex-1 sticky top-[130px] self-start">
+            <!-- Description -->
+            <div class="mb-10">
+              <h2 class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-4">
+                Deskripsi Proyek
+              </h2>
+              <p class="text-[18px] font-normal text-[#333333] leading-[1.7]">
+                {project.description}
+              </p>
+            </div>
 
-            <div class="pl-14">
-              <!-- Description -->
-              <div class="mb-16">
-                <h2 class="text-[32px] font-light text-[#959595] mb-8" style="letter-spacing: -1.6px;">
-                  Deskripsi Proyek
-                </h2>
-                <p class="text-[32px] font-light text-black leading-[0.99]" style="letter-spacing: -1.6px;">
-                  {project.description}
-                </p>
+            <!-- Divider -->
+            <div class="w-full h-[1px] bg-[#e5e5e5] mb-8"></div>
+
+            <!-- Project Meta Info -->
+            <div class="grid grid-cols-2 gap-x-8 gap-y-6">
+              <!-- Kategori -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Kategori</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.category_tag}</p>
               </div>
 
-              <!-- Project Meta Info -->
-              <div class="space-y-0">
-                <!-- Kategori -->
-                <div class="flex items-center py-6 border-b border-[#e5e5e5]">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Kategori:</span>
-                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.category_tag}</span>
-                </div>
-
-                <!-- Klien -->
-                <div class="flex items-center py-6 border-b border-[#e5e5e5]">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Klien:</span>
-                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.client}</span>
-                </div>
-
-                <!-- Lokasi -->
-                <div class="flex items-center py-6">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Lokasi:</span>
-                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.location}</span>
-                </div>
-
-                <!-- Tahun -->
-                <div class="flex items-center py-6">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Tahun:</span>
-                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.year}</span>
-                </div>
-
-                <!-- Budget -->
-                <div class="flex items-center py-6">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Budget:</span>
-                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.budget}</span>
-                </div>
-
-                <!-- Layanan -->
-                <div class="flex py-6">
-                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px] flex-shrink-0" style="letter-spacing: -1.6px;">Layanan:</span>
-                  <div class="text-[32px] font-light text-[#111] leading-[0.99]" style="letter-spacing: -1.6px;">
-                    {project.services.map((service) => (
-                      <p class="mb-2">{service}</p>
-                    ))}
-                  </div>
-                </div>
+              <!-- Klien -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Klien</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.client}</p>
               </div>
+
+              <!-- Lokasi -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Lokasi</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.location}</p>
+              </div>
+
+              <!-- Tahun -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Tahun</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.year}</p>
+              </div>
+
+              <!-- Budget -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Budget</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.budget}</p>
+              </div>
+
+              <!-- Layanan -->
+              <div class="col-span-2">
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Layanan</p>
+                <ul class="text-[16px] font-normal text-[#111111] space-y-1">
+                  {project.services.map((service) => (
+                    <li class="flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 bg-[#0096f7] rounded-full"></span>
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="mt-10">
+              <a
+                href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20tertarik%20dengan%20proyek%20seperti%20ini."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 text-[16px] font-medium text-white bg-black rounded-full hover:bg-[#333333] transition-colors"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Konsultasi Proyek Serupa
+              </a>
             </div>
           </div>
         </div>
