@@ -71,6 +71,7 @@ import CTASection from '../components/common/CTASection.astro';
                 <input
                   type="text"
                   id="budget"
+                  inputmode="numeric"
                   placeholder="Rp 50.000.000"
                   class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                 />
@@ -253,6 +254,32 @@ import CTASection from '../components/common/CTASection.astro';
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contact-form');
+    const budgetInput = document.getElementById('budget') as HTMLInputElement;
+
+    // Format number to Rupiah
+    function formatRupiah(value: string): string {
+      // Remove non-numeric characters
+      const number = value.replace(/\D/g, '');
+      if (!number) return '';
+
+      // Format with thousand separators
+      const formatted = new Intl.NumberFormat('id-ID').format(parseInt(number));
+      return `Rp ${formatted}`;
+    }
+
+    // Auto format budget input
+    budgetInput?.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      const cursorPosition = target.selectionStart || 0;
+      const oldLength = target.value.length;
+
+      target.value = formatRupiah(target.value);
+
+      // Adjust cursor position
+      const newLength = target.value.length;
+      const newPosition = cursorPosition + (newLength - oldLength);
+      target.setSelectionRange(newPosition, newPosition);
+    });
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
