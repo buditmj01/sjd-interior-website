@@ -68,16 +68,16 @@ const { title, category, image, slug, location, area, style } = Astro.props;
           )}
         </div>
 
-        <!-- Divider line -->
-        <div class="w-12 h-[2px] bg-white/40 mb-4 transition-all duration-500 group-hover:w-20 group-hover:bg-white/60"></div>
-
-        <!-- View Button - Always visible -->
-        <span class="inline-flex items-center gap-2 text-[14px] font-medium text-white group-hover:gap-3 transition-all duration-300">
-          Lihat Project
-          <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
-        </span>
+        <!-- View Button - Hidden, shows on hover -->
+        <div class="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out">
+          <div class="w-12 h-[2px] bg-white/40 mb-4 transition-all duration-500 group-hover:w-20 group-hover:bg-white/60"></div>
+          <span class="inline-flex items-center gap-2 text-[14px] font-medium text-white group-hover:gap-3 transition-all duration-300">
+            Lihat Project
+            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </span>
+        </div>
       </div>
     </div>
   </a>
