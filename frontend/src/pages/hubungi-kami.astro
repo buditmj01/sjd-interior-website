@@ -38,7 +38,7 @@ import CTASection from '../components/common/CTASection.astro';
             <p class="text-[18px] font-light text-[#636363] mb-8">
               Isi form di bawah ini dan tim kami akan segera menghubungi Anda.
             </p>
-            <form class="space-y-5">
+            <form id="contact-form" class="space-y-5">
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-[18px] font-normal text-[#212121] mb-2">
@@ -46,8 +46,9 @@ import CTASection from '../components/common/CTASection.astro';
                   </label>
                   <input
                     type="text"
+                    id="nama-awal"
                     placeholder="Jane"
-                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
                 <div>
@@ -56,8 +57,9 @@ import CTASection from '../components/common/CTASection.astro';
                   </label>
                   <input
                     type="text"
+                    id="nama-akhir"
                     placeholder="Smith"
-                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
               </div>
@@ -68,8 +70,9 @@ import CTASection from '../components/common/CTASection.astro';
                 </label>
                 <input
                   type="text"
-                  placeholder="Rp0"
-                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  id="budget"
+                  placeholder="Rp 50.000.000"
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                 />
               </div>
 
@@ -80,8 +83,8 @@ import CTASection from '../components/common/CTASection.astro';
                   </label>
                   <input
                     type="date"
-                    placeholder="dd/mm/yyyy"
-                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    id="tanggal-mulai"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
                 <div>
@@ -90,8 +93,9 @@ import CTASection from '../components/common/CTASection.astro';
                   </label>
                   <input
                     type="tel"
-                    placeholder="+62 890 0000 000"
-                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    id="telepon"
+                    placeholder="+62 812 3456 7890"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
               </div>
@@ -102,8 +106,9 @@ import CTASection from '../components/common/CTASection.astro';
                 </label>
                 <input
                   type="text"
-                  placeholder="Jl. Anggrek 3 No. 40, Bogor, Indonesia."
-                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  id="lokasi"
+                  placeholder="Jl. Anggrek 3 No. 40, Bogor, Indonesia"
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                 />
               </div>
 
@@ -113,19 +118,22 @@ import CTASection from '../components/common/CTASection.astro';
                 </label>
                 <textarea
                   rows="3"
-                  placeholder="My message is..."
-                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
+                  id="pesan"
+                  placeholder="Saya ingin konsultasi mengenai desain interior rumah saya..."
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#333] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
                 ></textarea>
               </div>
 
-              <a
-                href="https://wa.me/6285398989810?text=Nama%3A%20[Nama%20Anda]%0AEstimasi%20Budget%3A%20[Budget]%0AKapan%20Ingin%20Mulai%3A%20[Tanggal]%0ATelepon%3A%20[Nomor%20Telepon]%0ALokasi%3A%20[Lokasi]%0APesan%3A%20[Pesan%20Anda]"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-full px-6 py-3 text-[16px] font-medium text-white bg-black rounded-full hover:bg-[#272727] transition-all duration-200"
+              <button
+                type="submit"
+                id="whatsapp-btn"
+                class="inline-flex items-center justify-center gap-2 w-full px-6 py-4 text-[16px] font-medium text-white bg-[#25D366] rounded-full hover:bg-[#1fb855] transition-all duration-200"
               >
-                Konsultasi via Whatsapp
-              </a>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Konsultasi via WhatsApp
+              </button>
             </form>
           </div>
 
@@ -241,3 +249,53 @@ import CTASection from '../components/common/CTASection.astro';
 
   <Footer />
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contact-form');
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Get form values
+      const namaAwal = (document.getElementById('nama-awal') as HTMLInputElement)?.value || '';
+      const namaAkhir = (document.getElementById('nama-akhir') as HTMLInputElement)?.value || '';
+      const budget = (document.getElementById('budget') as HTMLInputElement)?.value || '';
+      const tanggalMulai = (document.getElementById('tanggal-mulai') as HTMLInputElement)?.value || '';
+      const telepon = (document.getElementById('telepon') as HTMLInputElement)?.value || '';
+      const lokasi = (document.getElementById('lokasi') as HTMLInputElement)?.value || '';
+      const pesan = (document.getElementById('pesan') as HTMLTextAreaElement)?.value || '';
+
+      // Format date if provided
+      let formattedDate = tanggalMulai;
+      if (tanggalMulai) {
+        const date = new Date(tanggalMulai);
+        formattedDate = date.toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+      }
+
+      // Build WhatsApp message
+      const fullName = `${namaAwal} ${namaAkhir}`.trim();
+      let message = `Halo SJD Interior,\n\nSaya ingin berkonsultasi mengenai proyek interior.\n\n`;
+      message += `*Data Klien:*\n`;
+      message += `Nama: ${fullName || '-'}\n`;
+      message += `Telepon: ${telepon || '-'}\n`;
+      message += `Lokasi Proyek: ${lokasi || '-'}\n\n`;
+      message += `*Detail Proyek:*\n`;
+      message += `Estimasi Budget: ${budget || '-'}\n`;
+      message += `Rencana Mulai: ${formattedDate || '-'}\n\n`;
+      message += `*Pesan:*\n${pesan || '-'}\n\n`;
+      message += `Terima kasih.`;
+
+      // Encode message for URL
+      const encodedMessage = encodeURIComponent(message);
+
+      // Open WhatsApp
+      const whatsappUrl = `https://wa.me/6285398989810?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+    });
+  });
+</script>
