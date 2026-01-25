@@ -68,11 +68,24 @@ const processSteps = [
   { number: "04", title: "Serah terima", description: "Instalasi selesai, quality check done. Interior impian Anda siap dinikmati.", image: "/images/process-handover.jpg" }
 ];
 
-// Testimonials
+// Testimonials from Google Maps Reviews
 const testimonials = [
-  { name: "Pak Budi", role: "Pemilik Rumah", text: "Pelayanan sangat memuaskan, hasil sesuai ekspektasi.", avatar: "/images/avatar-1.svg" },
-  { name: "Ibu Sarah", role: "Pengusaha Cafe", text: "Tim SJD sangat profesional dan responsif.", avatar: "/images/avatar-2.svg" },
-  { name: "Pak Andi", role: "Pemilik Kantor", text: "Desain modern dan berkelas, sangat puas.", avatar: "/images/avatar-3.svg" }
+  { name: "Trisna A.K", text: "Kualitas premium, pengerjaan cepat, fast respon, harga bisa bisik-bisik, ownernya bisa maen drum. Pokonya mantullll bintang 5", rating: 5 },
+  { name: "Cahyani Linda", text: "Hasil bagus memuaskan, team ramah, desingnya bagus pokoknya memuaskan deh", rating: 5 },
+  { name: "Neneng Susanti", text: "Hasilnya sesuai dengan keinginan, kwalitas bahannya juga ok, ga nyesel udah pake jasa desain interior nya, recommended banget", rating: 5 },
+  { name: "Didik Hermansyah", text: "Recomended Aman, terpercaya.", rating: 5 },
+  { name: "Naufal Taufikurrachman", text: "Lemari nya ok, bahan nya juga bagus, kuat kokoh. Pokok nya recommended 👍", rating: 5 },
+  { name: "Oonye Cafe Bogor", text: "Terpercaya", rating: 5 },
+  { name: "Lukman Nurhakim", text: "Terbaik, ramah dalam konsultasi", rating: 5 },
+  { name: "Nabila Stwn", text: "Bikin lemari disini worth it banget, pelayanannya ramah, team nya satset. disini juga ada garansi nya, aftersales oke. secara bahan, harga semua nya transparant", rating: 5 },
+  { name: "Rexia Rex", text: "Top markotop pokoknya", rating: 5 },
+  { name: "Ardi Ardi Ansyah", text: "Hasil nya rapih & bagus 👍👍👍", rating: 5 },
+  { name: "Look-Man", text: "Owner nya ramah, hasilnya bagus. Terimakasih SJD", rating: 5 },
+  { name: "Nurma Yani", text: "Sangat memuaskan!", rating: 5 },
+  { name: "Mustika Jaya", text: "Pengerjaan rapi, harga ok, dan pelayanan after sales servicenya baik 🙌", rating: 5 },
+  { name: "Jojo Handayani", text: "Terbaik, rekomen yang mau cari custom interior coba kesini deh bagus hasilnya memuaskan 👌👍", rating: 5 },
+  { name: "Moch Rizal", text: "Sangat recommended 👍", rating: 5 },
+  { name: "Siti Hasanah", text: "Sangat di rekomendasikan bagi yang ingin membuat kitchenset, owner nya baikk sekali.", rating: 5 }
 ];
 ---
 
@@ -223,31 +236,44 @@ const testimonials = [
     </section>
 
     <!-- Testimonials Section -->
-    <section class="py-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[70px] font-light text-black text-center mb-16" style="letter-spacing: -3.50px;">
+    <section class="py-24 bg-white overflow-hidden">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px] mb-16">
+        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;">
           Apa kata mereka tentang SJD Interior
         </h2>
+      </div>
 
-        <!-- Testimonials Carousel Container -->
-        <div class="relative">
-          <div class="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
-            {testimonials.map((testimonial) => (
-              <div class="flex-shrink-0 w-[400px] bg-[#f8f8f8] rounded-[24px] p-8">
-                <div class="flex items-center gap-4 mb-6">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    class="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <p class="text-[20px] font-medium text-black">{testimonial.name}</p>
-                    <p class="text-[16px] font-light text-[#757575]">{testimonial.role}</p>
-                  </div>
+      <!-- Testimonials Carousel with Fade -->
+      <div class="relative">
+        <!-- Left Fade -->
+        <div class="absolute left-0 top-0 bottom-0 w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <!-- Right Fade -->
+        <div class="absolute right-0 top-0 bottom-0 w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+        <!-- Infinite Scroll Track -->
+        <div class="flex testimonial-scroll">
+          <div class="flex gap-6 animate-scroll">
+            {[...testimonials, ...testimonials].map((testimonial) => (
+              <div class="flex-shrink-0 w-[400px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-7 transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
+                <!-- Star Rating -->
+                <div class="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg class={`w-4 h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  ))}
                 </div>
-                <p class="text-[18px] font-light text-[#424242] leading-relaxed">
+
+                <!-- Review Text - Italic -->
+                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic mb-5">
                   "{testimonial.text}"
                 </p>
+
+                <!-- Divider -->
+                <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
+
+                <!-- Name -->
+                <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
               </div>
             ))}
           </div>
@@ -357,5 +383,23 @@ const testimonials = [
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Infinite scroll animation */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+  }
+
+  .animate-scroll:hover {
+    animation-play-state: paused;
   }
 </style>
