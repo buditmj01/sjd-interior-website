@@ -4,6 +4,7 @@ import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
+import PortfolioCard from '../components/common/PortfolioCard.astro';
 
 // Mock data for insights
 const insights = [
@@ -35,10 +36,10 @@ const insights = [
 
 // Portfolio items
 const portfolios = [
-  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-main.png" },
-  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-2.png" },
-  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-3.png" },
-  { title: "Judul Portfolio", subtitle: "Lorem Ipsum", category: "Nama Kategori", image: "/images/portfolio-4.png" }
+  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-main.png", slug: "modern-tropical-house" },
+  { title: "Cozy Apartment Living", category: "APARTEMEN", location: "BSD City", area: "120 m²", style: "Scandinavian", image: "/images/portfolio-2.png", slug: "cozy-apartment-living" },
+  { title: "Industrial Cafe Design", category: "KOMERSIAL", location: "Bogor", area: "200 m²", style: "Industrial", image: "/images/portfolio-3.png", slug: "industrial-cafe-design" },
+  { title: "Modern Office Space", category: "KANTOR", location: "Jakarta Pusat", area: "500 m²", style: "Contemporary", image: "/images/portfolio-4.png", slug: "modern-office-space" }
 ];
 
 // Stats data
@@ -132,28 +133,7 @@ const testimonials = [
         <!-- Portfolio Grid - 4 columns -->
         <div class="grid grid-cols-4 gap-5 mb-12">
           {portfolios.map((item) => (
-            <div class="relative group rounded-[17px] overflow-hidden aspect-[335/419] cursor-pointer">
-              <img
-                src={item.image}
-                alt={item.title}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                <h3 class="text-white text-[35px] font-light leading-[1.1] mb-1" style="letter-spacing: -1.75px;">
-                  {item.title}
-                </h3>
-                <p class="text-white text-[35px] font-light leading-[1.1] mb-2" style="letter-spacing: -1.75px;">
-                  {item.subtitle}
-                </p>
-                <p class="text-white/70 text-[15px] font-light mb-6" style="letter-spacing: -0.75px;">
-                  {item.category}
-                </p>
-                <button class="px-8 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
-                  Lihat Project
-                </button>
-              </div>
-            </div>
+            <PortfolioCard {...item} />
           ))}
         </div>
 
