@@ -32,18 +32,18 @@ const { title, category, image, slug, location, area, style } = Astro.props;
         </span>
       </div>
 
-      <!-- Content Overlay - Bottom, moves up on hover -->
-      <div class="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-500 ease-out group-hover:-translate-y-3">
+      <!-- Content Overlay - Anchored to bottom -->
+      <div class="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
         <!-- Title -->
-        <h3 class="text-[24px] font-medium text-white mb-3 leading-tight">
+        <h3 class="text-[22px] font-medium text-white mb-2 leading-tight transition-transform duration-500 ease-out group-hover:-translate-y-2">
           {title}
         </h3>
 
-        <!-- Info Row -->
-        <div class="flex flex-wrap items-center gap-4 text-[13px] text-white/85 mb-3">
+        <!-- Info Row - Compact -->
+        <div class="flex flex-wrap items-center gap-3 text-[12px] text-white/80 transition-transform duration-500 ease-out group-hover:-translate-y-2">
           {location && (
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -51,16 +51,16 @@ const { title, category, image, slug, location, area, style } = Astro.props;
             </span>
           )}
           {area && (
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
               </svg>
               {area}
             </span>
           )}
           {style && (
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
               </svg>
               {style}
@@ -69,11 +69,10 @@ const { title, category, image, slug, location, area, style } = Astro.props;
         </div>
 
         <!-- View Button - Hidden, shows on hover -->
-        <div class="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out">
-          <div class="w-12 h-[2px] bg-white/40 mb-4 transition-all duration-500 group-hover:w-20 group-hover:bg-white/60"></div>
-          <span class="inline-flex items-center gap-2 text-[14px] font-medium text-white group-hover:gap-3 transition-all duration-300">
+        <div class="h-0 overflow-hidden opacity-0 group-hover:h-auto group-hover:opacity-100 group-hover:mt-3 transition-all duration-400 ease-out">
+          <span class="inline-flex items-center gap-2 text-[13px] font-medium text-white">
             Lihat Project
-            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </span>
