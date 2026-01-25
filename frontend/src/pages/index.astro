@@ -122,32 +122,36 @@ const testimonials = [
     <!-- Introduction Section -->
     <section class="py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <!-- Title -->
-        <h2 class="text-center mb-16">
-          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">SJD Interior adalah</span>
-          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">solusi desain lengkap</span>
-          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">personal dan tanpa</span>
-          <span class="block text-[96px] font-light text-black leading-[1.1]" style="letter-spacing: -4.8px;">ribet.</span>
-        </h2>
+        <!-- Title - Left aligned -->
+        <div class="mb-16">
+          <h2 class="text-left">
+            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">SJD Interior adalah</span>
+            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">solusi desain lengkap</span>
+            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">personal dan tanpa</span>
+            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">ribet.</span>
+          </h2>
+
+          <!-- Subtitle - Left aligned with proper spacing -->
+          <p class="text-[36px] font-light text-black mt-8 leading-[1.3]" style="letter-spacing: -1.80px;">
+            Kami handle semuanya, dari desain hingga furniture.<br />
+            Tersedia sekarang di Jabodetabek.
+          </p>
+
+          <!-- CTA Link -->
+          <a href="/portfolio" class="inline-flex items-center gap-2 text-[20px] font-light text-black mt-6 hover:gap-4 transition-all duration-300 group">
+            Mau lihat hasil kerja kami? Jelajahi portfolio
+            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
 
         <!-- Portfolio Grid - 4 columns -->
-        <div class="grid grid-cols-4 gap-5 mb-12">
+        <div class="grid grid-cols-4 gap-5">
           {portfolios.map((item) => (
             <PortfolioCard {...item} />
           ))}
         </div>
-
-        <!-- Subtitle -->
-        <p class="text-center text-[36px] font-light text-black mb-4" style="letter-spacing: -1.80px;">
-          Kami handle semuanya, dari desain hingga furniture.<br />
-          Tersedia sekarang di Jabodetabek.
-        </p>
-
-        <p class="text-center">
-          <a href="/portfolio" class="text-[20px] font-light text-black hover:underline transition-all">
-            Mau lihat hasil kerja kami? Jelajahi portfolio →
-          </a>
-        </p>
       </div>
     </section>
 
