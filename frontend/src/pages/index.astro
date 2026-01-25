@@ -254,7 +254,7 @@ const testimonials = [
         <div class="flex testimonial-scroll">
           <div class="flex gap-6 animate-scroll">
             {[...testimonials, ...testimonials].map((testimonial) => (
-              <div class="flex-shrink-0 w-[400px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-7 transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
+              <div class="flex-shrink-0 w-[400px] h-[220px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-7 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
                 <!-- Star Rating -->
                 <div class="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
@@ -265,15 +265,17 @@ const testimonials = [
                 </div>
 
                 <!-- Review Text - Italic -->
-                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic mb-5">
+                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
                   "{testimonial.text}"
                 </p>
 
-                <!-- Divider -->
-                <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
-
-                <!-- Name -->
-                <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
+                <!-- Bottom Section - Always at bottom -->
+                <div class="mt-auto pt-4">
+                  <!-- Divider -->
+                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
+                  <!-- Name -->
+                  <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -396,7 +398,7 @@ const testimonials = [
   }
 
   .animate-scroll {
-    animation: scroll 30s linear infinite;
+    animation: scroll 60s linear infinite;
   }
 
   .animate-scroll:hover {
