@@ -181,13 +181,13 @@ const testimonials = [
         <!-- Stats Grid -->
         <div class="grid grid-cols-4 gap-6 mt-16">
           {stats.map((stat) => (
-            <div class="bg-transparent border border-white rounded-[35px] py-10 px-8 text-center">
-              <div class="text-[79px] font-light text-white leading-none mb-2" style="letter-spacing: -3.95px;">
+            <div class="bg-transparent border-2 border-white rounded-[35px] p-6 text-center flex flex-col items-center justify-center aspect-square">
+              <p class="text-[56px] font-light text-white mb-2" style="letter-spacing: -3.95px;">
                 {stat.number}
-              </div>
-              <div class="text-[28px] font-light text-white" style="letter-spacing: -1.40px;">
+              </p>
+              <p class="text-[18px] font-light text-white" style="letter-spacing: -1.4px;">
                 {stat.label}
-              </div>
+              </p>
             </div>
           ))}
         </div>
