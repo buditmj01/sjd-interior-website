@@ -12,34 +12,70 @@ interface Props {
 const { title, category, image, slug, location, area, style } = Astro.props;
 ---
 
-<article class="group h-full flex flex-col">
-  <a href={`/portfolio/${slug}`} class="block flex-1 flex flex-col">
-    <div class="overflow-hidden rounded-t-[14px] flex-shrink-0">
-      <img 
-        src={image} 
+<article class="group h-full">
+  <a href={`/portfolio/${slug}`} class="block h-full">
+    <!-- Image Container - Large, focused -->
+    <div class="relative overflow-hidden rounded-[16px] aspect-[4/5]">
+      <img
+        src={image}
         alt={title}
-        class="w-full h-[280px] object-cover transition-transform duration-300 group-hover:scale-105"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
-    </div>
-    
-    <div class="bg-white border border-black/50 rounded-b-[14px] p-5 flex flex-col flex-1">
-      <p class="text-[12px] font-light text-[#919191] mb-2 uppercase" style="letter-spacing: 2.35px;">
-        {category}
-      </p>
-      
-      <h3 class="text-[20px] font-light text-[#2e2e2e] mb-3 line-clamp-2 leading-tight">
-        {title}
-      </h3>
-      
-      <div class="flex flex-col gap-1 text-[13px] font-light text-[#a8a8a8] mb-auto">
-        {location && <span>{location}</span>}
-        {area && <span>{area}</span>}
-        {style && <span>{style}</span>}
+
+      <!-- Gradient Overlay - Subtle, only at bottom -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"></div>
+
+      <!-- Category Badge - Top left -->
+      <div class="absolute top-4 left-4">
+        <span class="inline-block px-3 py-1.5 text-[11px] font-medium text-white bg-white/20 backdrop-blur-sm rounded-full uppercase tracking-wider">
+          {category}
+        </span>
       </div>
-      
-      <button class="mt-4 text-[12px] font-medium text-black border border-[#5e5151] px-4 py-2 rounded-full hover:bg-black hover:text-white transition-all self-start">
-        Lihat Detail
-      </button>
+
+      <!-- Content Overlay - Bottom -->
+      <div class="absolute bottom-0 left-0 right-0 p-5">
+        <!-- Title -->
+        <h3 class="text-[22px] font-medium text-white mb-2 leading-tight">
+          {title}
+        </h3>
+
+        <!-- Info Row -->
+        <div class="flex items-center gap-3 text-[13px] text-white/80">
+          {location && (
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              {location}
+            </span>
+          )}
+          {area && (
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+              </svg>
+              {area}
+            </span>
+          )}
+        </div>
+
+        {style && (
+          <p class="text-[12px] text-white/60 mt-2">
+            {style}
+          </p>
+        )}
+
+        <!-- View Button - Appears on hover -->
+        <div class="mt-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          <span class="inline-flex items-center gap-2 text-[13px] font-medium text-white">
+            Lihat Project
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </span>
+        </div>
+      </div>
     </div>
   </a>
 </article>
