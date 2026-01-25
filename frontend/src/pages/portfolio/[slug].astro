@@ -4,8 +4,27 @@ import Header from '../../components/common/Header.astro';
 import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
-import TestimonialsSection from '../../components/common/TestimonialsSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
+
+// Testimonials from Google Maps Reviews (same as home page)
+const testimonials = [
+  { name: "Trisna A.K", text: "Kualitas premium, pengerjaan cepat, fast respon, harga bisa bisik-bisik, ownernya bisa maen drum. Pokonya mantullll bintang 5", rating: 5 },
+  { name: "Cahyani Linda", text: "Hasil bagus memuaskan, team ramah, desingnya bagus pokoknya memuaskan deh", rating: 5 },
+  { name: "Neneng Susanti", text: "Hasilnya sesuai dengan keinginan, kwalitas bahannya juga ok, ga nyesel udah pake jasa desain interior nya, recommended banget", rating: 5 },
+  { name: "Didik Hermansyah", text: "Recomended Aman, terpercaya.", rating: 5 },
+  { name: "Naufal Taufikurrachman", text: "Lemari nya ok, bahan nya juga bagus, kuat kokoh. Pokok nya recommended 👍", rating: 5 },
+  { name: "Oonye Cafe Bogor", text: "Terpercaya", rating: 5 },
+  { name: "Lukman Nurhakim", text: "Terbaik, ramah dalam konsultasi", rating: 5 },
+  { name: "Nabila Stwn", text: "Bikin lemari disini worth it banget, pelayanannya ramah, team nya satset. disini juga ada garansi nya, aftersales oke. secara bahan, harga semua nya transparant", rating: 5 },
+  { name: "Rexia Rex", text: "Top markotop pokoknya", rating: 5 },
+  { name: "Ardi Ardi Ansyah", text: "Hasil nya rapih & bagus 👍👍👍", rating: 5 },
+  { name: "Look-Man", text: "Owner nya ramah, hasilnya bagus. Terimakasih SJD", rating: 5 },
+  { name: "Nurma Yani", text: "Sangat memuaskan!", rating: 5 },
+  { name: "Mustika Jaya", text: "Pengerjaan rapi, harga ok, dan pelayanan after sales servicenya baik 🙌", rating: 5 },
+  { name: "Jojo Handayani", text: "Terbaik, rekomen yang mau cari custom interior coba kesini deh bagus hasilnya memuaskan 👌👍", rating: 5 },
+  { name: "Moch Rizal", text: "Sangat recommended 👍", rating: 5 },
+  { name: "Siti Hasanah", text: "Sangat di rekomendasikan bagi yang ingin membuat kitchenset, owner nya baikk sekali.", rating: 5 }
+];
 
 // Generate static paths for SSG
 export function getStaticPaths() {
@@ -27,24 +46,25 @@ const project = {
     "/images/portfolio-3.png",
     "/images/portfolio-4.png"
   ],
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   category_tag: "Retail Interior Design",
   client: "Budi Triatmojo",
   location: "Bogor, Jawa Barat",
   year: "2026",
   budget: "Rp. 50.000.000",
-  services: "Retail Concept Development\nStore Planning & Layout Design\nCustom Furniture & Display Fixtures\nLighting & Materials Selection"
+  services: [
+    "Retail Concept Development",
+    "Store Planning & Layout Design",
+    "Custom Furniture & Display Fixtures",
+    "Lighting & Materials Selection"
+  ]
 };
 
-const relatedProjects = Array(3).fill(null).map(() => ({
-  title: "Modern Tropical House",
-  category: "RUMAH TINGGAL",
-  location: "Jakarta Selatan",
-  area: "350 m²",
-  style: "Modern Minimalis",
-  image: "/images/insight-card.jpg",
-  slug: "modern-tropical-house"
-}));
+const relatedProjects = [
+  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-main.png", slug: "modern-tropical-house" },
+  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-2.png", slug: "modern-tropical-house" },
+  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-3.png", slug: "modern-tropical-house" }
+];
 ---
 
 <BaseLayout
@@ -52,106 +72,100 @@ const relatedProjects = Array(3).fill(null).map(() => ({
   description={project.description}
 >
   <Header />
-  
-  <main>
+
+  <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative min-h-[600px] flex items-end overflow-hidden">
-      <img 
-        src={project.mainImage} 
+    <section class="relative h-[1019px] w-full overflow-hidden">
+      <img
+        src={project.mainImage}
         alt={project.title}
         class="absolute inset-0 w-full h-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#131313]/90 to-transparent"></div>
-      
-      <div class="container mx-auto max-w-[1440px] relative z-10 py-16">
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent"></div>
+
+      <!-- Content - Bottom Left -->
+      <div class="absolute bottom-[150px] left-0 w-full max-w-[1761px] mx-auto px-[151px]">
         <p class="text-[40px] font-light text-white mb-4" style="letter-spacing: -2px;">
           {project.category}
         </p>
-        <h1 class="text-[clamp(3rem,10vw,115.56px)] font-light text-white" style="letter-spacing: -5.78px;">
+        <h1 class="text-[115.56px] font-light text-white leading-[0.99]" style="letter-spacing: -5.78px;">
           {project.title}
         </h1>
       </div>
     </section>
 
-    <!-- Project Details -->
-    <section class="py-16 md:py-20 bg-white">
-      <div class="container mx-auto max-w-[1440px]">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <!-- Images -->
-          <div class="space-y-8">
+    <!-- Project Details Section -->
+    <section class="py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <div class="flex gap-16">
+          <!-- Left Column - Images -->
+          <div class="w-[650px] flex-shrink-0 space-y-[55px]">
             {project.images.map((image) => (
-              <img 
-                src={image} 
+              <img
+                src={image}
                 alt={project.title}
-                class="w-full h-auto rounded-xl"
+                class="w-full h-[650px] object-cover"
               />
             ))}
           </div>
 
-          <!-- Info -->
-          <div>
-            <div class="border-l border-black pl-8">
-              <h2 class="text-[32px] font-light text-[#959595] mb-6" style="letter-spacing: -1.60px;">
-                Deskripsi Proyek
-              </h2>
-              
-              <p class="text-[32px] font-light text-black mb-12 leading-relaxed" style="letter-spacing: -1.60px;">
-                {project.description}
-              </p>
+          <!-- Right Column - Project Info -->
+          <div class="flex-1 relative">
+            <!-- Vertical Line -->
+            <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-[#e5e5e5]"></div>
 
-              <div class="space-y-8">
-                <div>
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Kategori:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
-                    {project.category_tag}
-                  </p>
+            <div class="pl-14">
+              <!-- Description -->
+              <div class="mb-16">
+                <h2 class="text-[32px] font-light text-[#959595] mb-8" style="letter-spacing: -1.6px;">
+                  Deskripsi Proyek
+                </h2>
+                <p class="text-[32px] font-light text-black leading-[0.99]" style="letter-spacing: -1.6px;">
+                  {project.description}
+                </p>
+              </div>
+
+              <!-- Project Meta Info -->
+              <div class="space-y-0">
+                <!-- Kategori -->
+                <div class="flex items-center py-6 border-b border-[#e5e5e5]">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Kategori:</span>
+                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.category_tag}</span>
                 </div>
 
-                <div>
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Klien:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
-                    {project.client}
-                  </p>
+                <!-- Klien -->
+                <div class="flex items-center py-6 border-b border-[#e5e5e5]">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Klien:</span>
+                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.client}</span>
                 </div>
 
-                <div class="border-t border-black pt-8">
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Lokasi:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
-                    {project.location}
-                  </p>
+                <!-- Lokasi -->
+                <div class="flex items-center py-6">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Lokasi:</span>
+                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.location}</span>
                 </div>
 
-                <div class="border-t border-black pt-8">
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Tahun:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
-                    {project.year}
-                  </p>
+                <!-- Tahun -->
+                <div class="flex items-center py-6">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Tahun:</span>
+                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.year}</span>
                 </div>
 
-                <div>
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Budget:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
-                    {project.budget}
-                  </p>
+                <!-- Budget -->
+                <div class="flex items-center py-6">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px]" style="letter-spacing: -1.6px;">Budget:</span>
+                  <span class="text-[32px] font-light text-[#111]" style="letter-spacing: -1.6px;">{project.budget}</span>
                 </div>
 
-                <div>
-                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
-                    Layanan:
-                  </p>
-                  <p class="text-[32px] font-light text-[#111111] leading-relaxed whitespace-pre-line" style="letter-spacing: -1.60px;">
-                    {project.services}
-                  </p>
+                <!-- Layanan -->
+                <div class="flex py-6">
+                  <span class="text-[32px] font-light text-[#b6b6b6] w-[214px] flex-shrink-0" style="letter-spacing: -1.6px;">Layanan:</span>
+                  <div class="text-[32px] font-light text-[#111] leading-[0.99]" style="letter-spacing: -1.6px;">
+                    {project.services.map((service) => (
+                      <p class="mb-2">{service}</p>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,28 +174,31 @@ const relatedProjects = Array(3).fill(null).map(() => ({
       </div>
     </section>
 
-    <!-- Related Projects -->
-    <section class="py-16 md:py-20 bg-white">
-      <div class="container mx-auto max-w-[1440px]">
-        <div class="mb-12">
-          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.80px;">
+    <!-- Related Projects Section -->
+    <section class="py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <!-- Title -->
+        <div class="text-center mb-16">
+          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.8px;">
             Proyek Selanjutnya
           </p>
-          <h2 class="text-[clamp(4rem,12vw,128px)] font-light text-black" style="letter-spacing: -6.40px;">
+          <h2 class="text-[128px] font-light text-black" style="letter-spacing: -6.4px;">
             Design yang Berkesan
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Portfolio Cards Grid -->
+        <div class="grid grid-cols-3 gap-5 mb-12">
           {relatedProjects.map((portfolio) => (
             <PortfolioCard {...portfolio} />
           ))}
         </div>
 
+        <!-- Button -->
         <div class="text-center">
           <a
             href="/portfolio"
-            class="inline-flex items-center justify-center px-8 py-3 text-[21.41px] font-medium text-[#272727] border-2 border-[#272727] rounded-full hover:bg-[#272727] hover:text-white transition-all duration-300"
+            class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#272727] border-2 border-[#272727] rounded-full hover:bg-[#272727] hover:text-white transition-all duration-300"
           >
             Lihat semua Portfolio
           </a>
@@ -192,8 +209,53 @@ const relatedProjects = Array(3).fill(null).map(() => ({
     <!-- FAQ Section -->
     <FAQSection />
 
-    <!-- Testimonials -->
-    <TestimonialsSection />
+    <!-- Testimonials Section (same as home page) -->
+    <section class="py-24 bg-white overflow-hidden">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px] mb-16">
+        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;">
+          Apa kata mereka tentang SJD Interior
+        </h2>
+      </div>
+
+      <!-- Testimonials Carousel with Fade -->
+      <div class="relative">
+        <!-- Left Fade -->
+        <div class="absolute left-0 top-0 bottom-0 w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <!-- Right Fade -->
+        <div class="absolute right-0 top-0 bottom-0 w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+        <!-- Infinite Scroll Track -->
+        <div class="flex testimonial-scroll">
+          <div class="flex gap-6 animate-scroll">
+            {[...testimonials, ...testimonials].map((testimonial) => (
+              <div class="flex-shrink-0 w-[400px] h-[260px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-8 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
+                <!-- Star Rating -->
+                <div class="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg class={`w-4 h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  ))}
+                </div>
+
+                <!-- Review Text - Italic -->
+                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
+                  "{testimonial.text}"
+                </p>
+
+                <!-- Bottom Section - Always at bottom -->
+                <div class="mt-auto pt-4">
+                  <!-- Divider -->
+                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
+                  <!-- Name -->
+                  <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- CTA Section -->
     <CTASection />
@@ -201,3 +263,24 @@ const relatedProjects = Array(3).fill(null).map(() => ({
 
   <Footer />
 </BaseLayout>
+
+<style>
+  /* Infinite scroll animation */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 60s linear infinite;
+  }
+
+  .animate-scroll:hover {
+    animation-play-state: paused;
+  }
+</style>
+
