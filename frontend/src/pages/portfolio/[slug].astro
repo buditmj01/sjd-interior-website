@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import CTASection from '../../components/common/CTASection.astro';
+import FAQSection from '../../components/common/FAQSection.astro';
+import TestimonialsSection from '../../components/common/TestimonialsSection.astro';
+import PortfolioCard from '../../components/common/PortfolioCard.astro';
+
+// Generate static paths for SSG
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'modern-tropical-house' } }
+  ];
+}
+
+const { slug } = Astro.params;
+
+// Mock data - in production, fetch from Strapi based on slug
+const project = {
+  title: "Modern Tropical House",
+  category: "Portofolio",
+  mainImage: "/images/portfolio-main.png",
+  images: [
+    "/images/portfolio-main.png",
+    "/images/portfolio-2.png",
+    "/images/portfolio-3.png",
+    "/images/portfolio-4.png"
+  ],
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...",
+  category_tag: "Retail Interior Design",
+  client: "Budi Triatmojo",
+  location: "Bogor, Jawa Barat",
+  year: "2026",
+  budget: "Rp. 50.000.000",
+  services: "Retail Concept Development\nStore Planning & Layout Design\nCustom Furniture & Display Fixtures\nLighting & Materials Selection"
+};
+
+const relatedProjects = Array(3).fill(null).map(() => ({
+  title: "Modern Tropical House",
+  category: "RUMAH TINGGAL",
+  location: "Jakarta Selatan",
+  area: "350 m²",
+  style: "Modern Minimalis",
+  image: "/images/insight-card.jpg",
+  slug: "modern-tropical-house"
+}));
+---
+
+<BaseLayout
+  title={`${project.title} - Portfolio SJD Interior`}
+  description={project.description}
+>
+  <Header />
+  
+  <main>
+    <!-- Hero Section -->
+    <section class="relative min-h-[600px] flex items-end overflow-hidden">
+      <img 
+        src={project.mainImage} 
+        alt={project.title}
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#131313]/90 to-transparent"></div>
+      
+      <div class="container mx-auto max-w-[1440px] relative z-10 py-16">
+        <p class="text-[40px] font-light text-white mb-4" style="letter-spacing: -2px;">
+          {project.category}
+        </p>
+        <h1 class="text-[clamp(3rem,10vw,115.56px)] font-light text-white" style="letter-spacing: -5.78px;">
+          {project.title}
+        </h1>
+      </div>
+    </section>
+
+    <!-- Project Details -->
+    <section class="py-16 md:py-20 bg-white">
+      <div class="container mx-auto max-w-[1440px]">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <!-- Images -->
+          <div class="space-y-8">
+            {project.images.map((image) => (
+              <img 
+                src={image} 
+                alt={project.title}
+                class="w-full h-auto rounded-xl"
+              />
+            ))}
+          </div>
+
+          <!-- Info -->
+          <div>
+            <div class="border-l border-black pl-8">
+              <h2 class="text-[32px] font-light text-[#959595] mb-6" style="letter-spacing: -1.60px;">
+                Deskripsi Proyek
+              </h2>
+              
+              <p class="text-[32px] font-light text-black mb-12 leading-relaxed" style="letter-spacing: -1.60px;">
+                {project.description}
+              </p>
+
+              <div class="space-y-8">
+                <div>
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Kategori:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
+                    {project.category_tag}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Klien:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
+                    {project.client}
+                  </p>
+                </div>
+
+                <div class="border-t border-black pt-8">
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Lokasi:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
+                    {project.location}
+                  </p>
+                </div>
+
+                <div class="border-t border-black pt-8">
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Tahun:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
+                    {project.year}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Budget:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111]" style="letter-spacing: -1.60px;">
+                    {project.budget}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[32px] font-light text-[#b6b6b6] mb-2" style="letter-spacing: -1.60px;">
+                    Layanan:
+                  </p>
+                  <p class="text-[32px] font-light text-[#111111] leading-relaxed whitespace-pre-line" style="letter-spacing: -1.60px;">
+                    {project.services}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Projects -->
+    <section class="py-16 md:py-20 bg-white">
+      <div class="container mx-auto max-w-[1440px]">
+        <div class="mb-12">
+          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.80px;">
+            Proyek Selanjutnya
+          </p>
+          <h2 class="text-[clamp(4rem,12vw,128px)] font-light text-black" style="letter-spacing: -6.40px;">
+            Design yang Berkesan
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {relatedProjects.map((portfolio) => (
+            <PortfolioCard {...portfolio} />
+          ))}
+        </div>
+
+        <div class="text-center">
+          <a
+            href="/portfolio"
+            class="inline-flex items-center justify-center px-8 py-3 text-[21.41px] font-medium text-[#272727] border-2 border-[#272727] rounded-full hover:bg-[#272727] hover:text-white transition-all duration-300"
+          >
+            Lihat semua Portfolio
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <FAQSection />
+
+    <!-- Testimonials -->
+    <TestimonialsSection />
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+// Statistics section
+const stats = [
+  { number: '500+', label: 'Proyek Selesai' },
+  { number: '12+', label: 'Tahun Pengalaman' },
+  { number: '98%', label: 'Klien Puas' },
+  { number: '25+', label: 'Kota di Indonesia' },
+];
+---
+
+<section class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto max-w-[1440px] px-4 md:px-8">
+    <!-- Heading -->
+    <div class="text-center mb-12 md:mb-16">
+      <h2 class="text-[clamp(2rem,5vw,70px)] font-light text-black mb-2" style="letter-spacing: -3.5px;">
+        Rumah. Apartemen. Kantor. Semua bisa.
+      </h2>
+      <p class="text-[clamp(2rem,5vw,70px)] font-light text-[#949494]" style="letter-spacing: -3.5px;">
+        Maksimalkan setiap meter ruang Anda.
+      </p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      {stats.map((stat) => (
+        <div class="bg-[#f8f8f8] rounded-[35px] p-8 md:p-12 text-center">
+          <div class="text-[clamp(3rem,6vw,79px)] font-light text-black mb-2" style="letter-spacing: -3.95px;">
+            {stat.number}
+          </div>
+          <div class="text-[clamp(1.25rem,2vw,28px)] font-light text-black" style="letter-spacing: -1.4px;">
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

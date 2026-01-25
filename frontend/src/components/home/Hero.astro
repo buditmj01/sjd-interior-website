@@ -1,0 +1,59 @@
+---
+// Hero section matching Figma design
+---
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background Video with Fallback Image -->
+  <div class="absolute inset-0 z-0">
+    <!-- High-quality background image (fallback) -->
+    <img 
+      src="https://images.unsplash.com/photo-1758448755778-90ebf4d0f1e7?q=85&w=2070&fit=crop" 
+      alt="Luxurious modern interior design" 
+      class="w-full h-full object-cover"
+    />
+    
+    <!-- Video Background -->
+    <video 
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      class="absolute inset-0 w-full h-full object-cover"
+    >
+      <source src="https://videos.pexels.com/video-files/30667070/13123417_360_640_30fps.mp4" type="video/mp4" />
+    </video>
+    
+    <!-- Dark gradient overlay for text readability -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="container mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 pt-24 md:pt-32 pb-16">
+    <div class="max-w-4xl">
+      <!-- Hero Text -->
+      <h1 class="text-white mb-8">
+        <div class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+          Be the next
+        </div>
+        <div class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+          Your Design.
+        </div>
+      </h1>
+
+      <!-- CTA Button -->
+      <a
+        href="/contact"
+        class="inline-flex items-center justify-center px-10 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-[23px] hover:bg-white hover:text-black transition-all duration-300"
+      >
+        Consultation
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator (Optional) -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+    <svg class="w-6 h-6 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</section>

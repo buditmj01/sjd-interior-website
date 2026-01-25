@@ -1,0 +1,344 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import CTASection from '../components/common/CTASection.astro';
+import FAQSection from '../components/common/FAQSection.astro';
+import InsightCard from '../components/common/InsightCard.astro';
+
+const steps = [
+  {
+    number: "01",
+    label: "MULAI DARI SINI",
+    title: "Konsultasi",
+    description: "Ceritakan kebutuhan dan impian ruang Anda. Tim kami akan menganalisis gaya hidup, preferensi, dan budget Anda secara mendetail.",
+    image: "/images/workflow-consult.jpg",
+    position: "right"
+  },
+  {
+    label: "KUNJUNGAN",
+    title: "Survei Lokasi",
+    description: "Desainer kami akan mengunjungi lokasi untuk mengukur ruangan, memahami pencahayaan alami, dan menemukan potensi tersembunyi dari ruang Anda.",
+    image: "/images/workflow-consult.jpg",
+    position: "left"
+  },
+  {
+    label: "PERENCANAAN",
+    title: "Design & Anggaran",
+    description: "Desain disusun berdasarkan referensi dan kebutuhan Anda, lengkap dengan perhitungan RAB yang terukur. Setelah disetujui, proses dilanjutkan dengan persetujuan RAB sebagai dasar pelaksanaan proyek.",
+    image: "/images/workflow-planning.jpg",
+    position: "right"
+  },
+  {
+    label: "DESAIN",
+    title: "Presentasi Konsep",
+    description: "Kami sajikan konsep desain lengkap dengan moodboard, 3D rendering dan gambar teknis arsitektur.",
+    milestone: "Penerimaan & TTD RAB dengan 50%",
+    image: "/images/workflow-design.png",
+    position: "left"
+  },
+  {
+    label: "PERSIAPAN",
+    title: "Pengadaan Material",
+    description: "Seluruh furniture dikerjakan di workshop kami hingga selesai, kemudian dikirim ke lokasi setelah proses pembayaran tahap selanjutnya.",
+    milestone: "Eksekusi dimulai dengan 25%",
+    position: "right"
+  },
+  {
+    label: "EKSEKUSI",
+    title: "Pengerjaan di Lokasi",
+    description: "Tim kami melakukan instalasi dan pengerjaan langsung di lokasi sesuai desain yang telah disepakati. Setiap proses dijalankan dengan rapi, terukur, dan diawasi hingga hasil akhir sesuai ekspektasi Anda.",
+    milestone: "Pengerjaan selesai",
+    image: "/images/workflow-execution.jpg",
+    position: "left"
+  },
+  {
+    label: "FINALISASI",
+    title: "Serah terima & pembayaran",
+    description: "Tahap akhir penyelesaian proyek dilakukan melalui proses pengecekan bersama untuk memastikan seluruh pekerjaan sesuai desain dan standar kualitas. Setelah progress 90% dan pembayaran final dilakukan serah terima.",
+    image: "/images/workflow-materials.jpg",
+    position: "right"
+  }
+];
+
+const insights = [
+  {
+    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+    author: "Nurhanif Kamal Putra",
+    date: "8 Januari 2026",
+    category: "NEWS",
+    image: "/images/insight-card.jpg",
+    slug: "8-konsep-desain-interior-2026"
+  },
+  {
+    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+    author: "Nurhanif Kamal Putra",
+    date: "8 Januari 2026",
+    category: "NEWS",
+    image: "/images/insight-card.jpg",
+    slug: "8-konsep-desain-interior-2026"
+  },
+  {
+    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+    author: "Nurhanif Kamal Putra",
+    date: "8 Januari 2026",
+    category: "NEWS",
+    image: "/images/insight-card.jpg",
+    slug: "8-konsep-desain-interior-2026"
+  }
+];
+---
+
+<BaseLayout>
+  <Header />
+  
+  <main class="bg-white">
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-12 bg-gradient-to-b from-white to-[#f9f9f9]">
+      <div class="w-full max-w-[1761px] mx-auto">
+        <h1 class="text-[143px] font-light text-black px-[151px] mb-6" style="letter-spacing: -7.15px; line-height: 1;">
+          Prosesnya mudah.
+        </h1>
+        <p class="text-[28px] font-light text-center mt-8 px-[151px] text-[#636363] leading-[1.4]" style="letter-spacing: -1.4px;">
+          <span class="text-black font-medium">Kami tangani</span> semuanya dengan profesional. 
+          <span class="text-black font-medium">Anda tinggal</span> nikmati hasilnya.
+        </p>
+      </div>
+    </section>
+
+    <!-- Gallery Image -->
+    <section class="py-8 bg-white">
+      <div class="w-full mx-auto">
+        <img 
+          src="/images/hero-background.jpg" 
+          alt="Proses Interior" 
+          class="w-full h-auto"
+        />
+      </div>
+    </section>
+
+    <!-- Timeline Process -->
+    <section class="relative py-28 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative">
+        <!-- Section Title -->
+        <div class="text-center mb-20">
+          <p class="text-[18px] font-medium text-[#0096f7] uppercase tracking-wider mb-3">Prosesnya Sederhana</p>
+          <h2 class="text-[80px] font-light text-black mb-4" style="letter-spacing: -4.00px;">Tujuh Langkah<br />Menuju Hasil Sempurna</h2>
+          <p class="text-[20px] text-[#636363] max-w-2xl mx-auto leading-[1.6]">Dari konsultasi awal hingga serah terima final, setiap tahap dirancang dengan cermat untuk kesuksesan proyek Anda.</p>
+        </div>
+
+        <!-- Center timeline line -->
+        <div class="absolute left-1/2 top-[390px] bottom-0 w-[1px] bg-gradient-to-b from-[#0096f7] via-[#0096f7] to-transparent transform -translate-x-1/2"></div>
+
+        <!-- Steps -->
+        {steps.map((step, index) => (
+          <div class="relative mb-40 last:mb-0 scroll-mt-20" id={`step-${index + 1}`}>
+            <!-- Timeline Circle with Step Number -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 -top-6">
+              <div class="w-[40px] h-[40px] bg-white border-[3px] border-[#0096f7] rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(0,150,247,0.2)] relative z-10">
+                <span class="text-[18px] font-bold text-[#0096f7]">{index + 1}</span>
+              </div>
+            </div>
+
+            <!-- Content - Alternating left/right -->
+            {step.position === 'right' ? (
+              <>
+                {step.milestone ? (
+                  <div class="relative mb-0 pt-20">
+                    <!-- Milestone centered on timeline -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 -top-16 w-[280px]">
+                      <div class="p-4 border-[2px] border-[#0096f7] rounded-[12px] bg-gradient-to-br from-[#f0f7ff] to-white hover:border-[#0078c4] transition-colors duration-300 shadow-[0_4px_12px_rgba(0,150,247,0.15)]">
+                        <p class="text-[14px] font-light text-black text-center leading-[1.5]">
+                          {step.milestone}
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Regular content -->
+                    <div class="grid grid-cols-2 gap-16 items-start pt-4">
+                      <div></div>
+                      <div class="group">
+                        {step.image && (
+                          <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
+                            <img 
+                              src={step.image}
+                              alt={step.title}
+                              class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                            />
+                          </div>
+                        )}
+                        <p class="text-[14px] font-semibold text-[#0096f7] mb-2 uppercase tracking-wide" style="letter-spacing: 1px;">
+                          {step.label}
+                        </p>
+                        <h3 class="text-[48px] font-light text-black mb-4" style="letter-spacing: -2.4px; line-height: 1.1;">
+                          {step.title}
+                        </h3>
+                        <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div class="grid grid-cols-2 gap-16 items-start pt-4">
+                    <div></div>
+                    <div class="group">
+                      {step.image && (
+                        <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
+                          <img 
+                            src={step.image}
+                            alt={step.title}
+                            class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                          />
+                        </div>
+                      )}
+                      <p class="text-[14px] font-semibold text-[#0096f7] mb-2 uppercase tracking-wide" style="letter-spacing: 1px;">
+                        {step.label}
+                      </p>
+                      <h3 class="text-[48px] font-light text-black mb-4" style="letter-spacing: -2.4px; line-height: 1.1;">
+                        {step.title}
+                      </h3>
+                      <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {step.milestone ? (
+                  <div class="relative mb-0">
+                    <!-- Milestone centered on timeline -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 -top-12 w-[280px]">
+                      <div class="p-4 border-[2px] border-[#0096f7] rounded-[12px] bg-gradient-to-br from-[#f0f7ff] to-white hover:border-[#0078c4] transition-colors duration-300 shadow-[0_4px_12px_rgba(0,150,247,0.15)]">
+                        <p class="text-[14px] font-light text-black text-center leading-[1.5]">
+                          {step.milestone}
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Regular content -->
+                    <div class="grid grid-cols-2 gap-16 items-start pt-4">
+                      <div class="group">
+                        {step.image && (
+                          <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
+                            <img 
+                              src={step.image}
+                              alt={step.title}
+                              class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                            />
+                          </div>
+                        )}
+                        <p class="text-[14px] font-semibold text-[#0096f7] mb-2 uppercase tracking-wide" style="letter-spacing: 1px;">
+                          {step.label}
+                        </p>
+                        <h3 class="text-[48px] font-light text-black mb-4" style="letter-spacing: -2.4px; line-height: 1.1;">
+                          {step.title}
+                        </h3>
+                        <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6">
+                          {step.description}
+                        </p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                ) : (
+                  <div class="relative mb-0 pt-20">
+                    <!-- Milestone centered on timeline -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 -top-16 w-[280px]">
+                      <div class="p-4 border-[2px] border-[#0096f7] rounded-[12px] bg-gradient-to-br from-[#f0f7ff] to-white hover:border-[#0078c4] transition-colors duration-300 shadow-[0_4px_12px_rgba(0,150,247,0.15)]">
+                        <p class="text-[14px] font-light text-black text-center leading-[1.5]">
+                          {step.milestone}
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Regular content -->
+                    <div class="grid grid-cols-2 gap-16 items-start pt-4">
+                      <div class="group">
+                        {step.image && (
+                          <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
+                            <img 
+                              src={step.image}
+                              alt={step.title}
+                              class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                            />
+                          </div>
+                        )}
+                        <p class="text-[14px] font-semibold text-[#0096f7] mb-2 uppercase tracking-wide" style="letter-spacing: 1px;">
+                          {step.label}
+                        </p>
+                        <h3 class="text-[48px] font-light text-black mb-4" style="letter-spacing: -2.4px; line-height: 1.1;">
+                          {step.title}
+                        </h3>
+                        <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6">
+                          {step.description}
+                        </p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ))}
+
+        <!-- End of Timeline - Pengerjaan Selesai -->
+        <div class="relative mt-12">
+          <div class="w-[280px] p-4 border-[2px] border-[#0096f7] rounded-[12px] bg-gradient-to-br from-[#f0f7ff] to-white hover:border-[#0078c4] transition-colors duration-300 shadow-[0_4px_12px_rgba(0,150,247,0.15)] mx-auto">
+            <p class="text-[14px] font-light text-black text-center leading-[1.5]">
+              Pengerjaan selesai
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Background Image Section for FAQ -->
+    <section class="relative py-0 bg-white mt-20">
+      <div class="w-full mx-auto h-[800px] overflow-hidden rounded-[20px] mx-[151px]">
+        <img 
+          src="/images/hero-background.jpg" 
+          alt="Background" 
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.3)] via-transparent to-white opacity-80 rounded-[20px]"></div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <div class="relative bg-white pt-0">
+      <FAQSection />
+    </div>
+
+    <!-- Insights Section -->
+    <section class="py-28 bg-gradient-to-b from-white via-white to-[#f9f9f9]">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <div class="text-center mb-16">
+          <p class="text-[18px] font-medium text-[#0096f7] uppercase tracking-wider mb-3">Pelajari Lebih Lanjut</p>
+          <h2 class="text-[80px] font-light text-black mb-4" style="letter-spacing: -4.00px;">Insight & Tips<br />Desain Interior</h2>
+          <p class="text-[20px] text-[#636363] max-w-2xl mx-auto leading-[1.6]">Dapatkan inspirasi dan pengetahuan tentang tren desain terkini dari tim ahli kami.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          {insights.map((insight) => (
+            <InsightCard {...insight} />
+          ))}
+        </div>
+        
+        <div class="text-center">
+          <a
+            href="/insight"
+            class="inline-flex items-center justify-center px-10 py-4 text-[18px] font-medium text-white bg-[#0096f7] rounded-full hover:bg-[#0078c4] shadow-[0_4px_16px_rgba(0,150,247,0.3)] hover:shadow-[0_8px_24px_rgba(0,150,247,0.4)] transition-all duration-300"
+          >
+            Jelajahi Semua Artikel
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #0066ff;
+  --color-primary-dark: #0052cc;
+  --color-primary-light: #3384ff;
+
+  /* Brand Colors from Figma */
+  --color-blue-accent: #0096f7;
+  
+  /* Button Colors (from mockup) */
+  --color-button: #5BA3E8;
+  --color-button-hover: #4A92D7;
+
+  /* Neutral Colors */
+  --color-cream: #f5f1ed;
+  --color-cream-light: #faf8f6;
+  --color-cream-bg: #fff7ee;
+  --color-dark: #1a1a1a;
+  --color-dark-light: #2d2d2d;
+  --color-dark-section: #151515;
+  --color-footer: #202020;
+  
+  /* Gray Scale */
+  --color-gray-medium: #949494;
+  --color-gray-light: #a7a7a7;
+  --color-gray-lighter: #b3b3b3;
+  --color-gray-card: #f8f8f8;
+  --color-gray-border: #dfdfdf;
+  --color-gray-border-dark: #767676;
+
+  /* Custom Spacing */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --spacing-128: 32rem;
+
+  /* Custom Font Sizes */
+  --font-size-hero: 115.56px;
+  --font-size-hero-line-height: 1.1;
+  
+  --font-size-heading-xl: 96px;
+  --font-size-heading-lg: 70px;
+  --font-size-heading-md: 53.13px;
+  --font-size-heading-sm: 46.21px;
+
+  --font-size-section: 2.5rem;
+  --font-size-section-line-height: 1.2;
+
+  --font-size-stat: 79px;
+  --font-size-stat-line-height: 1;
+
+  /* Container - Figma design width */
+  --container-max-width: 1761px;
+
+  /* Figma Padding Values */
+  --padding-footer: 114px;
+  --padding-header: 124px;
+  --padding-section: 151px;
+  --padding-cta: 170px;
+  --padding-content: 199px;
+  --padding-images: 218px;
+
+  /* Border Radius from Figma */
+  --radius-sm: 13px;
+  --radius-md: 16px;
+  --radius-card: 17px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --radius-2xl: 24px;
+  --radius-3xl: 35px;
+  --radius-button: 23px;
+}
+
+@layer base {
+  /* Base Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Lexend', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1a1a1a;
+  }
+
+  /* Mobile-First Typography Scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  /* Smooth transitions */
+  button, a {
+    transition: all 0.3s ease;
+  }
+}
+
+@layer components {
+  /* Container utility */
+  .container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

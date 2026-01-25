@@ -1,0 +1,59 @@
+---
+// News section
+const newsCards = [
+  { 
+    image: '/images/portfolio-card-1.jpg',
+    link: '/news/1'
+  },
+  { 
+    image: '/images/news-card-2.jpg',
+    link: '/news/2'
+  },
+  { 
+    image: '/images/news-card-3.jpg',
+    link: '/news/3',
+    linkText: 'Pelajari lebih\nlanjut→'
+  },
+  { 
+    image: '/images/portfolio-card-1.jpg',
+    link: '/news/4',
+    linkText: 'Pelajari lebih\nlanjut→'
+  },
+];
+---
+
+<section class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto max-w-[1440px] px-4 md:px-8">
+    <!-- Section Title -->
+    <h2 class="text-center text-[clamp(1.75rem,3.5vw,43.7px)] font-light text-[#151515] mb-12 md:mb-16" style="letter-spacing: -2.18px;">
+      Lihat berita terbaru
+    </h2>
+
+    <!-- News Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      {newsCards.map((card, index) => (
+        <div class="group relative rounded-[18px] overflow-hidden aspect-[3/5] cursor-pointer">
+          <img 
+            src={card.image} 
+            alt="News article" 
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          
+          <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <p class="text-[32px] font-light mb-2" style="letter-spacing: -1.6px;">
+              Lihat hasil karya kami langsung.
+            </p>
+            <a 
+              href={card.link} 
+              class="inline-block text-[32px] font-normal hover:opacity-80 transition-opacity whitespace-pre-line"
+              style="letter-spacing: -1.6px;"
+            >
+              {card.linkText || 'Jelajahi portfolio →'}
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

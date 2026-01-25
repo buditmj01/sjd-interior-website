@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "./dev.sh start",
+    "setup": "./dev.sh setup", 
+    "stop": "./dev.sh stop",
+    "restart": "./dev.sh restart",
+    "logs": "./dev.sh logs",
+    "status": "./dev.sh status"
+  }
+}

@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  category: string;
+  image: string;
+  slug: string;
+  location?: string;
+  area?: string;
+  style?: string;
+}
+
+const { title, category, image, slug, location, area, style } = Astro.props;
+---
+
+<article class="group h-full flex flex-col">
+  <a href={`/portfolio/${slug}`} class="block flex-1 flex flex-col">
+    <div class="overflow-hidden rounded-t-[14px] flex-shrink-0">
+      <img 
+        src={image} 
+        alt={title}
+        class="w-full h-[280px] object-cover transition-transform duration-300 group-hover:scale-105"
+      />
+    </div>
+    
+    <div class="bg-white border border-black/50 rounded-b-[14px] p-5 flex flex-col flex-1">
+      <p class="text-[12px] font-light text-[#919191] mb-2 uppercase" style="letter-spacing: 2.35px;">
+        {category}
+      </p>
+      
+      <h3 class="text-[20px] font-light text-[#2e2e2e] mb-3 line-clamp-2 leading-tight">
+        {title}
+      </h3>
+      
+      <div class="flex flex-col gap-1 text-[13px] font-light text-[#a8a8a8] mb-auto">
+        {location && <span>{location}</span>}
+        {area && <span>{area}</span>}
+        {style && <span>{style}</span>}
+      </div>
+      
+      <button class="mt-4 text-[12px] font-medium text-black border border-[#5e5151] px-4 py-2 rounded-full hover:bg-black hover:text-white transition-all self-start">
+        Lihat Detail
+      </button>
+    </div>
+  </a>
+</article>

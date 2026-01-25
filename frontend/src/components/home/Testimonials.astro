@@ -1,0 +1,53 @@
+---
+// Testimonials section
+const testimonials = [
+  {
+    quote: '"Hasil desainnya melebihi ekspektasi kami"',
+    avatar: '/images/avatar-1.svg',
+    rating: 5
+  },
+  {
+    quote: '"Hasil desainnya melebihi ekspektasi kami"',
+    avatar: '/images/avatar-2.svg',
+    rating: 5
+  },
+  {
+    quote: '"Hasil desainnya melebihi ekspektasi kami"',
+    avatar: '/images/avatar-3.svg',
+    rating: 5
+  },
+];
+---
+
+<section class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto max-w-[1440px] px-4 md:px-8">
+    <!-- Section Title -->
+    <h2 class="text-center text-[clamp(1.75rem,3.5vw,43.7px)] font-light text-[#151515] mb-12 md:mb-16" style="letter-spacing: -2.18px;">
+      Apa kata mereka tentang SJD Interior
+    </h2>
+
+    <!-- Testimonials Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {testimonials.map((testimonial) => (
+        <div class="bg-white rounded-[22px] p-8 shadow-[0px_2.08px_19.45px_rgba(0,0,0,0.13)]">
+          <!-- Quote -->
+          <p class="text-[28.2px] font-light text-black mb-6">
+            {testimonial.quote}
+          </p>
+          
+          <!-- Avatar and Rating -->
+          <div class="flex items-center gap-4">
+            <img 
+              src={testimonial.avatar} 
+              alt="Customer avatar" 
+              class="w-6 h-6 rounded-full bg-[#d9d9d9]"
+            />
+            <div class="text-[16.4px] font-light text-black">
+              ⭐⭐⭐⭐⭐
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

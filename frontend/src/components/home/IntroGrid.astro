@@ -1,0 +1,76 @@
+---
+// Intro section with portfolio grid
+const portfolioCards = [
+  { image: '/images/portfolio-card-1.jpg' },
+  { image: '/images/portfolio-card-1.jpg' },
+  { image: '/images/portfolio-card-1.jpg' },
+  { image: '/images/portfolio-card-1.jpg' },
+];
+---
+
+<section class="relative py-16 md:py-24 bg-gradient-to-b from-white via-white to-[#fff7ee]">
+  <div class="container mx-auto max-w-[1440px] px-4 md:px-8">
+    <!-- Heading -->
+    <div class="mb-12 md:mb-16">
+      <h2 class="text-[clamp(2.5rem,6vw,96px)] font-light leading-[1.2] mb-4" style="letter-spacing: -4.8px;">
+        <span class="text-black">SJD Interior </span>
+        <span class="text-black">adalah</span>
+      </h2>
+      <h2 class="text-[clamp(2.5rem,6vw,96px)] font-light leading-[1.2]" style="letter-spacing: -4.8px;">
+        <span class="text-black">solusi desain lengkap</span>
+      </h2>
+      <h2 class="text-[clamp(2.5rem,6vw,96px)] font-light leading-[1.2]" style="letter-spacing: -4.8px;">
+        <span class="text-black">personal </span>
+        <span class="text-black">dan tanpa</span>
+      </h2>
+      <h2 class="text-[clamp(2.5rem,6vw,96px)] font-light leading-[1.2]" style="letter-spacing: -4.8px;">
+        <span class="text-black">ribet.</span>
+      </h2>
+    </div>
+
+    <!-- Portfolio Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      {portfolioCards.map((card) => (
+        <div class="group relative rounded-[17px] overflow-hidden aspect-[3/4] cursor-pointer">
+          <!-- Background Image -->
+          <img 
+            src={card.image} 
+            alt="Portfolio showcase" 
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          
+          <!-- Text Content -->
+          <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <p class="text-[30.13px] font-light mb-2" style="letter-spacing: -1.51px;">
+              Lihat hasil karya kami langsung.
+            </p>
+            <a 
+              href="/portfolio" 
+              class="inline-block text-[30.13px] font-normal hover:opacity-80 transition-opacity"
+              style="letter-spacing: -1.51px;"
+            >
+              Jelajahi portfolio →
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Description Text -->
+    <div class="text-center max-w-4xl mx-auto space-y-4">
+      <p class="text-[clamp(1.5rem,3vw,36px)] font-light text-black leading-relaxed" style="letter-spacing: -1.8px;">
+        Kami handle semuanya, dari desain sampai furniture.<br />
+        Tersedia sekarang di seluruh Indonesia.
+      </p>
+      <a 
+        href="/portfolio" 
+        class="inline-block text-[20px] font-light text-black hover:opacity-70 transition-opacity"
+      >
+        Mau lihat hasil kerja kami? Jelajahi portfolio →
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>NoSuchBucket</Code><Message>The specified bucket does not exist</Message><BucketName>coverr-main</BucketName><RequestId>6N8R3WC7VCH14NYY</RequestId><HostId>L88hWywkxmQSHpfFNCjBq0mka35ciU+21uU4VTh0xQBvzXGn4LpVYG6ysvRryAzto9YM9/WK8g0=</HostId></Error>

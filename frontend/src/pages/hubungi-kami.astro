@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import CTASection from '../components/common/CTASection.astro';
+---
+
+<BaseLayout
+  title="Hubungi Kami - SJD Interior"
+  description="Hubungi kami untuk konsultasi gratis proyek interior Anda"
+>
+  <Header />
+  
+  <main class="bg-white">
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-16 md:pb-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <div class="text-center mb-12">
+          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.80px;">
+            Hubungi Kami
+          </p>
+          <h1 class="text-[128px] font-light text-black" style="letter-spacing: -6.40px; line-height: 98.83%;">
+            Wujudkan Interior Impian Anda
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form & Info -->
+    <section class="py-12 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-[60px]">
+          <!-- Contact Form -->
+          <div>
+            <h2 class="text-[40px] font-light text-black mb-6" style="letter-spacing: -2px;">
+              Hubungi Kami
+            </h2>
+            <form class="space-y-5">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                    Nama Awal
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Jane"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                    Nama Akhir
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Smith"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  Estimasi Budget
+                </label>
+                <input
+                  type="text"
+                  placeholder="Rp0"
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                    Kapan Ingin Mulai
+                  </label>
+                  <input
+                    type="date"
+                    placeholder="dd/mm/yyyy"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                    Telepon
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+62 890 0000 000"
+                    class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  Lokasi Proyek/Alamat
+                </label>
+                <input
+                  type="text"
+                  placeholder="Jl. Anggrek 3 No. 40, Bogor, Indonesia."
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  Pesan
+                </label>
+                <textarea
+                  rows="3"
+                  placeholder="My message is..."
+                  class="w-full px-4 py-3 text-[16px] font-medium text-[#636363] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
+                ></textarea>
+              </div>
+
+              <a
+                href="https://wa.me/6285398989810?text=Nama%3A%20[Nama%20Anda]%0AEstimasi%20Budget%3A%20[Budget]%0AKapan%20Ingin%20Mulai%3A%20[Tanggal]%0ATelepon%3A%20[Nomor%20Telepon]%0ALokasi%3A%20[Lokasi]%0APesan%3A%20[Pesan%20Anda]"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-full px-6 py-3 text-[16px] font-medium text-white bg-black rounded-full hover:bg-[#272727] transition-all duration-200"
+              >
+                Konsultasi via Whatsapp
+              </a>
+            </form>
+          </div>
+
+          <!-- Contact Info -->
+          <div>
+            <div class="border-l border-black pl-10">
+              <h2 class="text-[40px] font-light text-black mb-8" style="letter-spacing: -2px;">
+                Hubungi Kami
+              </h2>
+
+              <div class="space-y-6 mb-10">
+                <div class="flex items-start gap-4">
+                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 10C8.9 10 8.05 10.85 8.05 11.95L8 40C8 41.1 8.9 42 10 42H38C39.1 42 40 41.1 40 40V11.95C40 10.85 39.1 10 38 10H10ZM24 30L10 20V11.95L24 19.95L38 11.95V20L24 30Z" fill="black"/>
+                  </svg>
+                  <p class="text-[18px] font-light text-black leading-snug">
+                    +62 85-398-989-810
+                  </p>
+                </div>
+
+                <div class="flex items-start gap-4">
+                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24" cy="24" r="14" stroke="black" stroke-width="2" fill="none"/>
+                    <circle cx="24" cy="24" r="10" stroke="black" stroke-width="2" fill="none"/>
+                    <circle cx="24" cy="24" r="2" fill="black"/>
+                    <line x1="24" y1="8" x2="24" y2="10" stroke="black" stroke-width="2"/>
+                  </svg>
+                  <p class="text-[18px] font-light text-black leading-snug">
+                    @sjd_interior
+                  </p>
+                </div>
+
+                <div class="flex items-start gap-4">
+                  <svg class="w-7 h-7 mt-0.5 flex-shrink-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4C13.5 4 5 12.5 5 23C5 38 24 44 24 44S43 38 43 23C43 12.5 34.5 4 24 4ZM24 31C19.6 31 16 27.4 16 23C16 18.6 19.6 15 24 15C28.4 15 32 18.6 32 23C32 27.4 28.4 31 24 31Z" fill="black"/>
+                  </svg>
+                  <p class="text-[18px] font-light text-black leading-snug">
+                    Bogor Outer Ring Rd Blok Mulia 1 No.55, RT.01/RW.03, Cibuluh, Bogor Utara, Bogor City, West Java 16151
+                  </p>
+                </div>
+
+                <div class="flex items-start gap-4">
+                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24" cy="24" r="18" stroke="black" stroke-width="2" fill="none"/>
+                    <path d="M24 10V24L34 34" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <p class="text-[18px] font-light text-black leading-snug">
+                    Tersedia 09.00-17.00<br />Senin - Jumat
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-[28px] font-light text-black mb-4" style="letter-spacing: -1.4px;">
+                  Google Maps
+                </h3>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.8697688189746!2d106.71520192341842!3d-6.558361964833639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ccd96e001ee1%3A0x8b1e8e8e8e8e8e8e!2sBogor%20Outer%20Ring%20Rd%20Blok%20Mulia%201%20No.55!5e0!3m2!1sen!2sid!4v1234567890"
+                  width="100%"
+                  height="280"
+                  style="border:0; border-radius: 8px;"
+                  allowFullScreen=""
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <Footer />
+</BaseLayout>

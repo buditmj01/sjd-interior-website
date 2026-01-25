@@ -1,0 +1,242 @@
+---
+import Button from './Button.astro';
+
+// Navigation items - matching Figma design
+const navItems = [
+  { label: 'Beranda', href: '/' },
+  { label: 'Alur Kerja', href: '/alur-kerja' },
+  { label: 'Portofolio', href: '/portfolio' },
+  { label: 'Insight', href: '/insight' },
+  { label: 'Hubungi Kami', href: '/hubungi-kami' },
+];
+
+const currentPath = Astro.url.pathname;
+const isHomePage = currentPath === '/';
+---
+
+<header
+  id="main-header"
+  class:list={[
+    'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+    isHomePage ? 'bg-black/90 text-white' : 'bg-white shadow-sm text-black'
+  ]}
+>
+  <div class="w-full max-w-[1761px] mx-auto px-[42px]">
+    <div class="flex items-center justify-between h-[110px]">
+      <!-- Logo - matching Figma -->
+      <a
+        href="/"
+        class="text-[20px] font-normal leading-tight hover:opacity-80 transition-opacity header-logo"
+      >
+        <span class="block">SJD</span>
+        <span class="block">Interior</span>
+      </a>
+
+      <!-- Desktop Navigation - matching Figma -->
+      <nav class="hidden lg:flex items-center gap-[19px]">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'text-[15px] font-normal hover:opacity-70 transition-opacity header-link',
+              currentPath === item.href ? 'opacity-70' : ''
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- CTA Button (Desktop) - matching Figma -->
+      <div class="hidden lg:block">
+        <a
+          href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center w-[136px] h-[45px] text-[15px] font-medium bg-[#0096f7] text-white rounded-[22.5px] hover:bg-[#0085e0] transition-colors header-cta-btn"
+        >
+          Konsultasi
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-button"
+        class="lg:hidden p-2 hover:text-primary transition-colors header-menu-btn"
+        aria-label="Toggle mobile menu"
+      >
+        <svg class="w-6 h-6" id="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg class="w-6 h-6 hidden" id="close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <nav
+    id="mobile-menu"
+    class="lg:hidden fixed inset-0 top-16 bg-black transform translate-x-full transition-transform duration-300 ease-in-out"
+  >
+    <div class="container py-6 space-y-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'block px-4 py-3 rounded-lg text-base font-medium transition-colors text-white',
+            currentPath === item.href
+              ? 'bg-primary/20 text-primary'
+              : 'hover:bg-white/10'
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+
+      <!-- Mobile CTA Button -->
+      <div class="mt-6 mx-4">
+        <a
+          href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center w-full px-6 py-2.5 text-[15px] font-medium bg-[#0096f7] text-white rounded-full hover:bg-[#0085e0] transition-colors"
+        >
+          Konsultasi
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Spacer to prevent content from going under fixed header (not needed for home page with full screen hero) -->
+{!isHomePage && <div class="h-16 md:h-20"></div>}
+
+<script>
+  // Mobile menu toggle
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  let isMenuOpen = false;
+
+  menuButton?.addEventListener('click', () => {
+    isMenuOpen = !isMenuOpen;
+
+    if (isMenuOpen) {
+      mobileMenu?.classList.remove('translate-x-full');
+      menuIcon?.classList.add('hidden');
+      closeIcon?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    } else {
+      mobileMenu?.classList.add('translate-x-full');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close mobile menu when clicking on a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('translate-x-full');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      document.body.style.overflow = '';
+      isMenuOpen = false;
+    });
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) {
+      mobileMenu?.classList.add('translate-x-full');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      document.body.style.overflow = '';
+      isMenuOpen = false;
+    }
+  });
+
+  // Scroll detection for header background change
+  const header = document.getElementById('main-header');
+  const isHomePage = window.location.pathname === '/';
+
+  if (isHomePage && header) {
+    // Only apply scroll effect on home page
+    const updateHeader = () => {
+      const scrollY = window.scrollY;
+
+      // Change background after scrolling past hero section (approximately 100px)
+      // Change background after scrolling past hero section (approximately 100px)
+      if (scrollY > 100) {
+        header.classList.add('bg-white', 'shadow-sm'); // Changed to white background
+        header.classList.remove('bg-transparent');
+      } else {
+        header.classList.add('bg-transparent');
+        header.classList.remove('bg-white', 'shadow-sm');
+      }
+    };
+
+    // Initial check
+    updateHeader();
+
+    // Listen to scroll events
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  }
+</script>
+
+<style>
+  /* Ensure smooth mobile menu animation */
+  #mobile-menu {
+    will-change: transform;
+  }
+
+  /* Header transitions */
+  #main-header {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .header-logo,
+  .header-link,
+  .header-menu-btn {
+    transition: color 0.3s ease;
+  }
+
+  /* Default state (Transparent background, White text) */
+  #main-header.bg-transparent .header-logo,
+  #main-header.bg-transparent .header-link,
+  #main-header.bg-transparent .header-menu-btn {
+    color: white;
+  }
+
+  #main-header.bg-transparent .header-link:hover {
+    color: var(--color-primary, #0066ff);
+  }
+
+  /* Scrolled state (White background, Dark text) */
+  #main-header.bg-white .header-logo,
+  #main-header.bg-white .header-link,
+  #main-header.bg-white .header-menu-btn {
+    color: #1a1a1a;
+  }
+
+  #main-header.bg-white .header-link:hover {
+    opacity: 0.7;
+  }
+  
+  /* White button on transparent header */
+  #main-header.bg-transparent .header-cta-btn {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  /* Black button on scrolled header */
+  #main-header.bg-white .header-cta-btn {
+    background-color: #000000;
+    color: #ffffff;
+  }
+</style>

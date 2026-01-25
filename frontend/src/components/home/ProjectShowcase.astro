@@ -1,0 +1,58 @@
+---
+// Project showcase cards
+---
+
+<section class="py-16 md:py-24 bg-white relative overflow-hidden">
+  <!-- Gradient Background -->
+  <div class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white pointer-events-none"></div>
+  
+  <div class="container mx-auto max-w-[1440px] px-4 md:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <!-- Portfolio Card -->
+      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer">
+        <img 
+          src="/images/portfolio-card-1.jpg" 
+          alt="Portfolio showcase" 
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+          <p class="text-[29.13px] font-light mb-2" style="letter-spacing: -1.46px;">
+            Lihat hasil karya kami langsung.
+          </p>
+          <a 
+            href="/portfolio" 
+            class="inline-block text-[29.13px] font-normal hover:opacity-80 transition-opacity"
+            style="letter-spacing: -1.46px;"
+          >
+            Jelajahi portfolio →
+          </a>
+        </div>
+      </div>
+
+      <!-- Workflow Card -->
+      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer">
+        <img 
+          src="/images/workflow-card.jpg" 
+          alt="Workflow showcase" 
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+          <p class="text-[29.13px] font-light mb-4 max-w-md" style="letter-spacing: -1.46px;">
+            Pelajari bagaimana kami mengubah ruang kosong jadi rumah impian.
+          </p>
+          <a 
+            href="/workflow" 
+            class="inline-block text-[29.13px] font-normal hover:opacity-80 transition-opacity"
+            style="letter-spacing: -1.46px;"
+          >
+            Cara kerja kami →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import CTASection from '../../components/common/CTASection.astro';
+import InsightCard from '../../components/common/InsightCard.astro';
+
+// Mock data - in production, fetch from Strapi
+const latestArticles = [
+  {
+    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+    author: "Nurhanif Kamal Putra",
+    date: "8 Januari 2026",
+    category: "NEWS",
+    image: "/images/insight-card.jpg",
+    slug: "8-konsep-desain-interior-2026",
+    featured: true
+  },
+  {
+    title: "Panduan Memilih Warna untuk Ruang Tamu Modern",
+    author: "Rina Wijaya",
+    date: "5 Januari 2026",
+    category: "TIPS",
+    image: "/images/insight-card.jpg",
+    slug: "panduan-warna-ruang-tamu",
+    featured: false
+  },
+  {
+    title: "Tren Material Sustainable dalam Interior Design",
+    author: "Budi Santoso",
+    date: "2 Januari 2026",
+    category: "TREND",
+    image: "/images/insight-card.jpg",
+    slug: "tren-material-sustainable",
+    featured: false
+  }
+];
+
+const allArticles = Array(9).fill(null).map(() => ({
+  title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+  author: "Nurhanif Kamal Putra",
+  date: "8 Januari 2026",
+  category: "NEWS",
+  image: "/images/insight-card.jpg",
+  slug: "8-konsep-desain-interior-2026"
+}));
+---
+
+<BaseLayout
+  title="Insight - SJD Interior"
+  description="Artikel dan tips seputar desain interior dari SJD Interior"
+>
+  <Header />
+
+  <main class="bg-white">
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-8 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <h1 class="text-[80px] font-light text-black mb-2" style="letter-spacing: -4.00px; line-height: 98.83%;">
+          Insight & Artikel
+        </h1>
+        <p class="text-[16px] font-light text-[#636363]" style="letter-spacing: -0.80px;">
+          Tips, tren, dan inspirasi desain interior terkini
+        </p>
+      </div>
+    </section>
+
+    <!-- Latest Articles Section -->
+    <section class="py-10 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <!-- Section Title -->
+        <h2 class="text-[28px] font-light text-black mb-6" style="letter-spacing: -1.40px;">
+          Artikel Terbaru
+        </h2>
+
+        <!-- Latest Articles Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+          <!-- Featured/Latest Article (Full Width) -->
+          <div class="lg:col-span-2 bg-white rounded-[12px] overflow-hidden border border-[#e5e5e5] hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="h-[280px] overflow-hidden bg-gray-200">
+              <img src={latestArticles[0].image} alt={latestArticles[0].title} class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+            </div>
+            <div class="p-6">
+              <div class="mb-3">
+                <span class="inline-block px-2 py-1 bg-[#0096f7] text-white text-[12px] font-medium rounded-full mb-2">
+                  {latestArticles[0].category}
+                </span>
+                <p class="text-[12px] font-light text-[#848484]">
+                  {latestArticles[0].date}
+                </p>
+              </div>
+              <h3 class="text-[20px] font-light text-black mb-3 leading-[1.3] line-clamp-2" style="letter-spacing: -1.00px;">
+                {latestArticles[0].title}
+              </h3>
+              <div class="flex items-center gap-3 pt-3 border-t border-[#e5e5e5]">
+                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="24" r="23" stroke="#969696" stroke-width="2"/>
+                  <circle cx="24" cy="19" r="8" stroke="#969696" stroke-width="2"/>
+                  <path d="M9.5 42C9.5 35.0964 15.0964 29.5 22 29.5H26C32.9036 29.5 38.5 35.0964 38.5 42" stroke="#969696" stroke-width="2"/>
+                </svg>
+                <span class="text-[14px] font-light text-[#636363]">
+                  {latestArticles[0].author}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Articles Sidebar -->
+          <div class="space-y-3">
+            {latestArticles.slice(1, 3).map((article) => (
+              <div class="bg-[#f9f9f9] rounded-[10px] p-4 border border-[#e5e5e5] hover:bg-white hover:shadow-md transition-all duration-300 cursor-pointer">
+                <div class="flex items-start gap-2 mb-2">
+                  <span class="inline-block px-2 py-0.5 bg-[#e5e5e5] text-[#636363] text-[11px] font-medium rounded-full flex-shrink-0">
+                    {article.category}
+                  </span>
+                  <p class="text-[11px] font-light text-[#848484]">
+                    {article.date}
+                  </p>
+                </div>
+                <h4 class="text-[14px] font-light text-black leading-[1.3] line-clamp-2" style="letter-spacing: -0.70px;">
+                  {article.title}
+                </h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <section class="py-8 bg-[#f9f9f9] border-y border-[#e5e5e5]">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <!-- Search Bar -->
+        <div class="max-w-2xl mb-5">
+          <div class="relative">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#636363]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="search"
+              placeholder="Cari artikel..."
+              class="w-full pl-12 pr-6 py-3 text-[14px] font-light text-[#636363] bg-white border border-[#d9d9d9] rounded-[10px] focus:outline-none focus:border-[#0096f7] placeholder:text-[#848484]"
+            />
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="flex gap-2 flex-wrap">
+          <button class="px-4 py-2 bg-black text-white text-[13px] font-medium rounded-full hover:bg-[#333333] transition-colors">
+            Semua
+          </button>
+          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
+            Tips
+          </button>
+          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
+            Trend
+          </button>
+          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
+            News
+          </button>
+          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
+            Tutorial
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- All Articles Grid -->
+    <section class="py-12">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <h2 class="text-[28px] font-light text-black mb-6" style="letter-spacing: -1.40px;">
+          Semua Artikel
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          {allArticles.map((article) => (
+            <InsightCard {...article} />
+          ))}
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center items-center gap-6">
+          <div class="flex gap-2">
+            {[1, 2, 3, 4, 5, 6].map((page, index) => (
+              <button
+                class={`w-[10px] h-[10px] rounded-full transition-colors ${index === 0 ? 'bg-black' : 'bg-[#d9d9d9] hover:bg-[#b0b0b0]'}`}
+                aria-label={`Page ${page}`}
+              />
+            ))}
+          </div>
+          <button class="px-6 py-2 text-[14px] font-medium text-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
+            Next
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <Footer />
+</BaseLayout>

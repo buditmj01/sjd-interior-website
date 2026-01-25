@@ -1,0 +1,122 @@
+---
+// FAQ Section with accordion functionality
+const faqs = [
+  {
+    question: "Berapa lama proses dari konsultasi awal hingga selesai?",
+    answer: "Proses keseluruhan umumnya memakan waktu 2-8 minggu, tergantung pada skala dan kompleksitas proyek Anda."
+  },
+  {
+    question: "Apakah bisa melayani di luar Bogor?",
+    answer: "Ya, kami melayani seluruh area Jabodetabek. Untuk area lain, silakan hubungi kami untuk diskusi lebih lanjut."
+  },
+  {
+    question: "Bagaimana sistem pembayarannya?",
+    answer: "Pembayaran dilakukan secara bertahap: DP 50% saat TTD RAB, 25% saat eksekusi dimulai, dan 25% sisanya saat serah terima."
+  },
+  {
+    question: "Apakah ada garansi?",
+    answer: "Ya, kami memberikan garansi untuk semua pekerjaan konstruksi dan furniture yang kami buat."
+  },
+  {
+    question: "Apa bisa dengan budget terbatas?",
+    answer: "Tentu! Kami akan membantu menyesuaikan desain dan material dengan budget yang Anda miliki tanpa mengurangi kualitas hasil."
+  }
+];
+---
+
+<section class="py-16 md:py-20 lg:py-24 bg-white">
+  <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+    <div class="max-w-3xl">
+      <h2 class="text-[56px] font-light text-black mb-6" style="letter-spacing: -2.80px;">
+        Pertanyaan yang Sering Diajukan
+      </h2>
+      
+      <p class="text-[18px] font-light text-[#636363] mb-10 leading-relaxed">
+        Butuh informasi lebih lanjut? Kami siap membantu menjawab pertanyaan Anda tentang layanan dan proses kami.
+      </p>
+      
+      <div class="space-y-3 mb-10">
+        {faqs.map((faq, index) => (
+          <div class="faq-item border-b border-[#e5e5e5] overflow-hidden">
+            <button
+              class="faq-trigger w-full flex items-center justify-between py-5 text-left hover:text-[#0096f7] transition-colors duration-200 group"
+              data-faq-id={`faq-${index}`}
+              aria-expanded="false"
+            >
+              <span class="text-[18px] font-light text-black group-hover:text-[#0096f7] transition-colors pr-4 flex-1">
+                {faq.question}
+              </span>
+              <div class="faq-icon flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </button>
+            <div
+              id={`faq-${index}`}
+              class="faq-content hidden overflow-hidden transition-all duration-300"
+            >
+              <p class="text-[16px] font-light text-[#636363] pb-5 leading-relaxed">
+                {faq.answer}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="pt-6">
+        <p class="text-[16px] font-light text-[#848484] mb-4">
+          Pertanyaan lain belum terjawab?
+        </p>
+        <a
+          href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20bertanya%20lebih%20lanjut."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center px-6 py-3 text-[16px] font-medium text-white bg-black hover:bg-[#0096f7] transition-colors duration-300 rounded-full"
+        >
+          Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // FAQ Accordion functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll('.faq-trigger');
+    
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const targetId = trigger.getAttribute('data-faq-id');
+        const content = document.getElementById(targetId as string);
+        const icon = trigger.querySelector('.faq-icon svg');
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        
+        // Close all other FAQs
+        triggers.forEach(otherTrigger => {
+          if (otherTrigger !== trigger) {
+            const otherId = otherTrigger.getAttribute('data-faq-id');
+            const otherContent = document.getElementById(otherId as string);
+            const otherIcon = otherTrigger.querySelector('.faq-icon svg');
+            
+            otherTrigger.setAttribute('aria-expanded', 'false');
+            otherContent?.classList.add('hidden');
+            otherIcon?.classList.remove('rotate-180');
+          }
+        });
+        
+        // Toggle current FAQ
+        if (isExpanded) {
+          trigger.setAttribute('aria-expanded', 'false');
+          content?.classList.add('hidden');
+          icon?.classList.remove('rotate-180');
+        } else {
+          trigger.setAttribute('aria-expanded', 'true');
+          content?.classList.remove('hidden');
+          icon?.classList.add('rotate-180');
+        }
+      });
+    });
+  });
+</script>

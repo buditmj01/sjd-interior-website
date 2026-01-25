@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import CTASection from '../../components/common/CTASection.astro';
+import InsightCard from '../../components/common/InsightCard.astro';
+
+// Generate static paths for SSG
+export function getStaticPaths() {
+  return [
+    { params: { slug: '8-konsep-desain-interior-2026' } }
+  ];
+}
+
+const { slug } = Astro.params;
+
+// Mock data - in production, fetch from Strapi based on slug
+const article = {
+  title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+  author: "Nurhanif Kamal Putra",
+  date: "8 Januari 2026",
+  category: "BERITA",
+  mainImage: "/images/portfolio-main.png",
+  contentImages: [
+    "/images/portfolio-main.png",
+    "/images/portfolio-main.png"
+  ]
+};
+
+const relatedInsights = Array(3).fill(null).map(() => ({
+  title: "8 Konsep Desain Interior yang Akan Tren di 2026",
+  author: "Nurhanif Kamal Putra",
+  date: "8 Januari 2026",
+  category: "NEWS",
+  image: "/images/insight-card.jpg",
+  slug: "8-konsep-desain-interior-2026"
+}));
+---
+
+<BaseLayout
+  title={`${article.title} - SJD Interior`}
+  description={article.title}
+>
+  <Header />
+
+  <main class="bg-white">
+    <!-- Breadcrumb -->
+    <section class="pt-32 pb-6">
+      <div class="w-full max-w-[1761px] mx-auto px-[124px]">
+        <p class="text-[16px] font-normal tracking-tight">
+          <span class="text-[#bcbcbc]">Beranda   &gt;   Insight   &gt;  </span>
+          <span class="text-black"> {article.title}</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Article Header -->
+    <section class="pb-10">
+      <div class="w-full max-w-[1761px] mx-auto px-[124px]">
+        <h1 class="text-[48px] md:text-[64px] lg:text-[72px] font-bold text-black mb-8 leading-[1.1] tracking-tight">
+          {article.title}
+        </h1>
+
+        <div class="flex items-center gap-5">
+          <!-- Author -->
+          <div class="flex items-center gap-3">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="23" stroke="#969696" stroke-width="2"/>
+              <circle cx="24" cy="19" r="8" stroke="#969696" stroke-width="2"/>
+              <path d="M9.5 40C9.5 33.0964 15.0964 27.5 22 27.5H26C32.9036 27.5 38.5 33.0964 38.5 40" stroke="#969696" stroke-width="2"/>
+            </svg>
+            <span class="text-[16px] font-medium text-[#757575]">
+              {article.author}
+            </span>
+          </div>
+
+          <!-- Category Badge -->
+          <div class="flex items-center justify-center px-4 py-2 border-2 border-[#5e5151] rounded-full">
+            <span class="text-[14px] font-medium text-black">
+              {article.category}
+            </span>
+          </div>
+
+          <!-- Date -->
+          <span class="text-[16px] font-normal text-[#757575]">
+            {article.date}
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Image -->
+    <section class="pb-12">
+      <div class="w-full max-w-[1761px] mx-auto px-[124px]">
+        <img
+          src={article.mainImage}
+          alt={article.title}
+          class="w-full h-[500px] md:h-[600px] object-cover rounded-lg"
+        />
+      </div>
+    </section>
+
+    <!-- Article Content - Medium Style -->
+    <section class="pb-12">
+      <div class="w-full max-w-[720px] mx-auto px-6">
+        <!-- Opening Paragraph -->
+        <div class="mb-8">
+          <p class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+            <span class="font-bold">Bogor, SJD Interior News</span>
+            <span> — </span>
+            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span>
+          </p>
+        </div>
+
+        <!-- Divider -->
+        <hr class="border-t border-[#e6e6e6] my-10" />
+
+        <!-- Poin Penting Section -->
+        <div class="mb-8">
+          <h2 class="text-[32px] font-bold text-[#292929] mb-6 leading-[1.2] tracking-tight">
+            Poin Penting
+          </h2>
+          <ul class="list-disc pl-6 space-y-4">
+            <li class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+            </li>
+            <li class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+            </li>
+            <li class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+            </li>
+          </ul>
+        </div>
+
+        <!-- Divider -->
+        <hr class="border-t border-[#e6e6e6] my-10" />
+
+        <!-- Baca Juga Section -->
+        <div class="mb-8 p-6 bg-[#f9f9f9] rounded-lg border-l-4 border-[#0096f7]">
+          <p class="text-[18px] text-[#292929] leading-[1.58]">
+            <span class="font-bold">Baca Juga: </span>
+            <a href="/insight/hati-hati-pilih-kontraktor-2025" class="text-[#0096f7] hover:underline">
+              Hati-hati pilih kontraktor interior 2025
+            </a>
+          </p>
+        </div>
+
+        <!-- Main Content Paragraph -->
+        <div class="mb-8">
+          <p class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+            Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Article Images -->
+    <section class="pb-12">
+      <div class="w-full max-w-[1100px] mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <img
+            src={article.contentImages[0]}
+            alt="Article image"
+            class="w-full h-[400px] md:h-[450px] object-cover rounded-lg"
+          />
+          <img
+            src={article.contentImages[1]}
+            alt="Article image"
+            class="w-full h-[400px] md:h-[450px] object-cover rounded-lg"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing Paragraph -->
+    <section class="pb-16">
+      <div class="w-full max-w-[720px] mx-auto px-6">
+        <p class="text-[21px] text-[#292929] leading-[1.58] tracking-[-0.003em]">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </p>
+      </div>
+    </section>
+
+    <!-- Related Articles -->
+    <section class="py-16 md:py-20 bg-[#fafafa]">
+      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+        <div class="mb-12">
+          <p class="text-[16px] font-medium text-[#757575] text-center mb-3 uppercase tracking-wide">
+            Berita Selanjutnya
+          </p>
+          <h2 class="text-[36px] md:text-[48px] font-bold text-black text-center leading-[1.2] tracking-tight">
+            Artikel Lain yang Mungkin Anda Sukai
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          {relatedInsights.map((insight) => (
+            <InsightCard {...insight} />
+          ))}
+        </div>
+
+        <div class="text-center">
+          <a
+            href="/insight"
+            class="inline-flex items-center justify-center px-8 py-3 text-[16px] font-medium text-[#292929] border-2 border-[#292929] rounded-full hover:bg-[#292929] hover:text-white transition-all duration-300"
+          >
+            Lihat semua Berita
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <Footer />
+</BaseLayout>
