@@ -53,7 +53,7 @@ import CTASection from '../components/common/CTASection.astro';
                 </div>
                 <div>
                   <label class="block text-[18px] font-normal text-[#212121] mb-2">
-                    Nama Akhir
+                    Nama Akhir <span class="text-[14px] font-light text-[#999]">(Opsional)</span>
                   </label>
                   <input
                     type="text"
@@ -184,7 +184,7 @@ import CTASection from '../components/common/CTASection.astro';
                   <div>
                     <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Alamat</p>
                     <p class="text-[18px] font-light text-black leading-relaxed">
-                      Jl. Raya Bogor KM 30<br/>Cimanggis, Depok 16451
+                      Bogor Outer Ring Rd Blok Mulia 1 No.55<br/>Cibuluh, Bogor Utara, Bogor 16151
                     </p>
                   </div>
                 </div>
@@ -269,8 +269,6 @@ import CTASection from '../components/common/CTASection.astro';
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <CTASection />
   </main>
 
   <Footer />
@@ -310,13 +308,31 @@ import CTASection from '../components/common/CTASection.astro';
       e.preventDefault();
 
       // Get form values
-      const namaAwal = (document.getElementById('nama-awal') as HTMLInputElement)?.value || '';
-      const namaAkhir = (document.getElementById('nama-akhir') as HTMLInputElement)?.value || '';
-      const budget = (document.getElementById('budget') as HTMLInputElement)?.value || '';
+      const namaAwal = (document.getElementById('nama-awal') as HTMLInputElement)?.value.trim() || '';
+      const namaAkhir = (document.getElementById('nama-akhir') as HTMLInputElement)?.value.trim() || '';
+      const budget = (document.getElementById('budget') as HTMLInputElement)?.value.trim() || '';
       const tanggalMulai = (document.getElementById('tanggal-mulai') as HTMLInputElement)?.value || '';
-      const telepon = (document.getElementById('telepon') as HTMLInputElement)?.value || '';
-      const lokasi = (document.getElementById('lokasi') as HTMLInputElement)?.value || '';
-      const pesan = (document.getElementById('pesan') as HTMLTextAreaElement)?.value || '';
+      const telepon = (document.getElementById('telepon') as HTMLInputElement)?.value.trim() || '';
+      const lokasi = (document.getElementById('lokasi') as HTMLInputElement)?.value.trim() || '';
+      const pesan = (document.getElementById('pesan') as HTMLTextAreaElement)?.value.trim() || '';
+
+      // Validation - all fields required except namaAkhir
+      const requiredFields = [
+        { value: namaAwal, name: 'Nama Awal' },
+        { value: budget, name: 'Estimasi Budget' },
+        { value: tanggalMulai, name: 'Kapan Ingin Mulai' },
+        { value: telepon, name: 'Telepon' },
+        { value: lokasi, name: 'Lokasi Proyek' },
+        { value: pesan, name: 'Pesan' }
+      ];
+
+      const emptyFields = requiredFields.filter(field => !field.value);
+
+      if (emptyFields.length > 0) {
+        const fieldNames = emptyFields.map(f => f.name).join(', ');
+        alert(`Mohon lengkapi field berikut: ${fieldNames}`);
+        return;
+      }
 
       // Format date if provided
       let formattedDate = tanggalMulai;
@@ -330,16 +346,16 @@ import CTASection from '../components/common/CTASection.astro';
       }
 
       // Build WhatsApp message
-      const fullName = `${namaAwal} ${namaAkhir}`.trim();
+      const fullName = namaAkhir ? `${namaAwal} ${namaAkhir}` : namaAwal;
       let message = `Halo SJD Interior,\n\nSaya ingin berkonsultasi mengenai proyek interior.\n\n`;
       message += `*Data Klien:*\n`;
-      message += `Nama: ${fullName || '-'}\n`;
-      message += `Telepon: ${telepon || '-'}\n`;
-      message += `Lokasi Proyek: ${lokasi || '-'}\n\n`;
+      message += `Nama: ${fullName}\n`;
+      message += `Telepon: ${telepon}\n`;
+      message += `Lokasi Proyek: ${lokasi}\n\n`;
       message += `*Detail Proyek:*\n`;
-      message += `Estimasi Budget: ${budget || '-'}\n`;
-      message += `Rencana Mulai: ${formattedDate || '-'}\n\n`;
-      message += `*Pesan:*\n${pesan || '-'}\n\n`;
+      message += `Estimasi Budget: ${budget}\n`;
+      message += `Rencana Mulai: ${formattedDate}\n\n`;
+      message += `*Pesan:*\n${pesan}\n\n`;
       message += `Terima kasih.`;
 
       // Encode message for URL
