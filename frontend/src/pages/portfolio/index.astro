@@ -5,17 +5,34 @@ import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
+import { getProjects, getImageUrl } from '../../lib/strapi';
 
-// Mock data - in production, fetch from Strapi
-const portfolios = Array(6).fill(null).map(() => ({
-  title: "Modern Tropical House",
-  category: "RUMAH TINGGAL",
-  location: "Jakarta Selatan",
-  area: "350 m²",
-  style: "Modern Minimalis",
-  image: "/images/insight-card.jpg",
-  slug: "modern-tropical-house"
-}));
+// Fetch projects from Strapi
+let portfolios = [];
+try {
+  const response = await getProjects({ 'pagination[limit]': 12 });
+  portfolios = response.data?.map((project) => ({
+    title: project.attributes.title,
+    category: project.attributes.category.toUpperCase(),
+    location: project.attributes.location || 'Indonesia',
+    area: project.attributes.area_size || '-',
+    style: 'Modern',
+    image: getImageUrl(project.attributes.featured_image, 'medium') || '/images/insight-card.jpg',
+    slug: project.attributes.slug
+  })) || [];
+} catch (error) {
+  console.error('Error fetching projects:', error);
+  // Fallback to mock data if Strapi fails
+  portfolios = Array(6).fill(null).map(() => ({
+    title: "Modern Tropical House",
+    category: "RUMAH TINGGAL",
+    location: "Jakarta Selatan",
+    area: "350 m²",
+    style: "Modern Minimalis",
+    image: "/images/insight-card.jpg",
+    slug: "modern-tropical-house"
+  }));
+}
 ---
 
 <BaseLayout

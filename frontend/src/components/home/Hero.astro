@@ -2,14 +2,15 @@
 // Hero section matching Figma design
 ---
 
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden" data-hero-section>
   <!-- Background Video with Fallback Image -->
-  <div class="absolute inset-0 z-0">
+  <div class="absolute inset-0 z-0" data-hero-bg>
     <!-- High-quality background image (fallback) -->
     <img 
       src="https://images.unsplash.com/photo-1758448755778-90ebf4d0f1e7?q=85&w=2070&fit=crop" 
       alt="Luxurious modern interior design" 
       class="w-full h-full object-cover"
+      data-parallax-img
     />
     
     <!-- Video Background -->
@@ -19,6 +20,7 @@
       loop 
       playsinline
       class="absolute inset-0 w-full h-full object-cover"
+      data-parallax-video
     >
       <source src="https://videos.pexels.com/video-files/30667070/13123417_360_640_30fps.mp4" type="video/mp4" />
     </video>
@@ -28,14 +30,22 @@
   </div>
 
   <!-- Content -->
-  <div class="container mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 pt-24 md:pt-32 pb-16">
+  <div class="container mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 pt-24 md:pt-32 pb-16" data-hero-content>
     <div class="max-w-4xl">
       <!-- Hero Text -->
       <h1 class="text-white mb-8">
-        <div class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+        <div 
+          class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" 
+          style="letter-spacing: -5.78px;"
+          data-hero-text-1
+        >
           Be the next
         </div>
-        <div class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" style="letter-spacing: -5.78px;">
+        <div 
+          class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" 
+          style="letter-spacing: -5.78px;"
+          data-hero-text-2
+        >
           Your Design.
         </div>
       </h1>
@@ -44,6 +54,7 @@
       <a
         href="/contact"
         class="inline-flex items-center justify-center px-10 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-[23px] hover:bg-white hover:text-black transition-all duration-300"
+        data-hero-cta
       >
         Consultation
       </a>
@@ -51,9 +62,143 @@
   </div>
 
   <!-- Scroll Indicator (Optional) -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce" data-scroll-indicator>
     <svg class="w-6 h-6 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
     </svg>
   </div>
 </section>
+
+<!-- Hero Parallax Animations -->
+<script>
+  import { createParallax, createFadeAnimation, createReveal, gsap } from '../../utils/gsap';
+
+  // Wait for DOM to be ready
+  const initHeroAnimations = () => {
+    const heroSection = document.querySelector('[data-hero-section]');
+    if (!heroSection) return;
+
+    // Parallax effect on background media (slow movement)
+    const parallaxImg = document.querySelector('[data-parallax-img]');
+    const parallaxVideo = document.querySelector('[data-parallax-video]');
+    
+    if (parallaxImg) {
+      createParallax(parallaxImg as HTMLElement, {
+        speed: 0.5,
+        direction: 'vertical',
+        start: 'top top',
+        end: 'bottom top',
+      });
+    }
+
+    if (parallaxVideo) {
+      createParallax(parallaxVideo as HTMLElement, {
+        speed: 0.5,
+        direction: 'vertical',
+        start: 'top top',
+        end: 'bottom top',
+      });
+    }
+
+    // Fade out hero content as user scrolls down
+    const heroContent = document.querySelector('[data-hero-content]');
+    if (heroContent) {
+      createFadeAnimation(heroContent as HTMLElement, {
+        fromOpacity: 1,
+        toOpacity: 0,
+        start: 'top top',
+        end: 'bottom top',
+      });
+    }
+
+    // Initial reveal animations for hero text (staggered)
+    const heroText1 = document.querySelector('[data-hero-text-1]');
+    const heroText2 = document.querySelector('[data-hero-text-2]');
+    const heroCta = document.querySelector('[data-hero-cta]');
+    const scrollIndicator = document.querySelector('[data-scroll-indicator]');
+
+    // Reveal text with stagger
+    if (heroText1) {
+      gsap.fromTo(
+        heroText1,
+        { opacity: 0, y: 100 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: 'power3.out',
+          delay: 0.3,
+        }
+      );
+    }
+
+    if (heroText2) {
+      gsap.fromTo(
+        heroText2,
+        { opacity: 0, y: 100 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: 'power3.out',
+          delay: 0.5,
+        }
+      );
+    }
+
+    if (heroCta) {
+      gsap.fromTo(
+        heroCta,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
+          delay: 0.8,
+        }
+      );
+    }
+
+    if (scrollIndicator) {
+      gsap.fromTo(
+        scrollIndicator,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.out',
+          delay: 1.2,
+        }
+      );
+    }
+  };
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initHeroAnimations);
+  
+  // Re-initialize for Astro view transitions
+  document.addEventListener('astro:page-load', initHeroAnimations);
+</script>
+
+<style>
+  /* Performance optimization: GPU acceleration */
+  [data-parallax-img],
+  [data-parallax-video],
+  [data-hero-content],
+  [data-hero-text-1],
+  [data-hero-text-2],
+  [data-hero-cta] {
+    will-change: transform;
+  }
+
+  /* Remove will-change after animations complete (handled by GSAP) */
+  @media (prefers-reduced-motion: reduce) {
+    [data-parallax-img],
+    [data-parallax-video],
+    [data-hero-content] {
+      will-change: auto;
+      transform: none !important;
+    }
+  }
+</style>

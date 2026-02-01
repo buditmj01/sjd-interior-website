@@ -1,5 +1,9 @@
 ---
 import Button from './Button.astro';
+import { getSiteSettings } from '../../lib/getSiteSettings.js';
+
+// Fetch site settings for logo
+const siteSettings = await getSiteSettings();
 
 // Navigation items - matching Figma design
 const navItems = [
@@ -11,25 +15,46 @@ const navItems = [
 ];
 
 const currentPath = Astro.url.pathname;
-const isHomePage = currentPath === '/';
 ---
 
 <header
   id="main-header"
-  class:list={[
-    'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-    isHomePage ? 'bg-black/90 text-white' : 'bg-white shadow-sm text-black'
-  ]}
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent text-white"
 >
   <div class="w-full max-w-[1761px] mx-auto px-[42px]">
     <div class="flex items-center justify-between h-[110px]">
       <!-- Logo - matching Figma -->
       <a
         href="/"
-        class="text-[20px] font-normal leading-tight hover:opacity-80 transition-opacity header-logo"
+        class="hover:opacity-80 transition-opacity header-logo-link relative"
       >
-        <span class="block">SJD</span>
-        <span class="block">Interior</span>
+        {(siteSettings.logo || siteSettings.logoLight) ? (
+          <>
+            {/* Dark logo - shown on white/scrolled header */}
+            {siteSettings.logo && (
+              <img
+                src={siteSettings.logo.url}
+                alt={siteSettings.logo.alt}
+                class="h-12 md:h-16 w-auto object-contain logo-dark absolute top-0 left-0"
+                loading="eager"
+              />
+            )}
+            {/* Light logo - shown on transparent/hero header */}
+            {siteSettings.logoLight && (
+              <img
+                src={siteSettings.logoLight.url}
+                alt={siteSettings.logoLight.alt}
+                class="h-12 md:h-16 w-auto object-contain logo-light"
+                loading="eager"
+              />
+            )}
+          </>
+        ) : (
+          <span class="text-[24px] md:text-[28px] font-normal leading-tight">
+            <span class="block">SJD</span>
+            <span class="block">Interior</span>
+          </span>
+        )}
       </a>
 
       <!-- Desktop Navigation - matching Figma -->
@@ -110,8 +135,7 @@ const isHomePage = currentPath === '/';
   </nav>
 </header>
 
-<!-- Spacer to prevent content from going under fixed header (not needed for home page with full screen hero) -->
-{!isHomePage && <div class="h-16 md:h-20"></div>}
+<!-- Spacer removed - all pages now have transparent header at top -->
 
 <script>
   // Mobile menu toggle
@@ -161,31 +185,50 @@ const isHomePage = currentPath === '/';
     }
   });
 
-  // Scroll detection for header background change
+  // Smart header background detection
   const header = document.getElementById('main-header');
-  const isHomePage = window.location.pathname === '/';
 
-  if (isHomePage && header) {
-    // Only apply scroll effect on home page
-    const updateHeader = () => {
-      const scrollY = window.scrollY;
+  if (header) {
+    // Function to check and update header
+    const initializeHeader = () => {
+      // Check if page has a hero section (image/banner at top)
+      // Only look for explicit hero markers, not all sections
+      const hasHeroSection = document.querySelector('[data-hero-section]');
+      const shouldBeTransparent = !!hasHeroSection;
 
-      // Change background after scrolling past hero section (approximately 100px)
-      // Change background after scrolling past hero section (approximately 100px)
-      if (scrollY > 100) {
-        header.classList.add('bg-white', 'shadow-sm'); // Changed to white background
-        header.classList.remove('bg-transparent');
-      } else {
-        header.classList.add('bg-transparent');
-        header.classList.remove('bg-white', 'shadow-sm');
-      }
+      const updateHeader = () => {
+        const scrollY = window.scrollY;
+
+        if (shouldBeTransparent) {
+          // Page has hero - use transparent mode at top
+          if (scrollY > 100) {
+            header.classList.add('bg-white', 'shadow-sm');
+            header.classList.remove('bg-transparent', 'bg-black/90');
+          } else {
+            header.classList.add('bg-transparent');
+            header.classList.remove('bg-white', 'shadow-sm', 'bg-black/90');
+          }
+        } else {
+          // No hero - always use white background
+          header.classList.add('bg-white', 'shadow-sm');
+          header.classList.remove('bg-transparent', 'bg-black/90');
+        }
+      };
+
+      // Initial check
+      updateHeader();
+
+      // Listen to scroll events
+      window.addEventListener('scroll', updateHeader, { passive: true });
     };
 
-    // Initial check
-    updateHeader();
+    // Run immediately and also after DOM is fully loaded
+    initializeHeader();
 
-    // Listen to scroll events
-    window.addEventListener('scroll', updateHeader, { passive: true });
+    // Ensure it runs after all components are mounted
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeHeader);
+    }
   }
 </script>
 
@@ -238,5 +281,50 @@ const isHomePage = currentPath === '/';
   #main-header.bg-white .header-cta-btn {
     background-color: #000000;
     color: #ffffff;
+  }
+
+  /* Logo switching based on header background */
+  /* Both logos have identical dimensions to prevent layout shift */
+  .logo-dark,
+  .logo-light {
+    transition: opacity 0.3s ease;
+  }
+
+  /* Default state (transparent background) - show light logo */
+  #main-header.bg-transparent .logo-dark {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #main-header.bg-transparent .logo-light {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Scrolled state (white background) - show dark logo */
+  #main-header.bg-white .logo-dark {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #main-header.bg-white .logo-light {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Fallback if only one logo exists */
+  .header-logo-link:has(.logo-dark:only-child) .logo-dark,
+  .header-logo-link:has(.logo-light:only-child) .logo-light {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Ensure logos are positioned identically */
+  .header-logo-link {
+    display: inline-block;
+  }
+
+  .logo-dark.absolute {
+    position: absolute;
   }
 </style>

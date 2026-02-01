@@ -8,7 +8,6 @@ import InsightCard from '../components/common/InsightCard.astro';
 
 const steps = [
   {
-    number: "01",
     label: "MULAI DARI SINI",
     title: "Konsultasi",
     description: "Ceritakan kebutuhan dan impian ruang Anda. Tim kami akan menganalisis gaya hidup, preferensi, dan budget Anda secara mendetail.",
@@ -33,7 +32,7 @@ const steps = [
     label: "DESAIN",
     title: "Presentasi Konsep",
     description: "Kami sajikan konsep desain lengkap dengan moodboard, 3D rendering dan gambar teknis arsitektur.",
-    milestone: "Penerimaan & TTD RAB dengan 50%",
+    milestoneAfter: "Penerimaan & TTD RAB dengan DP 50%",
     image: "/images/workflow-design.png",
     position: "left"
   },
@@ -41,7 +40,7 @@ const steps = [
     label: "PERSIAPAN",
     title: "Pengadaan Material",
     description: "Seluruh furniture dikerjakan di workshop kami hingga selesai, kemudian dikirim ke lokasi setelah proses pembayaran tahap selanjutnya.",
-    milestone: "Eksekusi dimulai dengan 25%",
+    milestoneBefore: "Eksekusi dimulai dengan DP 25%",
     image: "/images/workflow-materials.jpg",
     position: "right"
   },
@@ -122,125 +121,133 @@ const insights = [
     <section class="relative py-28 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px] relative">
         <!-- Section Title -->
-        <div class="text-center mb-20">
-            <p class="text-[18px] font-medium text-[#636363] uppercase tracking-wider mb-3">Prosesnya Sederhana</p>
-          <h2 class="text-[80px] font-light text-black mb-4" style="letter-spacing: -4.00px;">Tujuh Langkah<br />Menuju Hasil Sempurna</h2>
-          <p class="text-[20px] text-[#636363] max-w-2xl mx-auto leading-[1.6]">Dari konsultasi awal hingga serah terima final, setiap tahap dirancang dengan cermat untuk kesuksesan proyek Anda.</p>
+        <div class="text-center mb-16">
+          <h2 class="text-[80px] font-light text-black" style="letter-spacing: -4.00px;">Alur Pengerjaan</h2>
         </div>
 
         <!-- Steps -->
         {steps.map((step, index) => (
-          <div class={`relative scroll-mt-20 ${step.milestone ? 'mb-64' : 'mb-40'} last:mb-0`} id={`step-${index + 1}`}>
-            <!-- Content - Alternating left/right -->
+          <div class={`relative scroll-mt-20 ${step.milestoneAfter || step.milestoneBefore ? 'mb-40' : 'mb-28'} last:mb-0`} id={`step-${index + 1}`}>
+            <!-- Content - Text on one side, Image on opposite side -->
             {step.position === 'right' ? (
               <>
-                {step.milestone && (
-                  <div class="flex justify-center mb-4 -mt-8 relative z-10">
-                    <div class="w-[280px] p-4 border-[2px] border-[#e5e5e5] rounded-[12px] bg-gradient-to-br from-[#f7f7f7] to-white hover:border-[#636363] transition-colors duration-300 shadow-[0_4px_12px_rgba(99,99,99,0.10)]">
-                      <p class="text-[14px] font-light text-[#313131] text-center leading-[1.5]">
-                        {step.milestone}
+                <!-- Milestone Before (appears before content) -->
+                {step.milestoneBefore && (
+                  <div class="flex justify-center mb-10 relative z-10">
+                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
+                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                        {step.milestoneBefore}
                       </p>
                     </div>
                   </div>
                 )}
-                <!-- Step Number at top for first step -->
-                {index === 0 && (
-                  <div class="flex justify-center mb-6 relative z-10">
-                    <div class="w-[40px] h-[40px] bg-white border-[3px] border-[#636363] rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(99,99,99,0.12)]">
-                      <span class="text-[18px] font-bold text-[#636363]">1</span>
-                    </div>
-                  </div>
-                )}
-                <div class="grid grid-cols-2 gap-32 items-start">
-                  <div></div>
-                  <div class="group">
-                    {step.image && (
-                      <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
-                        <img
-                          src={step.image}
-                          alt={step.title}
-                          class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                    <p class="text-[14px] font-semibold text-[#636363] mb-2 uppercase tracking-wide" style="letter-spacing: 1px;">
+                <!-- Text LEFT, Image RIGHT with Dot in center -->
+                <div class="grid grid-cols-2 gap-0 items-start relative">
+                  <!-- Text on Left (aligned right) -->
+                  <div class="pr-12 text-right flex flex-col justify-start pt-2">
+                    <p class="text-[23px] font-normal text-[#929292] mb-2" style="letter-spacing: -1.15px; line-height: 1.4;">
                       {step.label}
                     </p>
-                    <!-- Title with Step Number on timeline -->
-                    <div class="relative title-wrapper">
-                      <h3 class="text-[48px] font-light text-black mb-4" style="letter-spacing: -2.4px; line-height: 1.1;">
-                        {step.title}
-                      </h3>
-                    </div>
-                    <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6">
+                    <h3 class="text-[55px] font-light text-black mb-4" style="letter-spacing: -2.75px; line-height: 1;">
+                      {step.title}
+                    </h3>
+                    <p class="text-[23px] font-normal text-[#929292] leading-[1.4]" style="letter-spacing: -1.15px;">
                       {step.description}
                     </p>
                   </div>
+                  <!-- Dot at center line -->
+                  <div class="absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
+                    <div class="w-[30px] h-[30px] bg-black rounded-full"></div>
+                  </div>
+                  <!-- Image on Right -->
+                  <div class="pl-12">
+                    {step.image && (
+                      <div class="overflow-hidden">
+                        <img
+                          src={step.image}
+                          alt={step.title}
+                          class="w-[628px] h-[418px] object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <!-- Step Number on Center Line - aligned with title (not for first step) -->
-                {index !== 0 && (
-                  <div class="absolute left-1/2 transform -translate-x-1/2 step-number z-10" style={`top: ${step.milestone ? 'calc(56px + ' : ''}${step.image ? '444px' : '32px'}${step.milestone ? ')' : ''};`}>
-                    <div class="w-[40px] h-[40px] bg-white border-[3px] border-[#636363] rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(99,99,99,0.12)] relative z-10">
-                      <span class="text-[18px] font-bold text-[#636363]">{index + 1}</span>
+                <!-- Milestone After (appears after content) -->
+                {step.milestoneAfter && (
+                  <div class="flex justify-center mt-10 relative z-10">
+                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
+                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                        {step.milestoneAfter}
+                      </p>
                     </div>
                   </div>
                 )}
               </>
             ) : (
               <>
-                {step.milestone && (
-                  <div class="flex justify-center mb-4 -mt-8 relative z-10">
-                    <div class="w-[280px] p-4 border-[2px] border-[#e5e5e5] rounded-[12px] bg-gradient-to-br from-[#f7f7f7] to-white hover:border-[#636363] transition-colors duration-300 shadow-[0_4px_12px_rgba(99,99,99,0.10)]">
-                      <p class="text-[14px] font-light text-[#313131] text-center leading-[1.5]">
-                        {step.milestone}
+                <!-- Milestone Before (appears before content) -->
+                {step.milestoneBefore && (
+                  <div class="flex justify-center mb-10 relative z-10">
+                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
+                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                        {step.milestoneBefore}
                       </p>
                     </div>
                   </div>
                 )}
-                <div class="grid grid-cols-2 gap-32 items-start">
-                  <div class="group">
+                <!-- Image LEFT, Text RIGHT with Dot in center -->
+                <div class="grid grid-cols-2 gap-0 items-start relative">
+                  <!-- Image on Left -->
+                  <div class="pr-12 flex justify-end">
                     {step.image && (
-                      <div class="mb-8 overflow-hidden rounded-[16px] shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_16px_48px_rgba(0,0,0,0.16)] transition-all duration-300">
+                      <div class="overflow-hidden">
                         <img
                           src={step.image}
                           alt={step.title}
-                          class="w-full h-[380px] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                          class="w-[628px] h-[418px] object-cover"
                         />
                       </div>
                     )}
-                    <p class="text-[14px] font-semibold text-[#636363] mb-2 uppercase tracking-wide text-right" style="letter-spacing: 1px;">
+                  </div>
+                  <!-- Dot at center line -->
+                  <div class="absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
+                    <div class="w-[30px] h-[30px] bg-black rounded-full"></div>
+                  </div>
+                  <!-- Text on Right -->
+                  <div class="pl-12 flex flex-col justify-start pt-2">
+                    <p class="text-[23px] font-normal text-[#929292] mb-2" style="letter-spacing: -1.15px; line-height: 1.4;">
                       {step.label}
                     </p>
-                    <!-- Title with Step Number on timeline -->
-                    <div class="relative title-wrapper">
-                      <h3 class="text-[48px] font-light text-black mb-4 text-right" style="letter-spacing: -2.4px; line-height: 1.1;">
-                        {step.title}
-                      </h3>
-                    </div>
-                    <p class="text-[18px] font-normal text-[#636363] leading-[1.7] mb-6 text-right">
+                    <h3 class="text-[55px] font-light text-black mb-4" style="letter-spacing: -2.75px; line-height: 1;">
+                      {step.title}
+                    </h3>
+                    <p class="text-[23px] font-normal text-[#929292] leading-[1.4]" style="letter-spacing: -1.15px;">
                       {step.description}
                     </p>
                   </div>
-                  <div></div>
                 </div>
-                <!-- Step Number on Center Line - aligned with title -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 step-number z-10" style={`top: ${step.milestone ? 'calc(56px + ' : ''}${step.image ? '444px' : '32px'}${step.milestone ? ')' : ''};`}>
-                  <div class="w-[40px] h-[40px] bg-white border-[3px] border-[#636363] rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(99,99,99,0.12)] relative z-10">
-                    <span class="text-[18px] font-bold text-[#636363]">{index + 1}</span>
+                <!-- Milestone After (appears after content) -->
+                {step.milestoneAfter && (
+                  <div class="flex justify-center mt-10 relative z-10">
+                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
+                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                        {step.milestoneAfter}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             )}
           </div>
         ))}
 
-        <!-- Center timeline line - starts from step 1 number -->
-        <div class="absolute left-1/2 top-[430px] bottom-[-120px] w-[1px] bg-[#e5e5e5] transform -translate-x-1/2 z-0"></div>
+        <!-- Center timeline line -->
+        <div class="absolute left-1/2 top-[200px] bottom-[80px] w-[9px] bg-black rounded-full transform -translate-x-1/2 z-0"></div>
 
         <!-- Pengerjaan Selesai - End of Timeline -->
-        <div class="flex justify-center mt-16 relative z-10">
-          <div class="w-[280px] p-4 border-[2px] border-[#e5e5e5] rounded-[12px] bg-white hover:border-[#636363] transition-colors duration-300 shadow-[0_4px_12px_rgba(99,99,99,0.10)]">
-            <p class="text-[14px] font-light text-[#313131] text-center leading-[1.5]">
+        <div class="flex justify-center mt-12 relative z-10">
+          <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
+            <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
               Pengerjaan selesai
             </p>
           </div>

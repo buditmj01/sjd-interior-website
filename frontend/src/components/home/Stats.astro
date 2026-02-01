@@ -4,30 +4,37 @@ const stats = [
   { number: '500+', label: 'Proyek Selesai' },
   { number: '12+', label: 'Tahun Pengalaman' },
   { number: '98%', label: 'Klien Puas' },
-  { number: '25+', label: 'Kota di Indonesia' },
+  { number: '90', label: 'Hari After Project Support' },
 ];
 ---
 
-<section class="py-16 md:py-24 bg-white">
-  <div class="container mx-auto max-w-[1440px] px-4 md:px-8">
+<section class="py-20 bg-white" data-stats-section>
+  <div class="w-full max-w-[1761px] mx-auto px-[151px]">
     <!-- Heading -->
-    <div class="text-center mb-12 md:mb-16">
-      <h2 class="text-[clamp(2rem,5vw,70px)] font-light text-black mb-2" style="letter-spacing: -3.5px;">
-        Rumah. Apartemen. Kantor. Semua bisa.
+    <div class="text-center mb-12 md:mb-16" data-stats-heading>
+      <h2 class="text-[70px] font-light text-black leading-[1.1]" style="letter-spacing: -3.5px;" data-stats-title>
+        <span class="block">Rumah. Apartemen. Kantor. Semua bisa.</span>
+        <span class="block">Maksimalkan setiap meter ruang Anda.</span>
       </h2>
-      <p class="text-[clamp(2rem,5vw,70px)] font-light text-[#949494]" style="letter-spacing: -3.5px;">
-        Maksimalkan setiap meter ruang Anda.
-      </p>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-      {stats.map((stat) => (
-        <div class="bg-[#f8f8f8] rounded-[35px] p-8 md:p-12 text-center">
-          <div class="text-[clamp(3rem,6vw,79px)] font-light text-black mb-2" style="letter-spacing: -3.95px;">
+    <div class="grid grid-cols-4 gap-6 mt-16" data-stats-grid>
+      {stats.map((stat, index) => (
+        <div
+          class="bg-transparent border-2 border-black rounded-[35px] p-6 text-center stat-card transition-transform duration-300 ease-out hover:scale-105 flex flex-col items-center justify-center aspect-square"
+          data-stat-card
+          data-stat-index={index}
+        >
+          <div
+            class="text-[56px] font-light text-black mb-2"
+            style="letter-spacing: -3.95px;"
+            data-stat-number
+            data-stat-value={stat.number}
+          >
             {stat.number}
           </div>
-          <div class="text-[clamp(1.25rem,2vw,28px)] font-light text-black" style="letter-spacing: -1.4px;">
+          <div class="text-[18px] font-light text-black" style="letter-spacing: -1.4px;" data-stat-label>
             {stat.label}
           </div>
         </div>
@@ -35,3 +42,181 @@ const stats = [
     </div>
   </div>
 </section>
+
+<!-- Stats Section Animations -->
+<script>
+  import { createReveal, gsap, ScrollTrigger } from '../../utils/gsap';
+
+  const initStatsAnimations = () => {
+    const statsSection = document.querySelector('[data-stats-section]');
+    if (!statsSection) {
+      console.log('Stats section not found');
+      return;
+    }
+
+    console.log('Initializing stats animations...');
+
+    // Reveal heading
+    const statsTitle = document.querySelector('[data-stats-title]');
+
+    if (statsTitle) {
+      createReveal(statsTitle as HTMLElement, {
+        from: { opacity: 0, y: 60 },
+        to: { opacity: 1, y: 0 },
+        start: 'top 80%',
+        once: true,
+      });
+    }
+
+    // Animate stat cards with bounce effect and counter animation
+    const statCards = document.querySelectorAll('[data-stat-card]');
+    statCards.forEach((card, index) => {
+      const cardElement = card as HTMLElement;
+      const numberElement = card.querySelector('[data-stat-number]') as HTMLElement;
+      const labelElement = card.querySelector('[data-stat-label]');
+      const statValue = numberElement?.getAttribute('data-stat-value') || '';
+
+      // Card bounce-in animation with stagger
+      gsap.fromTo(
+        cardElement,
+        {
+          opacity: 0,
+          y: 80,
+          scale: 0.8,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'back.out(1.4)',
+          delay: index * 0.1,
+          scrollTrigger: {
+            trigger: cardElement,
+            start: 'top 85%',
+            once: true,
+          },
+        }
+      );
+
+      // Counter animation for numbers - starts from 0
+      if (numberElement && statValue) {
+        // Extract number from string (e.g., "500+" -> 500)
+        const match = statValue.match(/(\d+)/);
+        if (match) {
+          const targetNumber = parseInt(match[1], 10);
+          const suffix = statValue.replace(/\d+/, ''); // Get suffix like "+", "%"
+
+          // Create counter object
+          const counter = { value: 0 };
+
+          // Set initial display to 0
+          gsap.set(numberElement, { textContent: `0${suffix}` });
+
+          // Start counter animation when card enters viewport
+          gsap.to(counter, {
+            value: targetNumber,
+            duration: 2.5,
+            ease: 'expo.out',
+            delay: index * 0.15 + 0.4,
+            scrollTrigger: {
+              trigger: cardElement,
+              start: 'top 85%',
+              once: true,
+            },
+            onUpdate: function() {
+              const currentValue = Math.round(counter.value);
+              numberElement.textContent = `${currentValue.toLocaleString('id-ID')}${suffix}`;
+            },
+            onComplete: function() {
+              // Ensure final value is exact
+              numberElement.textContent = `${targetNumber.toLocaleString('id-ID')}${suffix}`;
+
+              // Add a subtle pulse effect when counter completes
+              gsap.to(numberElement, {
+                scale: 1.1,
+                duration: 0.2,
+                ease: 'back.out(2)',
+                yoyo: true,
+                repeat: 1,
+              });
+            },
+          });
+        }
+      }
+
+      // Label fade-in
+      if (labelElement) {
+        gsap.fromTo(
+          labelElement,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.6,
+            delay: index * 0.1 + 0.5,
+            scrollTrigger: {
+              trigger: cardElement,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    });
+  };
+
+  // Initialize after a short delay to ensure GSAP is ready
+  const initWithDelay = () => {
+    setTimeout(() => {
+      initStatsAnimations();
+      // Refresh ScrollTrigger to ensure proper calculation
+      ScrollTrigger.refresh();
+    }, 100);
+  };
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWithDelay);
+  } else {
+    // DOM already loaded
+    initWithDelay();
+  }
+
+  // Re-initialize for Astro view transitions
+  document.addEventListener('astro:page-load', () => {
+    // Kill existing triggers first
+    ScrollTrigger.getAll().forEach(trigger => {
+      if (trigger.vars.trigger && (trigger.vars.trigger as HTMLElement).closest('[data-stats-section]')) {
+        trigger.kill();
+      }
+    });
+    initWithDelay();
+  });
+</script>
+
+<style>
+  /* Performance optimization */
+  [data-stat-card] {
+    will-change: transform;
+  }
+
+  /* Stat card hover effects */
+  .stat-card {
+    transform-origin: center;
+    backface-visibility: hidden;
+    cursor: pointer;
+  }
+
+  /* Accessibility: reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    [data-stat-card] {
+      will-change: auto;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .stat-card:hover {
+      transform: none !important;
+    }
+  }
+</style>

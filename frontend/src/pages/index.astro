@@ -5,6 +5,7 @@ import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
 import PortfolioCard from '../components/common/PortfolioCard.astro';
+import Stats from '../components/home/Stats.astro';
 
 // Mock data for insights
 const insights = [
@@ -40,14 +41,6 @@ const portfolios = [
   { title: "Cozy Apartment Living", category: "APARTEMEN", location: "BSD City", area: "120 m²", style: "Scandinavian", image: "/images/portfolio-2.png", slug: "cozy-apartment-living" },
   { title: "Industrial Cafe Design", category: "KOMERSIAL", location: "Bogor", area: "200 m²", style: "Industrial", image: "/images/portfolio-3.png", slug: "industrial-cafe-design" },
   { title: "Modern Office Space", category: "KANTOR", location: "Jakarta Pusat", area: "500 m²", style: "Contemporary", image: "/images/portfolio-4.png", slug: "modern-office-space" }
-];
-
-// Stats data
-const stats = [
-  { number: "100+", label: "Proyek Selesai" },
-  { number: "7+", label: "Tahun Pengalaman" },
-  { number: "98%", label: "Klien Puas" },
-  { number: "25+", label: "Kota di Indonesia" }
 ];
 
 // Features data
@@ -97,7 +90,7 @@ const testimonials = [
 
   <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative h-[100vh] min-h-[800px] flex items-center overflow-hidden">
+    <section class="relative h-[100vh] min-h-[800px] flex items-center overflow-hidden" data-hero-section>
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
@@ -111,7 +104,7 @@ const testimonials = [
       <!-- Content -->
       <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10">
         <div class="max-w-[800px]">
-          <h1 class="text-white mb-10">
+          <h1 class="text-white mb-10" data-animate-title>
             <span class="block text-[115.56px] font-light leading-[0.95]" style="letter-spacing: -5.78px;">
               Semua Berawal
             </span>
@@ -137,7 +130,7 @@ const testimonials = [
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
         <!-- Title - Left aligned -->
         <div class="mb-16">
-          <h2 class="text-left">
+          <h2 class="text-left" data-animate-title>
             <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">SJD Interior adalah</span>
             <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">solusi desain lengkap</span>
             <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">personal dan tanpa</span>
@@ -145,7 +138,7 @@ const testimonials = [
           </h2>
 
           <!-- Subtitle - Left aligned with proper spacing -->
-          <p class="text-[36px] font-light text-black mt-8 leading-[1.3]" style="letter-spacing: -1.80px;">
+          <p class="text-[36px] font-light text-black mt-8 leading-[1.3]" style="letter-spacing: -1.80px;" data-animate-subtitle>
             Kami handle semuanya, dari desain hingga furniture.<br />
             Tersedia sekarang di Jabodetabek.
           </p>
@@ -169,48 +162,12 @@ const testimonials = [
     </section>
 
     <!-- Stats Section -->
-    <section class="relative py-20 overflow-hidden">
-      <!-- Background Image -->
-      <div class="absolute inset-0 z-0">
-        <img
-          src="/images/stats-background.png"
-          alt=""
-          class="w-full h-full object-cover"
-        />
-        <div class="absolute inset-0 bg-black/50"></div>
-      </div>
-
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10">
-        <!-- Title -->
-        <h2 class="text-center mb-4">
-          <span class="block text-[70px] font-light text-white leading-[1.1]" style="letter-spacing: -3.50px;">
-            Rumah. Komersial. Kantor. Semua bisa.
-          </span>
-          <span class="block text-[70px] font-light text-white leading-[1.1]" style="letter-spacing: -3.50px;">
-            Maksimalkan setiap meter ruang Anda.
-          </span>
-        </h2>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-4 gap-6 mt-16">
-          {stats.map((stat) => (
-            <div class="bg-transparent border-2 border-white rounded-[35px] p-6 text-center flex flex-col items-center justify-center aspect-square">
-              <p class="text-[56px] font-light text-white mb-2" style="letter-spacing: -3.95px;">
-                {stat.number}
-              </p>
-              <p class="text-[18px] font-light text-white" style="letter-spacing: -1.4px;">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Stats />
 
     <!-- Features Section -->
     <section class="py-24 bg-gradient-to-b from-[#fff7ee] to-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[70px] font-light text-black text-center mb-20" style="letter-spacing: -3.50px;">
+        <h2 class="text-[70px] font-light text-black text-center mb-20" style="letter-spacing: -3.50px;" data-animate-title>
           Fasilitas yang anda dapatkan.
         </h2>
 
@@ -238,7 +195,7 @@ const testimonials = [
     <!-- Testimonials Section -->
     <section class="py-24 bg-white overflow-hidden">
       <div class="w-full max-w-[1761px] mx-auto px-[151px] mb-16">
-        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;">
+        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;" data-animate-title>
           Apa kata mereka tentang SJD Interior
         </h2>
       </div>
@@ -288,10 +245,10 @@ const testimonials = [
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
         <!-- Title -->
         <div class="text-center mb-16">
-          <h2 class="text-[53.13px] font-light text-black mb-2" style="letter-spacing: -2.66px;">
+          <h2 class="text-[53.13px] font-light text-black mb-2" style="letter-spacing: -2.66px;" data-animate-title>
             Dapatkan interior impian dalam empat langkah.
           </h2>
-          <p class="text-[53.13px] font-light text-[#a7a7a7]" style="letter-spacing: -2.66px;">
+          <p class="text-[53.13px] font-light text-[#a7a7a7]" style="letter-spacing: -2.66px;" data-animate-subtitle>
             Secepat 2-8 minggu pengerjaan.
           </p>
         </div>
@@ -335,10 +292,10 @@ const testimonials = [
 
         <!-- CTA -->
         <div class="text-center">
-          <p class="text-[46.21px] font-light text-black mb-2" style="letter-spacing: -2.31px;">
+          <p class="text-[46.21px] font-light text-black mb-2" style="letter-spacing: -2.31px;" data-animate-title>
             Mau tahu lebih detail?
           </p>
-          <p class="text-[46.21px] font-light text-[#919191] mb-10" style="letter-spacing: -2.31px;">
+          <p class="text-[46.21px] font-light text-[#919191] mb-10" style="letter-spacing: -2.31px;" data-animate-subtitle>
             Pelajari proses kerja kami dari awal sampai akhir.
           </p>
           <div class="flex justify-center gap-4">
@@ -364,7 +321,7 @@ const testimonials = [
     <!-- Insight Section -->
     <section class="py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[103.13px] font-light text-black text-center mb-16" style="letter-spacing: -5.16px;">
+        <h2 class="text-[103.13px] font-light text-black text-center mb-16" style="letter-spacing: -5.16px;" data-animate-title>
           Insight untuk anda.
         </h2>
 
@@ -420,3 +377,67 @@ const testimonials = [
     animation-play-state: paused;
   }
 </style>
+
+<!-- Section Title Animations -->
+<script>
+  import { createReveal, ScrollTrigger } from '../utils/gsap';
+
+  const initTitleAnimations = () => {
+    console.log('Initializing title animations...');
+
+    // Animate all titles with data-animate-title
+    const titles = document.querySelectorAll('[data-animate-title]');
+    titles.forEach((title, index) => {
+      createReveal(title as HTMLElement, {
+        from: { opacity: 0, y: 60 },
+        to: { opacity: 1, y: 0 },
+        start: 'top 80%',
+        once: true,
+      });
+    });
+
+    // Animate all subtitles with data-animate-subtitle
+    const subtitles = document.querySelectorAll('[data-animate-subtitle]');
+    subtitles.forEach((subtitle, index) => {
+      createReveal(subtitle as HTMLElement, {
+        from: { opacity: 0, y: 60 },
+        to: { opacity: 1, y: 0 },
+        delay: 0.2,
+        start: 'top 80%',
+        once: true,
+      });
+    });
+  };
+
+  // Initialize after a short delay to ensure GSAP is ready
+  const initWithDelay = () => {
+    setTimeout(() => {
+      initTitleAnimations();
+      // Refresh ScrollTrigger to ensure proper calculation
+      ScrollTrigger.refresh();
+    }, 100);
+  };
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWithDelay);
+  } else {
+    // DOM already loaded
+    initWithDelay();
+  }
+
+  // Re-initialize for Astro view transitions
+  document.addEventListener('astro:page-load', () => {
+    // Kill existing triggers first
+    ScrollTrigger.getAll().forEach(trigger => {
+      const triggerElement = trigger.vars.trigger as HTMLElement;
+      if (triggerElement && (
+        triggerElement.hasAttribute('data-animate-title') ||
+        triggerElement.hasAttribute('data-animate-subtitle')
+      )) {
+        trigger.kill();
+      }
+    });
+    initWithDelay();
+  });
+</script>

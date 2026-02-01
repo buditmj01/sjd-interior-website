@@ -84,6 +84,29 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Enable smooth scrolling with Lenis (will be overridden by JS) */
+    overflow-x: hidden;
+  }
+  
+  /* Lenis smooth scroll - prevent default scrollbar jump */
+  html.lenis {
+    height: auto;
+  }
+  
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+  
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
 
   body {
@@ -148,5 +171,177 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ==============================================
+   GSAP & Parallax Performance Optimizations
+   ============================================== */
+
+@layer utilities {
+  /* Force GPU acceleration for animated elements */
+  .gpu-accelerated {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Optimized will-change for animations */
+  .will-animate {
+    will-change: transform, opacity;
+  }
+
+  /* Remove will-change after animation completes (GSAP handles this) */
+  .animation-complete {
+    will-change: auto;
+  }
+}
+
+/* ==============================================
+   Reduced Motion Support (Accessibility)
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable all parallax effects */
+  [data-parallax-img],
+  [data-parallax-video],
+  [data-hero-content],
+  [data-intro-card],
+  [data-card-image],
+  [data-stat-card],
+  [data-showcase-card],
+  [data-showcase-image],
+  [data-testimonial-card],
+  [data-step-box],
+  [data-step-line],
+  [data-step-content] {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  /* Keep smooth scroll disabled */
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis,
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  /* Ensure all content is visible */
+  [data-hero-text-1],
+  [data-hero-text-2],
+  [data-hero-cta],
+  [data-intro-line],
+  [data-stats-title],
+  [data-testimonials-title] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==============================================
+   Performance: Hardware Acceleration Layers
+   ============================================== */
+
+/* Apply GPU acceleration to all animated elements */
+[data-parallax-img],
+[data-parallax-video],
+[data-hero-content],
+[data-hero-text-1],
+[data-hero-text-2],
+[data-hero-cta],
+[data-intro-card],
+[data-card-image],
+[data-stat-card],
+[data-showcase-card],
+[data-showcase-image],
+[data-showcase-bg],
+[data-testimonial-card],
+[data-step-box],
+[data-step-line],
+[data-step-content],
+[data-gallery-image] {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* ==============================================
+   Loading State Optimization
+   ============================================== */
+
+/* Prevent flash of unstyled content */
+body:not(.animations-loaded) [data-hero-text-1],
+body:not(.animations-loaded) [data-hero-text-2],
+body:not(.animations-loaded) [data-hero-cta],
+body:not(.animations-loaded) [data-intro-card],
+body:not(.animations-loaded) [data-stat-card],
+body:not(.animations-loaded) [data-testimonial-card] {
+  opacity: 0;
+}
+
+/* Mark body as loaded after animations initialize */
+body.animations-loaded [data-hero-text-1],
+body.animations-loaded [data-hero-text-2],
+body.animations-loaded [data-hero-cta] {
+  /* GSAP will handle the animation */
+}
+
+/* ==============================================
+   Custom Scrollbar (Optional)
+   ============================================== */
+
+/* Modern scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* ==============================================
+   Mobile Optimization
+   ============================================== */
+
+@media (max-width: 768px) {
+  /* Reduce parallax intensity on mobile for better performance */
+  [data-parallax-img],
+  [data-parallax-video] {
+    transform: none !important;
+  }
+
+  /* Disable complex 3D transforms on mobile */
+  [data-testimonial-card] {
+    perspective: none !important;
+    transform-style: flat !important;
   }
 }

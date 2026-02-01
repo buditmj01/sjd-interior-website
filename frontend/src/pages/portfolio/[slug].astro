@@ -5,6 +5,7 @@ import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
+import { getProjects, getProjectBySlug } from '../../lib/strapi.js';
 
 // Testimonials from Google Maps Reviews (same as home page)
 const testimonials = [
@@ -27,32 +28,128 @@ const testimonials = [
 ];
 
 // Generate static paths for SSG
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'modern-tropical-house' } }
-  ];
+export async function getStaticPaths() {
+  try {
+    const projectsResponse = await getProjects();
+    const projects = projectsResponse.data || [];
+    
+    return projects.map((project: any) => {
+      return {
+        params: { slug: project.attributes.slug },
+      };
+    });
+  } catch (error) {
+    console.warn('Could not fetch projects from Strapi during build, using empty array:', error.message);
+    // Return empty array if Strapi is not available during build
+    return [];
+  }
 }
 
 const { slug } = Astro.params;
 
-// Mock data - in production, fetch from Strapi based on slug
+let projectData;
+let projectsResponseData;
+
+try {
+  // Fetch project data from Strapi based on slug
+  projectData = await getProjectBySlug(slug);
+  
+  // Fetch related projects (excluding the current project)
+  projectsResponseData = await getProjects({
+    'filters[slug][$ne]': slug,
+    'pagination[limit]': 3
+  });
+} catch (error) {
+  console.warn('Could not fetch data from Strapi, using mock data:', error.message);
+  // Use mock data if Strapi is not available
+  projectData = {
+    attributes: {
+      title: "Modern Tropical House",
+      content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      category: "Retail Interior Design",
+      client_name: "Budi Triatmojo",
+      location: "Bogor, Jawa Barat",
+      area_size: "350 m²",
+      completion_date: "2026-01-01",
+      budget: "Rp. 50.000.000",
+      services: { data: [] },
+      featured_image: null,
+      gallery: null
+    }
+  };
+  
+  projectsResponseData = { 
+    data: [
+      {
+        attributes: {
+          title: "Modern Tropical House",
+          category: "RUMAH TINGGAL",
+          location: "Jakarta Selatan",
+          area_size: "350 m²",
+          style: "Modern Minimalis",
+          slug: "modern-tropical-house",
+          featured_image: null
+        }
+      },
+      {
+        attributes: {
+          title: "Cozy Scandinavian House",
+          category: "RUMAH TINGGAL",
+          location: "Bandung",
+          area_size: "280 m²",
+          style: "Scandinavian",
+          slug: "cozy-scandinavian-house",
+          featured_image: null
+        }
+      },
+      {
+        attributes: {
+          title: "Industrial Loft Office",
+          category: "OFFICE",
+          location: "Surabaya",
+          area_size: "450 m²",
+          style: "Industrial",
+          slug: "industrial-loft-office",
+          featured_image: null
+        }
+      }
+    ] 
+  };
+}
+
+// Fetch related projects (excluding the current project)
+const projectsResponse = await getProjects({
+  'filters[slug][$ne]': slug,
+  'pagination[limit]': 3
+});
+
+// Handle case where project is not found
+if (!projectData) {
+  throw new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
 const project = {
-  title: "Modern Tropical House",
+  title: projectData.attributes.title,
   category: "Portofolio",
-  mainImage: "/images/portfolio-main.png",
-  images: [
-    "/images/portfolio-main.png",
-    "/images/portfolio-2.png",
-    "/images/portfolio-3.png",
-    "/images/portfolio-4.png"
-  ],
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  category_tag: "Retail Interior Design",
-  client: "Budi Triatmojo",
-  location: "Bogor, Jawa Barat",
-  year: "2026",
-  budget: "Rp. 50.000.000",
-  services: [
+  mainImage: projectData.attributes.featured_image?.data?.attributes?.url
+    ? `/uploads/${projectData.attributes.featured_image.data.attributes.url.split('/').pop()}`
+    : "/images/portfolio-main.png",
+  images: projectData.attributes.gallery?.data?.map((img: any) =>
+    img?.attributes?.url ? `/uploads/${img.attributes.url.split('/').pop()}` : "/images/portfolio-main.png"
+  ) || ["/images/portfolio-main.png", "/images/portfolio-2.png", "/images/portfolio-3.png", "/images/portfolio-4.png"],
+  description: projectData.attributes.content,
+  category_tag: projectData.attributes.category,
+  client: projectData.attributes.client_name || "Client",
+  location: projectData.attributes.location || "Location",
+  area: projectData.attributes.area_size || "Area",
+  year: projectData.attributes.completion_date
+    ? new Date(projectData.attributes.completion_date).getFullYear()
+    : "Year",
+  budget: projectData.attributes.budget || "Budget",
+  services: projectData.attributes.services?.data?.map((service: any) => service?.attributes?.name).filter(Boolean) || [
     "Retail Concept Development",
     "Store Planning & Layout Design",
     "Custom Furniture & Display Fixtures",
@@ -60,11 +157,17 @@ const project = {
   ]
 };
 
-const relatedProjects = [
-  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-main.png", slug: "modern-tropical-house" },
-  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-2.png", slug: "modern-tropical-house" },
-  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-3.png", slug: "modern-tropical-house" }
-];
+const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
+  title: proj.attributes.title,
+  category: proj.attributes.category?.toUpperCase() || "PROJECT",
+  location: proj.attributes.location || "Location",
+  area: proj.attributes.area_size || "Area",
+  style: proj.attributes.style || "Design Style",
+  image: proj.attributes.featured_image?.data?.attributes?.url 
+    ? `/uploads/${proj.attributes.featured_image.data.attributes.url.split('/').pop()}`
+    : "/images/portfolio-main.png",
+  slug: proj.attributes.slug
+})) || [];
 ---
 
 <BaseLayout
@@ -103,7 +206,7 @@ const relatedProjects = [
         <div class="flex gap-12">
           <!-- Left Column - Images -->
           <div class="w-[55%] flex-shrink-0 space-y-6">
-            {project.images.map((image) => (
+            {project.images.map((image: any) => (
               <img
                 src={image}
                 alt={project.title}
@@ -147,6 +250,12 @@ const relatedProjects = [
                 <p class="text-[16px] font-normal text-[#111111]">{project.location}</p>
               </div>
 
+              <!-- Luas Area -->
+              <div>
+                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Luas Area</p>
+                <p class="text-[16px] font-normal text-[#111111]">{project.area}</p>
+              </div>
+
               <!-- Tahun -->
               <div>
                 <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Tahun</p>
@@ -163,7 +272,7 @@ const relatedProjects = [
               <div class="col-span-2">
                 <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Layanan</p>
                 <ul class="text-[16px] font-normal text-[#111111] space-y-1">
-                  {project.services.map((service) => (
+                  {project.services.map((service: any) => (
                     <li class="flex items-center gap-2">
                       <span class="w-1.5 h-1.5 bg-[#0096f7] rounded-full"></span>
                       {service}
@@ -207,7 +316,7 @@ const relatedProjects = [
 
         <!-- Portfolio Cards Grid -->
         <div class="grid grid-cols-3 gap-5 mb-12">
-          {relatedProjects.map((portfolio) => (
+          {relatedProjects.map((portfolio: any) => (
             <PortfolioCard {...portfolio} />
           ))}
         </div>

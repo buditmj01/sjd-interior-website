@@ -223,3 +223,53 @@ export const getGalleryUrls = (media, size = 'medium') => {
     return getStrapiMedia(url);
   });
 };
+
+/**
+ * Fetch insights/articles from Strapi
+ */
+export const getInsights = async (params = {}) => {
+  const queryParams = new URLSearchParams({
+    populate: '*',
+    'sort[0]': 'createdAt:desc',
+    ...params,
+  });
+  return fetchAPI(`/insights?${queryParams}`);
+};
+
+/**
+ * Fetch a single insight by slug
+ */
+export const getInsightBySlug = async (slug) => {
+  const queryParams = new URLSearchParams({
+    'filters[slug][$eq]': slug,
+    populate: '*',
+  });
+  const response = await fetchAPI(`/insights?${queryParams}`);
+  return response.data?.[0] || null;
+};
+
+/**
+ * Fetch featured insights
+ */
+export const getFeaturedInsights = async (limit = 6) => {
+  const queryParams = new URLSearchParams({
+    'filters[is_featured][$eq]': 'true',
+    populate: '*',
+    'sort[0]': 'order:asc',
+    'pagination[limit]': limit.toString(),
+  });
+  return fetchAPI(`/insights?${queryParams}`);
+};
+
+/**
+ * Fetch insights by category
+ */
+export const getInsightsByCategory = async (category, limit = 10) => {
+  const queryParams = new URLSearchParams({
+    'filters[category][$eq]': category,
+    populate: '*',
+    'sort[0]': 'createdAt:desc',
+    'pagination[limit]': limit.toString(),
+  });
+  return fetchAPI(`/insights?${queryParams}`);
+};

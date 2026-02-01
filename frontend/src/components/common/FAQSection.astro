@@ -2,24 +2,39 @@
 // FAQ Section with accordion functionality
 const faqs = [
   {
-    question: "Berapa lama proses dari konsultasi awal hingga selesai?",
-    answer: "Proses keseluruhan umumnya memakan waktu 2-8 minggu, tergantung pada skala dan kompleksitas proyek Anda."
+    question: "Berapa lama proses pengerjaan dari awal hingga selesai?",
+    answer: `Waktu pengerjaan dibagi menjadi beberapa tahap berikut:
+
+1. Tahap Desain (1-2 Minggu)
+Terhitung setelah survey. Mencakup pembuatan konsep, visual 3D, dan revisi.
+
+2. Tahap Produksi (1-3 Minggu)
+Terhitung setelah DP 50%. Waktu tergantung pada tingkat kesulitan dan volume pesanan.
+
+3. Pengiriman & Instalasi (1-2 Minggu)
+Terhitung setelah pembayaran kedua (25%). Dilanjutkan dengan serah terima dan pelunasan.
+
+Timeline detail akan kami lampirkan setelah kesepakatan awal.`
   },
   {
-    question: "Apakah bisa melayani di luar Bogor?",
-    answer: "Ya, kami melayani seluruh area Jabodetabek. Untuk area lain, silakan hubungi kami untuk diskusi lebih lanjut."
+    question: "Apakah bisa melayani area di luar Bogor?",
+    answer: "Tentu saja. Saat ini kami melayani seluruh wilayah Jabodetabek (Jakarta, Bogor, Depok, Tangerang, Bekasi)."
   },
   {
     question: "Bagaimana sistem pembayarannya?",
-    answer: "Pembayaran dilakukan secara bertahap: DP 50% saat TTD RAB, 25% saat eksekusi dimulai, dan 25% sisanya saat serah terima."
+    answer: `Sistem pembayaran kami dibagi menjadi 3 tahap untuk kenyamanan Anda:
+
+• DP 50%: Dibayarkan setelah sepakat dengan desain dan RAB.
+• Termin 25%: Dibayarkan saat furniture selesai diproduksi dan siap dikirim.
+• Pelunasan 25%: Dibayarkan setelah proses instalasi selesai dan serah terima.`
   },
   {
     question: "Apakah ada garansi?",
-    answer: "Ya, kami memberikan garansi untuk semua pekerjaan konstruksi dan furniture yang kami buat."
+    answer: "Ya, kami memberikan Garansi Pemeliharaan selama 90 hari (3 bulan) terhitung setelah serah terima proyek, untuk memastikan kepuasan Anda."
   },
   {
-    question: "Apa bisa dengan budget terbatas?",
-    answer: "Tentu! Kami akan membantu menyesuaikan desain dan material dengan budget yang Anda miliki tanpa mengurangi kualitas hasil."
+    question: "Apakah bisa menyesuaikan dengan budget terbatas?",
+    answer: "Sangat bisa. Kami akan membantu menyesuaikan desain dan pemilihan material yang tepat agar tetap optimal dengan budget yang Anda miliki."
   }
 ];
 ---
@@ -56,7 +71,7 @@ const faqs = [
               id={`faq-${index}`}
               class="faq-content hidden overflow-hidden transition-all duration-300"
             >
-              <p class="text-[16px] font-light text-[#636363] pb-5 leading-relaxed">
+              <p class="text-[16px] font-light text-[#636363] pb-5 leading-relaxed whitespace-pre-line">
                 {faq.answer}
               </p>
             </div>

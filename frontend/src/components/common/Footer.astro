@@ -1,5 +1,8 @@
 ---
+import { getSiteSettings } from '../../lib/getSiteSettings.js';
+
 const currentYear = new Date().getFullYear();
+const siteSettings = await getSiteSettings();
 
 // Navigation links
 const sitemapLinks = [
@@ -48,10 +51,19 @@ const socialLinks = [
       <div class="lg:col-span-4">
         <!-- Logo -->
         <a href="/" class="inline-block mb-6">
-          <span class="text-[28px] font-normal leading-tight">
-            <span class="block">SJD</span>
-            <span class="block">Interior</span>
-          </span>
+          {siteSettings.footerLogo ? (
+            <img
+              src={siteSettings.footerLogo.url}
+              alt={siteSettings.footerLogo.alt}
+              class="h-12 md:h-16 w-auto object-contain"
+              loading="lazy"
+            />
+          ) : (
+            <span class="text-[28px] font-normal leading-tight">
+              <span class="block">SJD</span>
+              <span class="block">Interior</span>
+            </span>
+          )}
         </a>
 
         <!-- Description -->

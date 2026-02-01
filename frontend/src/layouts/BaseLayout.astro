@@ -1,15 +1,22 @@
 ---
 import '../styles/global.css';
+import { getSiteSettings } from '../lib/getSiteSettings.js';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
+const siteSettings = await getSiteSettings();
+
 const {
   title = 'SJD Interior - Solusi Desain Interior Terbaik',
   description = 'SJD Interior adalah solusi desain lengkap personal dari Rumah, apartemen dan lainnya'
 } = Astro.props;
+
+// Use favicon if uploaded, otherwise use header logo, fallback to default
+const faviconUrl = siteSettings.favicon?.url || siteSettings.logo?.url || siteSettings.logoLight?.url || '/favicon.svg';
+const faviconType = siteSettings.favicon?.type || siteSettings.logo?.type || siteSettings.logoLight?.type || 'image/svg+xml';
 ---
 
 <!doctype html>
@@ -18,7 +25,7 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type={faviconType} href={faviconUrl} />
     <title>{title}</title>
 
     <!-- Open Graph -->
@@ -36,5 +43,42 @@ const {
   </head>
   <body class="antialiased">
     <slot />
+
+    <!-- Lenis Smooth Scroll Initialization -->
+    <script>
+      import { initSmoothScroll, destroySmoothScroll } from '../scripts/scroll-init';
+      
+      // Initialize smooth scroll when DOM is ready
+      let lenisInstance: ReturnType<typeof initSmoothScroll> = null;
+
+      // Mark animations as loaded to prevent FOUC
+      const markAnimationsLoaded = () => {
+        // Small delay to ensure GSAP is ready
+        setTimeout(() => {
+          document.body.classList.add('animations-loaded');
+        }, 100);
+      };
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', () => {
+        lenisInstance = initSmoothScroll();
+        markAnimationsLoaded();
+      });
+
+      // Cleanup on page unload (for Astro view transitions)
+      document.addEventListener('astro:before-preparation', () => {
+        if (lenisInstance) {
+          destroySmoothScroll(lenisInstance);
+          lenisInstance = null;
+        }
+        document.body.classList.remove('animations-loaded');
+      });
+
+      // Re-initialize after Astro page transitions
+      document.addEventListener('astro:page-load', () => {
+        lenisInstance = initSmoothScroll();
+        markAnimationsLoaded();
+      });
+    </script>
   </body>
 </html>

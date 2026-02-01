@@ -2,22 +2,25 @@
 // Project showcase cards
 ---
 
-<section class="py-16 md:py-24 bg-white relative overflow-hidden">
+<section class="py-16 md:py-24 bg-white relative overflow-hidden" data-showcase-section>
   <!-- Gradient Background -->
-  <div class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white pointer-events-none"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white pointer-events-none" data-showcase-bg></div>
   
   <div class="container mx-auto max-w-[1440px] px-4 md:px-8 relative z-10">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8" data-showcase-grid>
       <!-- Portfolio Card -->
-      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer">
-        <img 
-          src="/images/portfolio-card-1.jpg" 
-          alt="Portfolio showcase" 
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer" data-showcase-card="portfolio">
+        <div class="w-full h-full overflow-hidden" data-image-wrapper>
+          <img 
+            src="/images/portfolio-card-1.jpg" 
+            alt="Portfolio showcase" 
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            data-showcase-image
+          />
+        </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
         
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+        <div class="absolute bottom-0 left-0 right-0 p-8 text-white" data-showcase-content>
           <p class="text-[29.13px] font-light mb-2" style="letter-spacing: -1.46px;">
             Lihat hasil karya kami langsung.
           </p>
@@ -32,15 +35,18 @@
       </div>
 
       <!-- Workflow Card -->
-      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer">
-        <img 
-          src="/images/workflow-card.jpg" 
-          alt="Workflow showcase" 
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+      <div class="group relative rounded-[16px] overflow-hidden min-h-[338px] cursor-pointer" data-showcase-card="workflow">
+        <div class="w-full h-full overflow-hidden" data-image-wrapper>
+          <img 
+            src="/images/workflow-card.jpg" 
+            alt="Workflow showcase" 
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            data-showcase-image
+          />
+        </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
         
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+        <div class="absolute bottom-0 left-0 right-0 p-8 text-white" data-showcase-content>
           <p class="text-[29.13px] font-light mb-4 max-w-md" style="letter-spacing: -1.46px;">
             Pelajari bagaimana kami mengubah ruang kosong jadi rumah impian.
           </p>
@@ -56,3 +62,122 @@
     </div>
   </div>
 </section>
+
+<!-- ProjectShowcase Parallax Animations -->
+<script>
+  import { createParallax, createScaleAnimation, gsap } from '../../utils/gsap';
+
+  const initShowcaseAnimations = () => {
+    const showcaseSection = document.querySelector('[data-showcase-section]');
+    if (!showcaseSection) return;
+
+    // Parallax background gradient
+    const showcaseBg = document.querySelector('[data-showcase-bg]');
+    if (showcaseBg) {
+      createParallax(showcaseBg as HTMLElement, {
+        speed: 0.3,
+        direction: 'horizontal',
+        start: 'top bottom',
+        end: 'bottom top',
+      });
+    }
+
+    // Animate showcase cards
+    const showcaseCards = document.querySelectorAll('[data-showcase-card]');
+    showcaseCards.forEach((card, index) => {
+      const cardElement = card as HTMLElement;
+      const image = card.querySelector('[data-showcase-image]');
+      const content = card.querySelector('[data-showcase-content]');
+
+      // Card reveal animation
+      gsap.fromTo(
+        cardElement,
+        {
+          opacity: 0,
+          x: index === 0 ? -100 : 100,
+          scale: 0.95,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: cardElement,
+            start: 'top 80%',
+            once: true,
+          },
+        }
+      );
+
+      // Ken Burns effect - slow zoom on images
+      if (image) {
+        createScaleAnimation(image as HTMLElement, {
+          fromScale: 1.2,
+          toScale: 1,
+          start: 'top 80%',
+          end: 'bottom 20%',
+          scrub: 1,
+        });
+
+        // Parallax movement on image
+        createParallax(image as HTMLElement, {
+          speed: 0.4,
+          direction: 'vertical',
+          start: 'top bottom',
+          end: 'bottom top',
+        });
+      }
+
+      // Content fade-in
+      if (content) {
+        gsap.fromTo(
+          content,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            delay: 0.3,
+            scrollTrigger: {
+              trigger: cardElement,
+              start: 'top 80%',
+              once: true,
+            },
+          }
+        );
+      }
+    });
+  };
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initShowcaseAnimations);
+  
+  // Re-initialize for Astro view transitions
+  document.addEventListener('astro:page-load', initShowcaseAnimations);
+</script>
+
+<style>
+  /* Performance optimization */
+  [data-showcase-card],
+  [data-showcase-image],
+  [data-showcase-bg] {
+    will-change: transform, opacity;
+  }
+
+  [data-image-wrapper] {
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-showcase-card],
+    [data-showcase-image],
+    [data-showcase-bg] {
+      will-change: auto;
+      transform: none !important;
+    }
+  }
+</style>
