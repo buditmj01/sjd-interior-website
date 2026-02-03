@@ -47,6 +47,8 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 
+import { marked } from 'marked';
+
 let projectData;
 let projectsResponseData;
 
@@ -65,7 +67,7 @@ try {
   projectData = {
     attributes: {
       title: "Modern Tropical House",
-      content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      content: "## Hospitality dengan Sentuhan Lokal\n\nLobby hotel ini menggabungkan kemewahan dengan kearifan lokal Bali. Material natural seperti bambu, batu alam, dan kayu jati menciptakan ambiance yang warm yet luxurious.\n\n### Reception Area\n- Custom reception desk dari kayu jati reclaimed\n- Stone wall feature dengan water element\n- Balinese carving details\n- Soft lighting dengan warm tone\n\n### Lounge Area\n- Mix seating: sofa, armchair, daybed\n- Rattan furniture dengan cushion luxury\n- Indoor plants tropical\n- Open-air concept dengan retractable roof\n\n### Design Elements\n- Terrazzo flooring dengan pattern traditional\n- Woven pendant lights handmade\n- Art pieces dari local artisan\n- Natural ventilation maksimal",
       category: "Retail Interior Design",
       client_name: "Budi Triatmojo",
       location: "Bogor, Jawa Barat",
@@ -131,6 +133,27 @@ if (!projectData) {
   });
 }
 
+const rawDescription = projectData.attributes.content || '';
+const parsedDescription = await marked.parse(rawDescription);
+const descriptionWordCount = rawDescription.split(/\s+/).filter(Boolean).length;
+const isLongDescription = descriptionWordCount > 100;
+
+// Format budget to Rupiah
+function formatRupiah(amount: number | string): string {
+  if (!amount) return "Budget";
+  const numAmount = typeof amount === 'string' ? parseInt(amount) : amount;
+  if (isNaN(numAmount)) return "Budget";
+  return `Rp ${numAmount.toLocaleString('id-ID')}`;
+}
+
+// Format area with m² suffix
+function formatArea(area: string): string {
+  if (!area) return "Area";
+  // Remove m², m2, or any existing suffix
+  const cleanArea = area.replace(/\s*(m²|m2|m)$/i, '').trim();
+  return `${cleanArea} m²`;
+}
+
 const project = {
   title: projectData.attributes.title,
   category: "Portofolio",
@@ -140,21 +163,16 @@ const project = {
   images: projectData.attributes.gallery?.data?.map((img: any) =>
     img?.attributes?.url ? `/uploads/${img.attributes.url.split('/').pop()}` : "/images/portfolio-main.png"
   ) || ["/images/portfolio-main.png", "/images/portfolio-2.png", "/images/portfolio-3.png", "/images/portfolio-4.png"],
-  description: projectData.attributes.content,
+  description: parsedDescription,
   category_tag: projectData.attributes.category,
   client: projectData.attributes.client_name || "Client",
   location: projectData.attributes.location || "Location",
-  area: projectData.attributes.area_size || "Area",
+  area: formatArea(projectData.attributes.area_size || ""),
   year: projectData.attributes.completion_date
     ? new Date(projectData.attributes.completion_date).getFullYear()
     : "Year",
-  budget: projectData.attributes.budget || "Budget",
-  services: projectData.attributes.services?.data?.map((service: any) => service?.attributes?.name).filter(Boolean) || [
-    "Retail Concept Development",
-    "Store Planning & Layout Design",
-    "Custom Furniture & Display Fixtures",
-    "Lighting & Materials Selection"
-  ]
+  budget: formatRupiah(projectData.attributes.budget),
+  theme: projectData.attributes.theme || "Modern Minimalis"
 };
 
 const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
@@ -172,13 +190,13 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
 
 <BaseLayout
   title={`${project.title} - Portfolio SJD Interior`}
-  description={project.description}
+  description={project.title}
 >
   <Header />
 
   <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative h-[70vh] min-h-[500px] max-h-[650px] w-full overflow-hidden">
+    <section class="relative h-[60vh] md:h-[70vh] min-h-[400px] md:min-h-[500px] max-h-[550px] md:max-h-[650px] w-full overflow-hidden">
       <img
         src={project.mainImage}
         alt={project.title}
@@ -188,12 +206,12 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
       <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent"></div>
 
       <!-- Content - Bottom Left -->
-      <div class="absolute bottom-[60px] left-0 right-0">
-        <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-          <p class="text-[32px] font-light text-white mb-3" style="letter-spacing: -1.6px;">
+      <div class="absolute bottom-[40px] md:bottom-[60px] left-0 right-0">
+        <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+          <p class="text-[20px] md:text-[26px] lg:text-[32px] font-light text-white mb-2 md:mb-3" style="letter-spacing: -1.6px;">
             {project.category}
           </p>
-          <h1 class="text-[80px] font-light text-white leading-[1]" style="letter-spacing: -4px;">
+          <h1 class="text-[40px] md:text-[60px] lg:text-[80px] font-light text-white leading-[1]" style="letter-spacing: -2px; md:letter-spacing: -3px; lg:letter-spacing: -4px;">
             {project.title}
           </h1>
         </div>
@@ -201,11 +219,11 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
     </section>
 
     <!-- Project Details Section -->
-    <section class="py-16 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="flex gap-12">
+    <section class="py-12 md:py-14 lg:py-16 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="flex flex-col lg:flex-row gap-8 md:gap-10 lg:gap-12">
           <!-- Left Column - Images -->
-          <div class="w-[55%] flex-shrink-0 space-y-6">
+          <div class="w-full lg:w-[55%] flex-shrink-0 space-y-4 md:space-y-6">
             {project.images.map((image: any) => (
               <img
                 src={image}
@@ -216,81 +234,77 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
           </div>
 
           <!-- Right Column - Project Info -->
-          <div class="flex-1 sticky top-[130px] self-start">
-            <!-- Description -->
-            <div class="mb-10">
-              <h2 class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-4">
-                Deskripsi Proyek
-              </h2>
-              <p class="text-[18px] font-normal text-[#333333] leading-[1.7]">
-                {project.description}
-              </p>
-            </div>
-
-            <!-- Divider -->
-            <div class="w-full h-[1px] bg-[#e5e5e5] mb-8"></div>
-
-            <!-- Project Meta Info -->
-            <div class="grid grid-cols-2 gap-x-8 gap-y-6">
+          <div class="flex-1 lg:sticky lg:top-[130px] self-start lg:max-h-[calc(100vh-160px)] flex flex-col">
+            <!-- Project Meta Info - Moved to top for better scannability -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-4 md:gap-y-6 mb-6 md:mb-8 flex-shrink-0">
               <!-- Kategori -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Kategori</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.category_tag}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Kategori</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.category_tag}</p>
               </div>
 
               <!-- Klien -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Klien</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.client}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Klien</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.client}</p>
               </div>
 
               <!-- Lokasi -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Lokasi</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.location}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Lokasi</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.location}</p>
               </div>
 
               <!-- Luas Area -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Luas Area</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.area}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Luas Area</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.area}</p>
               </div>
 
               <!-- Tahun -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Tahun</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.year}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Tahun</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.year}</p>
               </div>
 
               <!-- Budget -->
               <div>
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Budget</p>
-                <p class="text-[16px] font-normal text-[#111111]">{project.budget}</p>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Budget</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.budget}</p>
               </div>
 
-              <!-- Layanan -->
-              <div class="col-span-2">
-                <p class="text-[13px] font-medium text-[#888888] uppercase tracking-wider mb-2">Layanan</p>
-                <ul class="text-[16px] font-normal text-[#111111] space-y-1">
-                  {project.services.map((service: any) => (
-                    <li class="flex items-center gap-2">
-                      <span class="w-1.5 h-1.5 bg-[#0096f7] rounded-full"></span>
-                      {service}
-                    </li>
-                  ))}
-                </ul>
+              <!-- Tema Project -->
+              <div>
+                <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Tema</p>
+                <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.theme}</p>
               </div>
             </div>
 
-            <!-- CTA Button -->
-            <div class="mt-10">
+            <!-- Divider -->
+            <div class="w-full h-[1px] bg-[#e5e5e5] mb-6 flex-shrink-0"></div>
+
+            <!-- Description -->
+            <div class="flex-1 min-h-0 flex flex-col mb-6 md:mb-8">
+              <h2 class="text-[12px] md:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-3 md:mb-4 flex-shrink-0">
+                Deskripsi Proyek
+              </h2>
+              <div
+                class="prose prose-sm md:prose-lg prose-p:text-[15px] md:prose-p:text-[17px] prose-p:leading-[1.6] prose-p:text-[#333333] prose-p:font-normal prose-headings:font-light prose-headings:tracking-tight prose-h2:text-[18px] md:prose-h2:text-[22px] prose-h2:mt-4 md:prose-h2:mt-6 prose-h2:mb-2 md:prose-h2:mb-3 prose-h3:text-[16px] md:prose-h3:text-[18px] prose-h3:mt-3 md:prose-h3:mt-4 prose-h3:mb-2 prose-ul:list-disc prose-ul:pl-5 prose-li:text-[15px] md:prose-li:text-[17px] max-w-none pr-4 overflow-y-auto custom-secondary-scrollbar"
+                data-lenis-prevent
+              >
+                <Fragment set:html={project.description} />
+              </div>
+            </div>
+
+            <!-- CTA Button - Fixed at bottom of info block -->
+            <div class="mt-auto flex-shrink-0">
               <a
                 href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20tertarik%20dengan%20proyek%20seperti%20ini."
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-2 px-8 py-4 text-[16px] font-medium text-white bg-black rounded-full hover:bg-[#333333] transition-colors"
+                class="w-full inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 text-[14px] md:text-[16px] font-medium text-white bg-black rounded-full hover:bg-[#333333] transition-colors"
               >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Konsultasi Proyek Serupa
@@ -302,20 +316,20 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
     </section>
 
     <!-- Related Projects Section -->
-    <section class="py-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+    <section class="py-12 md:py-16 lg:py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Title -->
-        <div class="text-center mb-16">
-          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.8px;">
+        <div class="text-center mb-10 md:mb-12 lg:mb-16">
+          <p class="text-[24px] md:text-[30px] lg:text-[36px] font-light text-[#848484] mb-3 md:mb-4" style="letter-spacing: -1.2px; md:letter-spacing: -1.5px; lg:letter-spacing: -1.8px;">
             Proyek Selanjutnya
           </p>
-          <h2 class="text-[128px] font-light text-black" style="letter-spacing: -6.4px;">
+          <h2 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black" style="letter-spacing: -2.4px; md:letter-spacing: -4.4px; lg:letter-spacing: -6.4px;">
             Design yang Berkesan
           </h2>
         </div>
 
         <!-- Portfolio Cards Grid -->
-        <div class="grid grid-cols-3 gap-5 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-8 md:mb-10 lg:mb-12">
           {relatedProjects.map((portfolio: any) => (
             <PortfolioCard {...portfolio} />
           ))}
@@ -325,7 +339,7 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
         <div class="text-center">
           <a
             href="/portfolio"
-            class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#272727] border-2 border-[#272727] rounded-full hover:bg-[#272727] hover:text-white transition-all duration-300"
+            class="inline-flex items-center justify-center px-8 md:px-10 py-3 md:py-4 text-[16px] md:text-[18px] lg:text-[21.41px] font-medium text-[#272727] border-2 border-[#272727] rounded-full hover:bg-[#272727] hover:text-white transition-all duration-300"
           >
             Lihat semua Portfolio
           </a>
@@ -337,9 +351,9 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
     <FAQSection />
 
     <!-- Testimonials Section (same as home page) -->
-    <section class="py-24 bg-white overflow-hidden">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] mb-16">
-        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;">
+    <section class="py-16 md:py-20 lg:py-24 bg-white overflow-hidden">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] mb-10 md:mb-12 lg:mb-16">
+        <h2 class="text-[36px] md:text-[52px] lg:text-[70px] font-light text-black text-center" style="letter-spacing: -1.8px; md:letter-spacing: -2.6px; lg:letter-spacing: -3.50px;">
           Apa kata mereka tentang SJD Interior
         </h2>
       </div>
@@ -347,35 +361,35 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
       <!-- Testimonials Carousel with Fade -->
       <div class="relative">
         <!-- Left Fade -->
-        <div class="absolute left-0 top-0 bottom-0 w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-[80px] md:w-[120px] lg:w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <!-- Right Fade -->
-        <div class="absolute right-0 top-0 bottom-0 w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-[80px] md:w-[120px] lg:w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
         <!-- Infinite Scroll Track -->
         <div class="flex testimonial-scroll">
-          <div class="flex gap-6 animate-scroll">
+          <div class="flex gap-4 md:gap-5 lg:gap-6 animate-scroll">
             {[...testimonials, ...testimonials].map((testimonial) => (
-              <div class="flex-shrink-0 w-[400px] h-[260px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-8 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
+              <div class="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] h-[240px] md:h-[250px] lg:h-[260px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-6 md:p-7 lg:p-8 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
                 <!-- Star Rating -->
-                <div class="flex gap-1 mb-4">
+                <div class="flex gap-1 mb-3 md:mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <svg class={`w-4 h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
+                    <svg class={`w-3.5 h-3.5 md:w-4 md:h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
                   ))}
                 </div>
 
                 <!-- Review Text - Italic -->
-                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
+                <p class="text-[14px] md:text-[15px] lg:text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
                   "{testimonial.text}"
                 </p>
 
                 <!-- Bottom Section - Always at bottom -->
-                <div class="mt-auto pt-4">
+                <div class="mt-auto pt-3 md:pt-4">
                   <!-- Divider -->
-                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
+                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-2 md:mb-3"></div>
                   <!-- Name -->
-                  <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
+                  <p class="text-[14px] md:text-[15px] font-medium text-black">{testimonial.name}</p>
                 </div>
               </div>
             ))}

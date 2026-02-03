@@ -9,10 +9,10 @@ interface Props {
   style?: string;
 }
 
-const { title, category, image, slug, location, area, style } = Astro.props;
+const { title, category, image, slug, location, area, style, createdAt } = Astro.props;
 ---
 
-<article class="group h-full">
+<article class="group h-full portfolio-item" data-category={category.toLowerCase()} data-date={createdAt}>
   <a href={`/portfolio/${slug}`} class="block h-full">
     <!-- Image Container - Taller aspect ratio -->
     <div class="relative overflow-hidden rounded-[20px] aspect-[3/4]">

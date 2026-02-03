@@ -6,42 +6,53 @@ import CTASection from '../components/common/CTASection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
 import PortfolioCard from '../components/common/PortfolioCard.astro';
 import Stats from '../components/home/Stats.astro';
+import Hero from '../components/home/Hero.astro';
+import { getInsights } from '../lib/getInsights';
+import { getProjects } from '../lib/getProjects';
+import { getStrapiMedia } from '../lib/strapi';
 
-// Mock data for insights
-const insights = [
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  },
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  },
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  }
-];
+// Fetch latest insights from Strapi (limit 4 for homepage)
+const insightsData = await getInsights({ limit: 4, sort: 'publishedAt:desc' });
 
-// Portfolio items
-const portfolios = [
-  { title: "Modern Tropical House", category: "RUMAH TINGGAL", location: "Jakarta Selatan", area: "350 m²", style: "Modern Minimalis", image: "/images/portfolio-main.png", slug: "modern-tropical-house" },
-  { title: "Cozy Apartment Living", category: "APARTEMEN", location: "BSD City", area: "120 m²", style: "Scandinavian", image: "/images/portfolio-2.png", slug: "cozy-apartment-living" },
-  { title: "Industrial Cafe Design", category: "KOMERSIAL", location: "Bogor", area: "200 m²", style: "Industrial", image: "/images/portfolio-3.png", slug: "industrial-cafe-design" },
-  { title: "Modern Office Space", category: "KANTOR", location: "Jakarta Pusat", area: "500 m²", style: "Contemporary", image: "/images/portfolio-4.png", slug: "modern-office-space" }
-];
+// Transform insights data for the component
+const insights = insightsData?.map((insight: any) => {
+  const attrs = insight.attributes;
+  const authorName = attrs.author?.data?.attributes?.name || 'SJD Team';
+  const publishedDate = attrs.publishedAt ? new Date(attrs.publishedAt).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }) : '';
+  const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/insight-card.jpg';
+
+  return {
+    title: attrs.title,
+    author: authorName,
+    date: publishedDate,
+    category: attrs.category?.toUpperCase() || 'ARTIKEL',
+    image: featuredImage,
+    slug: attrs.slug
+  };
+}) || [];
+
+// Fetch latest portfolio projects from Strapi (limit 4 for homepage)
+const projectsData = await getProjects({ limit: 4, sort: 'publishedAt:desc' });
+
+// Transform projects data for the component
+const portfolios = projectsData?.map((project: any) => {
+  const attrs = project.attributes;
+  const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/portfolio-main.png';
+
+  return {
+    title: attrs.title,
+    category: attrs.category?.toUpperCase() || 'PROJECT',
+    location: attrs.location || '',
+    area: attrs.area_size || '',
+    style: attrs.theme || '',
+    image: featuredImage,
+    slug: attrs.slug
+  };
+}) || [];
 
 // Features data
 const features = [
@@ -82,79 +93,46 @@ const testimonials = [
 ];
 ---
 
-<BaseLayout
-  title="SJD Interior - Semua Berawal Dari Rumah"
-  description="SJD Interior adalah solusi desain lengkap personal dan tanpa ribet"
->
+<BaseLayout>
   <Header />
 
   <main class="bg-white">
-    <!-- Hero Section -->
-    <section class="relative h-[100vh] min-h-[800px] flex items-center overflow-hidden" data-hero-section>
-      <!-- Background Image -->
-      <div class="absolute inset-0 z-0">
-        <img
-          src="/images/hero-background.jpg"
-          alt="Modern interior design"
-          class="w-full h-full object-cover"
-        />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-transparent"></div>
-      </div>
-
-      <!-- Content -->
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative z-10">
-        <div class="max-w-[800px]">
-          <h1 class="text-white mb-10" data-animate-title>
-            <span class="block text-[115.56px] font-light leading-[0.95]" style="letter-spacing: -5.78px;">
-              Semua Berawal
-            </span>
-            <span class="block text-[115.56px] font-light leading-[0.95]" style="letter-spacing: -5.78px;">
-              Dari Rumah.
-            </span>
-          </h1>
-
-          <a
-            href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center px-10 py-4 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"
-          >
-            Mulai Konsultasi
-          </a>
-        </div>
-      </div>
-    </section>
+    <!-- Hero Section - Dynamic from Strapi -->
+    <Hero />
 
     <!-- Introduction Section -->
-    <section class="py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+    <section class="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Title - Left aligned -->
-        <div class="mb-16">
+        <div class="mb-10 md:mb-14 lg:mb-16">
           <h2 class="text-left" data-animate-title>
-            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">SJD Interior adalah</span>
-            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">solusi desain lengkap</span>
-            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">personal dan tanpa</span>
-            <span class="block text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -4.8px;">ribet.</span>
+            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">SJD Interior adalah</span>
+            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">solusi desain lengkap</span>
+            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">personal dan tanpa</span>
+            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">ribet.</span>
           </h2>
 
           <!-- Subtitle - Left aligned with proper spacing -->
-          <p class="text-[36px] font-light text-black mt-8 leading-[1.3]" style="letter-spacing: -1.80px;" data-animate-subtitle>
+          <p class="text-[18px] md:text-[26px] lg:text-[36px] font-light text-black mt-6 md:mt-7 lg:mt-8 leading-[1.3]" style="letter-spacing: -0.9px;" data-animate-subtitle>
             Kami handle semuanya, dari desain hingga furniture.<br />
             Tersedia sekarang di Jabodetabek.
           </p>
         </div>
 
-        <!-- Portfolio Grid - 4 columns -->
-        <div class="grid grid-cols-4 gap-5 mb-8">
+        <!-- Portfolio Grid - Responsive columns -->
+        <!-- Mobile: 2x2 Grid | Desktop: 4 Columns -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6 md:mb-8">
           {portfolios.map((item) => (
-            <PortfolioCard {...item} />
+            <div class="w-full">
+              <PortfolioCard {...item} />
+            </div>
           ))}
         </div>
 
         <!-- CTA Link - Below portfolio cards -->
-        <a href="/portfolio" class="inline-flex items-center gap-2 text-[20px] font-light text-black hover:gap-4 transition-all duration-300 group">
+        <a href="/portfolio" class="inline-flex items-center gap-2 text-[16px] md:text-[18px] lg:text-[20px] font-light text-black hover:gap-4 transition-all duration-300 group">
           Mau lihat hasil kerja kami? Jelajahi portfolio
-          <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>
         </a>
@@ -165,25 +143,26 @@ const testimonials = [
     <Stats />
 
     <!-- Features Section -->
-    <section class="py-24 bg-gradient-to-b from-[#fff7ee] to-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[70px] font-light text-black text-center mb-20" style="letter-spacing: -3.50px;" data-animate-title>
+    <section class="py-12 md:py-20 lg:py-24 bg-gradient-to-b from-[#fff7ee] to-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h2 class="text-[36px] md:text-[52px] lg:text-[70px] font-light text-black text-center mb-10 md:mb-16 lg:mb-20" style="letter-spacing: -1.8px;" data-animate-title>
           Fasilitas yang anda dapatkan.
         </h2>
 
-        <div class="grid grid-cols-3 gap-x-16 gap-y-16">
+        <!-- Mobile: 2x3 Grid (fits in one view) | Desktop: 3 Columns -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-12 lg:gap-x-16 md:gap-y-12 lg:gap-y-16">
           {features.map((feature) => (
             <div class="group flex flex-col items-center text-center">
               <!-- Icon Container -->
-              <div class="w-[72px] h-[72px] mb-5 flex items-center justify-center rounded-2xl bg-[#f5f5f5] transition-all duration-300 group-hover:bg-[#0096f7]/10 group-hover:scale-110">
+              <div class="w-[56px] h-[56px] md:w-[72px] md:h-[72px] mb-3 md:mb-5 flex items-center justify-center rounded-2xl bg-[#f5f5f5] transition-all duration-300 group-hover:bg-[#0096f7]/10 group-hover:scale-110">
                 <img
                   src={feature.icon}
                   alt={feature.title}
-                  class="w-10 h-10 object-contain opacity-70 transition-all duration-300 group-hover:opacity-100"
+                  class="w-7 h-7 md:w-10 md:h-10 object-contain opacity-70 transition-all duration-300 group-hover:opacity-100"
                 />
               </div>
               <!-- Title -->
-              <h3 class="text-[20px] font-normal text-[#313131] leading-tight transition-colors duration-300 group-hover:text-[#0096f7]">
+              <h3 class="text-[15px] md:text-[19px] lg:text-[20px] font-normal text-[#313131] leading-tight transition-colors duration-300 group-hover:text-[#0096f7] max-w-[140px] md:max-w-none mx-auto">
                 {feature.title}
               </h3>
             </div>
@@ -193,9 +172,9 @@ const testimonials = [
     </section>
 
     <!-- Testimonials Section -->
-    <section class="py-24 bg-white overflow-hidden">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] mb-16">
-        <h2 class="text-[70px] font-light text-black text-center" style="letter-spacing: -3.50px;" data-animate-title>
+    <section class="py-16 md:py-20 lg:py-24 bg-white overflow-hidden">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] mb-10 md:mb-14 lg:mb-16">
+        <h2 class="text-[36px] md:text-[52px] lg:text-[70px] font-light text-black text-center" style="letter-spacing: -1.8px;" data-animate-title>
           Apa kata mereka tentang SJD Interior
         </h2>
       </div>
@@ -203,35 +182,35 @@ const testimonials = [
       <!-- Testimonials Carousel with Fade -->
       <div class="relative">
         <!-- Left Fade -->
-        <div class="absolute left-0 top-0 bottom-0 w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-[50px] md:w-[100px] lg:w-[150px] bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <!-- Right Fade -->
-        <div class="absolute right-0 top-0 bottom-0 w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-[50px] md:w-[100px] lg:w-[150px] bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
         <!-- Infinite Scroll Track -->
         <div class="flex testimonial-scroll">
-          <div class="flex gap-6 animate-scroll">
+          <div class="flex gap-4 md:gap-6 animate-scroll">
             {[...testimonials, ...testimonials].map((testimonial) => (
-              <div class="flex-shrink-0 w-[400px] h-[260px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-8 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
+              <div class="flex-shrink-0 w-[300px] md:w-[360px] lg:w-[400px] min-h-[240px] md:h-[260px] bg-[#fafafa] border border-[#e8e8e8] rounded-[20px] p-6 md:p-8 flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#d0d0d0]">
                 <!-- Star Rating -->
-                <div class="flex gap-1 mb-4">
+                <div class="flex gap-1 mb-3 md:mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <svg class={`w-4 h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
+                    <svg class={`w-3.5 h-3.5 md:w-4 md:h-4 ${i < testimonial.rating ? 'text-[#FFB800]' : 'text-[#E0E0E0]'}`} fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
                   ))}
                 </div>
 
                 <!-- Review Text - Italic -->
-                <p class="text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
+                <p class="text-[14px] md:text-[15px] lg:text-[16px] font-light text-[#444444] leading-relaxed italic flex-1">
                   "{testimonial.text}"
                 </p>
 
                 <!-- Bottom Section - Always at bottom -->
-                <div class="mt-auto pt-4">
+                <div class="mt-auto pt-3 md:pt-4">
                   <!-- Divider -->
-                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-3"></div>
+                  <div class="w-8 h-[1px] bg-[#e0e0e0] mb-2 md:mb-3"></div>
                   <!-- Name -->
-                  <p class="text-[15px] font-medium text-black">{testimonial.name}</p>
+                  <p class="text-[14px] md:text-[15px] font-medium text-black">{testimonial.name}</p>
                 </div>
               </div>
             ))}
@@ -241,40 +220,42 @@ const testimonials = [
     </section>
 
     <!-- Process Steps Section -->
-    <section class="py-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+    <section class="py-12 md:py-16 lg:py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Title -->
-        <div class="text-center mb-16">
-          <h2 class="text-[53.13px] font-light text-black mb-2" style="letter-spacing: -2.66px;" data-animate-title>
-            Dapatkan interior impian dalam empat langkah.
+        <div class="text-left mb-10 md:mb-14 lg:mb-16">
+          <h2 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8" style="letter-spacing: -2.4px; line-height: 98.83%;" data-animate-title>
+            Prosesnya mudah.
           </h2>
-          <p class="text-[53.13px] font-light text-[#a7a7a7]" style="letter-spacing: -2.66px;" data-animate-subtitle>
-            Secepat 2-8 minggu pengerjaan.
+          <p class="text-[24px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.2] max-w-5xl" style="letter-spacing: -1px;" data-animate-subtitle>
+            Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.
           </p>
         </div>
 
         <!-- Steps Grid -->
         <div class="relative">
-          <!-- Horizontal connecting line - spans across all number badges -->
-          <div class="absolute top-[26px] left-[calc(12.5%-10px)] right-[calc(12.5%-10px)] h-[1px] bg-[#d4d4d4] z-0"></div>
+          <!-- Horizontal connecting line - only on desktop -->
+          <div class="hidden lg:block absolute top-[26px] left-[calc(12.5%-10px)] right-[calc(12.5%-10px)] h-[1px] bg-[#d4d4d4] z-0"></div>
 
-          <div class="grid grid-cols-4 gap-5 mb-16 relative z-10">
+
+          
+          <div class="relative z-10 flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-5 mb-10 md:mb-14 lg:mb-16 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 pb-4 md:pb-0">
             {processSteps.map((step, index) => (
-              <div class="text-center flex flex-col">
+              <div class="text-center flex flex-col min-w-[80vw] md:min-w-0 snap-center">
                 <!-- Number with rounded shape - 1&3 filled, 2&4 outline -->
-                <div class="flex justify-center mb-4">
-                  <div class={`w-[52px] h-[52px] rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border border-[#c4c4c4]'}`}>
-                    <span class={`text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.9px;">
+                <div class="flex justify-center mb-3 md:mb-4">
+                  <div class={`w-[44px] h-[44px] md:w-[52px] md:h-[52px] rounded-[12px] md:rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border border-[#c4c4c4]'}`}>
+                    <span class={`text-[16px] md:text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.8px;">
                       {step.number}
                     </span>
                   </div>
                 </div>
-                <!-- Title - fixed height -->
-                <h3 class="text-[32px] font-light text-black mb-4 h-[42px]" style="letter-spacing: -1.60px;">
+                <!-- Title -->
+                <h3 class="text-[24px] md:text-[28px] lg:text-[32px] font-light text-black mb-3 md:mb-4" style="letter-spacing: -1.2px;">
                   {step.title}
                 </h3>
-                <!-- Description - fixed height for consistency -->
-                <p class="text-[18px] font-normal text-[#929292] leading-[1.4] mb-6 h-[76px]" style="letter-spacing: -0.9px;">
+                <!-- Description -->
+                <p class="text-[15px] md:text-[16px] lg:text-[18px] font-normal text-[#929292] leading-[1.4] mb-4 md:mb-6" style="letter-spacing: -0.75px;">
                   {step.description}
                 </p>
                 <!-- Image with same aspect ratio as portfolio card (3:4) -->
@@ -291,17 +272,18 @@ const testimonials = [
         </div>
 
         <!-- CTA -->
-        <div class="text-center">
-          <p class="text-[46.21px] font-light text-black mb-2" style="letter-spacing: -2.31px;" data-animate-title>
+        <!-- CTA -->
+        <div class="text-center mt-8 md:mt-0">
+          <p class="text-[24px] md:text-[36px] lg:text-[46.21px] font-light text-black mb-3 md:mb-2 leading-tight tracking-[-1px] md:tracking-[-1.4px]" data-animate-title>
             Mau tahu lebih detail?
           </p>
-          <p class="text-[46.21px] font-light text-[#919191] mb-10" style="letter-spacing: -2.31px;" data-animate-subtitle>
+          <p class="text-[24px] md:text-[36px] lg:text-[46.21px] font-light text-[#666] md:text-[#919191] mb-10 md:mb-10 leading-tight tracking-[-1px] md:tracking-[-1.4px]" data-animate-subtitle>
             Pelajari proses kerja kami dari awal sampai akhir.
           </p>
-          <div class="flex justify-center gap-4">
+          <div class="flex flex-col md:flex-row justify-center gap-4 md:gap-4 w-full md:w-auto">
             <a
               href="/alur-kerja"
-              class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
+              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[16px] md:text-[21.41px] font-medium text-[#1a1a1a] border border-[#e5e5e5] md:border-[#424242] rounded-full hover:bg-[#1a1a1a] hover:text-white hover:border-[#1a1a1a] transition-all duration-300"
             >
               Cara Kerja
             </a>
@@ -309,7 +291,7 @@ const testimonials = [
               href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi."
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-white bg-[#424242] rounded-full hover:bg-black transition-all duration-300"
+              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[16px] md:text-[21.41px] font-medium text-white bg-[#1a1a1a] rounded-full hover:bg-black hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg md:shadow-none"
             >
               Konsultasi
             </a>
@@ -319,13 +301,13 @@ const testimonials = [
     </section>
 
     <!-- Insight Section -->
-    <section class="py-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[103.13px] font-light text-black text-center mb-16" style="letter-spacing: -5.16px;" data-animate-title>
+    <section class="py-12 md:py-16 lg:py-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h2 class="text-[44px] md:text-[72px] lg:text-[103.13px] font-light text-black text-center mb-10 md:mb-14 lg:mb-16" style="letter-spacing: -2.2px;" data-animate-title>
           Insight untuk anda.
         </h2>
 
-        <div class="grid grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-8 md:mb-10 lg:mb-12">
           {insights.map((insight) => (
             <InsightCard {...insight} />
           ))}

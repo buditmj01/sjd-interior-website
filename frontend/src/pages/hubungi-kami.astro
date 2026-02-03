@@ -3,6 +3,39 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
+import { getContactInfo } from '../lib/getContactInfo.js';
+
+// Fetch contact info from Strapi
+const contactData = await getContactInfo();
+
+// Default fallback data
+const defaultContact = {
+  phone: '+62 853-9898-9810',
+  whatsapp_number: '6285398989810',
+  email: 'hello@sjdinterior.com',
+  address: 'Bogor Outer Ring Rd Blok Mulia 1 No.55\nCibuluh, Bogor Utara, Bogor 16151',
+  working_hours: 'Senin - Sabtu: 09:00 - 18:00\nMinggu: Tutup',
+  google_maps_url: 'https://www.google.com/maps/place/SJD+Interior/@-6.554956,106.8162471,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69c700289557a1:0x8c45e67698b256f5!8m2!3d-6.554956!4d106.818822!16s%2Fg%2F11yn9lqlfy',
+  google_maps_embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.6835!2d106.8162471!3d-6.554956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c700289557a1%3A0x8c45e67698b256f5!2sSJD%20Interior!5e0!3m2!1sen!2sid!4v1706270400000'
+};
+
+// Use Strapi data if available, otherwise use default
+const contactRaw = contactData?.attributes || defaultContact;
+
+// Extract iframe src from google_maps_embed if it contains full iframe HTML
+let mapsEmbedUrl = contactRaw.google_maps_embed;
+if (mapsEmbedUrl && mapsEmbedUrl.includes('<iframe')) {
+  // Extract src URL from iframe tag
+  const srcMatch = mapsEmbedUrl.match(/src="([^"]+)"/);
+  if (srcMatch) {
+    mapsEmbedUrl = srcMatch[1];
+  }
+}
+
+const contact = {
+  ...contactRaw,
+  google_maps_embed: mapsEmbedUrl
+};
 ---
 
 <BaseLayout
@@ -13,59 +46,59 @@ import CTASection from '../components/common/CTASection.astro';
   
   <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-16 md:pb-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="text-center mb-12">
-          <p class="text-[36px] font-light text-[#848484] mb-4" style="letter-spacing: -1.80px;">
+    <section class="relative pt-32 md:pt-40 lg:pt-44 pb-10 md:pb-16 lg:pb-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="text-center mb-8 md:mb-10 lg:mb-12">
+          <p class="text-[18px] md:text-[28px] lg:text-[36px] font-light text-[#848484] mb-2 md:mb-3 lg:mb-4" style="letter-spacing: -0.90px; md:letter-spacing: -1.40px; lg:letter-spacing: -1.80px;">
             Hubungi Kami
           </p>
-          <h1 class="text-[128px] font-light text-black" style="letter-spacing: -6.40px; line-height: 98.83%;">
-            Wujudkan Interior Impian Anda
+          <h1 class="text-[42px] md:text-[88px] lg:text-[128px] font-light text-black leading-tight" style="letter-spacing: -2.10px; md:letter-spacing: -4.40px; lg:letter-spacing: -6.40px;">
+            Wujudkan Interior<br class="hidden md:block" /> Impian Anda
           </h1>
         </div>
       </div>
     </section>
 
     <!-- Contact Form & Info -->
-    <section class="py-12 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-[60px]">
+    <section class="py-8 md:py-10 lg:py-12 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 lg:gap-[60px]">
           <!-- Contact Form -->
           <div>
-            <h2 class="text-[40px] font-light text-black mb-3" style="letter-spacing: -2px;">
+            <h2 class="text-[32px] md:text-[36px] lg:text-[40px] font-light text-black mb-2 md:mb-3" style="letter-spacing: -1.60px; md:letter-spacing: -1.80px; lg:letter-spacing: -2px;">
               Mulai Proyek Anda
             </h2>
-            <p class="text-[18px] font-light text-[#636363] mb-8">
+            <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-[#636363] mb-6 md:mb-7 lg:mb-8">
               Isi form di bawah ini dan tim kami akan segera menghubungi Anda.
             </p>
-            <form id="contact-form" class="space-y-5">
-              <div class="grid grid-cols-2 gap-4">
+            <form id="contact-form" class="space-y-4 md:space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                     Nama Awal
                   </label>
                   <input
                     type="text"
                     id="nama-awal"
                     placeholder="Budi"
-                    class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
                 <div>
-                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
-                    Nama Akhir <span class="text-[14px] font-light text-[#999]">(Opsional)</span>
+                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
+                    Nama Akhir <span class="text-[13px] md:text-[14px] font-light text-[#999]">(Opsional)</span>
                   </label>
                   <input
                     type="text"
                     id="nama-akhir"
                     placeholder="Santoso"
-                    class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
               </div>
 
               <div>
-                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                   Estimasi Budget
                 </label>
                 <input
@@ -73,64 +106,65 @@ import CTASection from '../components/common/CTASection.astro';
                   id="budget"
                   inputmode="numeric"
                   placeholder="Rp 150.000.000"
-                  class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                 />
               </div>
 
-              <div class="grid grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                     Kapan Ingin Mulai
                   </label>
                   <input
                     type="date"
                     id="tanggal-mulai"
-                    class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
                 <div>
-                  <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                     Telepon
                   </label>
                   <input
                     type="tel"
                     id="telepon"
                     placeholder="0812 3456 7890"
-                    class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                   />
                 </div>
               </div>
 
               <div>
-                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                   Lokasi Proyek/Alamat
                 </label>
                 <input
                   type="text"
                   id="lokasi"
                   placeholder="Perumahan Griya Asri Blok C2 No. 15, Depok"
-                  class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
                 />
               </div>
 
               <div>
-                <label class="block text-[18px] font-normal text-[#212121] mb-2">
+                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
                   Pesan
                 </label>
                 <textarea
                   rows="3"
                   id="pesan"
                   placeholder="Saya ingin renovasi interior rumah tipe 45, fokus di ruang tamu dan dapur. Sudah ada denah rumah."
-                  class="w-full px-4 py-3 text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
+                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
                 ></textarea>
               </div>
 
               <button
                 type="submit"
                 id="whatsapp-btn"
-                class="inline-flex items-center justify-center gap-2 w-full px-6 py-4 text-[16px] font-medium text-white bg-[#25D366] rounded-full hover:bg-[#1fb855] transition-all duration-200"
+                data-whatsapp-number={contact.whatsapp_number}
+                class="inline-flex items-center justify-center gap-2 w-full px-5 md:px-6 py-3 md:py-4 text-[15px] md:text-[16px] font-medium text-white bg-[#25D366] rounded-full hover:bg-[#1fb855] transition-all duration-200"
               >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Konsultasi via WhatsApp
@@ -140,128 +174,105 @@ import CTASection from '../components/common/CTASection.astro';
 
           <!-- Contact Info -->
           <div>
-            <div class="border-l border-black pl-10">
-              <h2 class="text-[40px] font-light text-black mb-3" style="letter-spacing: -2px;">
+            <div class="border-l-0 lg:border-l border-black pl-0 lg:pl-8 xl:pl-10">
+              <h2 class="text-[32px] md:text-[36px] lg:text-[40px] font-light text-black mb-2 md:mb-3" style="letter-spacing: -1.60px; md:letter-spacing: -1.80px; lg:letter-spacing: -2px;">
                 Informasi Kontak
               </h2>
-              <p class="text-[18px] font-light text-[#636363] mb-8">
+              <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-[#636363] mb-6 md:mb-7 lg:mb-8">
                 Hubungi kami melalui salah satu cara di bawah ini.
               </p>
 
-              <div class="space-y-6 mb-10">
+              <div class="space-y-5 md:space-y-6 mb-8 md:mb-9 lg:mb-10">
                 <!-- Phone -->
-                <a href="tel:+6285398989810" class="flex items-start gap-4 group">
-                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0 text-black group-hover:text-[#0096f7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href={`tel:${contact.phone.replace(/[^0-9+]/g, '')}`} class="flex items-start gap-3 md:gap-4 group">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-black group-hover:text-[#0096f7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                   </svg>
                   <div>
-                    <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Telepon</p>
-                    <p class="text-[18px] font-light text-black group-hover:text-[#0096f7] transition-colors">
-                      +62 853-9898-9810
+                    <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Telepon</p>
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black group-hover:text-[#0096f7] transition-colors">
+                      {contact.phone}
                     </p>
                   </div>
                 </a>
 
                 <!-- Email -->
-                <a href="mailto:hello@sjdinterior.com" class="flex items-start gap-4 group">
-                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0 text-black group-hover:text-[#0096f7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href={`mailto:${contact.email}`} class="flex items-start gap-3 md:gap-4 group">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-black group-hover:text-[#0096f7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                   </svg>
                   <div>
-                    <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Email</p>
-                    <p class="text-[18px] font-light text-black group-hover:text-[#0096f7] transition-colors">
-                      hello@sjdinterior.com
+                    <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Email</p>
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black group-hover:text-[#0096f7] transition-colors">
+                      {contact.email}
                     </p>
                   </div>
                 </a>
 
                 <!-- Address -->
-                <div class="flex items-start gap-4">
-                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-start gap-3 md:gap-4">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
                   <div>
-                    <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Alamat</p>
-                    <p class="text-[18px] font-light text-black leading-relaxed">
-                      Bogor Outer Ring Rd Blok Mulia 1 No.55<br/>Cibuluh, Bogor Utara, Bogor 16151
-                    </p>
+                    <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Alamat</p>
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={contact.address.replace(/\n/g, '<br/>')} />
                   </div>
                 </div>
 
                 <!-- Working Hours -->
-                <div class="flex items-start gap-4">
-                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-start gap-3 md:gap-4">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                   <div>
-                    <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Jam Operasional</p>
-                    <p class="text-[18px] font-light text-black leading-relaxed">
-                      Senin - Sabtu: 09:00 - 18:00<br/>Minggu: Tutup
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Social Media -->
-                <div class="flex items-start gap-4">
-                  <svg class="w-6 h-6 mt-0.5 flex-shrink-0 text-black" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                  <div>
-                    <p class="text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-1">Social Media</p>
-                    <div class="flex items-center gap-4">
-                      <a href="https://instagram.com/sjdinterior" target="_blank" rel="noopener noreferrer" class="text-[16px] font-light text-black hover:text-[#0096f7] transition-colors">
-                        Instagram
-                      </a>
-                      <a href="https://tiktok.com/@sjdinterior" target="_blank" rel="noopener noreferrer" class="text-[16px] font-light text-black hover:text-[#0096f7] transition-colors">
-                        TikTok
-                      </a>
-                      <a href="https://youtube.com/@sjdinterior" target="_blank" rel="noopener noreferrer" class="text-[16px] font-light text-black hover:text-[#0096f7] transition-colors">
-                        YouTube
-                      </a>
-                    </div>
+                    <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Jam Operasional</p>
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={contact.working_hours.replace(/\n/g, '<br/>')} />
                   </div>
                 </div>
               </div>
 
               <div>
-                <div class="flex items-center justify-between mb-4">
-                  <h3 class="text-[24px] font-light text-black" style="letter-spacing: -1.2px;">
+                <div class="flex items-center justify-between mb-3 md:mb-4">
+                  <h3 class="text-[20px] md:text-[22px] lg:text-[24px] font-light text-black" style="letter-spacing: -1.0px; md:letter-spacing: -1.1px; lg:letter-spacing: -1.2px;">
                     Lokasi Kami
                   </h3>
                   <a
-                    href="https://www.google.com/maps/place/SJD+Interior/@-6.554956,106.8162471,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69c700289557a1:0x8c45e67698b256f5!8m2!3d-6.554956!4d106.818822!16s%2Fg%2F11yn9lqlfy"
+                    href={contact.google_maps_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 text-[14px] font-medium text-[#0096f7] hover:text-[#0080d4] transition-colors"
+                    class="inline-flex items-center gap-1.5 md:gap-2 text-[13px] md:text-[14px] font-medium text-[#0096f7] hover:text-[#0080d4] transition-colors"
                   >
-                    <span>Buka di Google Maps</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="hidden md:inline">Buka di Google Maps</span>
+                    <span class="md:hidden">Buka Maps</span>
+                    <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                     </svg>
                   </a>
                 </div>
-                <a
-                  href="https://www.google.com/maps/place/SJD+Interior/@-6.554956,106.8162471,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69c700289557a1:0x8c45e67698b256f5!8m2!3d-6.554956!4d106.818822!16s%2Fg%2F11yn9lqlfy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="block relative group"
-                >
+                <div class="relative group">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.6835!2d106.8162471!3d-6.554956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c700289557a1%3A0x8c45e67698b256f5!2sSJD%20Interior!5e0!3m2!1sen!2sid!4v1706270400000"
+                    src={contact.google_maps_embed}
                     width="100%"
-                    height="250"
-                    style="border:0; border-radius: 12px; pointer-events: none;"
-                    allowFullScreen=""
+                    height="220"
+                    style="border:0; border-radius: 12px;"
+                    allowfullscreen
                     loading="lazy"
-                    class="shadow-sm"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    class="shadow-sm md:h-[250px]"
                   ></iframe>
-                  <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl flex items-center justify-center">
-                    <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-4 py-2 rounded-full text-[14px] font-medium text-black shadow-lg">
+                  <a
+                    href={contact.google_maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl flex items-center justify-center"
+                  >
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[13px] md:text-[14px] font-medium text-black shadow-lg">
                       Klik untuk buka Google Maps
                     </span>
-                  </div>
-                </a>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -306,6 +317,10 @@ import CTASection from '../components/common/CTASection.astro';
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      // Get WhatsApp number from button data attribute
+      const whatsappBtn = document.getElementById('whatsapp-btn') as HTMLButtonElement;
+      const whatsappNumber = whatsappBtn?.dataset.whatsappNumber || '6285398989810';
 
       // Get form values
       const namaAwal = (document.getElementById('nama-awal') as HTMLInputElement)?.value.trim() || '';
@@ -361,8 +376,8 @@ import CTASection from '../components/common/CTASection.astro';
       // Encode message for URL
       const encodedMessage = encodeURIComponent(message);
 
-      // Open WhatsApp
-      const whatsappUrl = `https://wa.me/6285398989810?text=${encodedMessage}`;
+      // Open WhatsApp with number from Strapi
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       window.open(whatsappUrl, '_blank');
     });
   });

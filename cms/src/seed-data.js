@@ -3,6 +3,29 @@
  * Run this script to populate the database with sample projects and insights
  */
 
+const sampleAuthors = [
+  {
+    name: 'Sarah Wijaya',
+    job: 'Interior Designer',
+    bio: 'Seorang desainer interior berpengalaman dengan fokus pada gaya modern minimalis. Suka berbagi tips dan inspirasi seputar dunia arsitektur dan interior. Telah menangani lebih dari 100 proyek residensial di Jabodetabek.',
+  },
+  {
+    name: 'Michael Chen',
+    job: 'Design Consultant',
+    bio: 'Design consultant dengan spesialisasi sustainable design dan eco-friendly materials. Passionate tentang menciptakan ruang yang indah sekaligus ramah lingkungan. Lulusan Interior Architecture dari University of Indonesia.',
+  },
+  {
+    name: 'Dina Putri',
+    job: 'Budget Interior Specialist',
+    bio: 'Ahli dalam menciptakan interior cantik dengan budget terbatas. Percaya bahwa desain yang baik tidak harus mahal. Fokus pada solusi praktis dan DIY-friendly untuk semua kalangan.',
+  },
+  {
+    name: 'Rina Kusuma',
+    job: 'Color Consultant',
+    bio: 'Color consultant profesional yang membantu klien memilih palet warna sempurna untuk rumah mereka. Menguasai color psychology dan aplikasinya dalam interior design. Certified color consultant dari International Association of Color Consultants.',
+  },
+];
+
 const sampleProjects = [
   {
     title: 'Modern Minimalist Apartment Jakarta',
@@ -26,13 +49,15 @@ Apartemen ini dirancang dengan konsep minimalis Jepang (Japandi) yang menggabung
 - Kitchen set minimalis dengan top table marble
 - Integrated appliances untuk tampilan bersih
 - Backsplash subway tiles putih`,
-    category: 'residential',
+    category: 'Apartemen',
     client_name: 'Bapak Andri & Ibu Sarah',
     location: 'Jakarta Selatan',
-    area_size: '85m²',
+    area_size: '85',
     completion_date: '2025-11-15',
     is_featured: true,
     order: 1,
+    theme: 'Minimalis Jepang (Japandi)',
+    budget: 150000000,
   },
   {
     title: 'Cozy Scandinavian House Bandung',
@@ -61,13 +86,15 @@ Rumah ini mengadopsi prinsip hygge dari Skandinavia - menciptakan suasana hangat
 - Bunk bed custom dengan play area di bawah
 - Storage yang mudah dijangkau anak
 - Wall mural bertema hutan`,
-    category: 'residential',
+    category: 'Rumah',
     client_name: 'Keluarga Sutanto',
     location: 'Bandung',
-    area_size: '120m²',
+    area_size: '120',
     completion_date: '2025-10-20',
     is_featured: true,
     order: 2,
+    theme: 'Scandinavian',
+    budget: 250000000,
   },
   {
     title: 'Industrial Loft Office Surabaya',
@@ -98,13 +125,15 @@ Kantor ini dirancang untuk startup teknologi dengan 25 karyawan. Mengadopsi kons
 - Phone booth untuk video call
 - Focus pod untuk deep work
 - Acoustic panels untuk sound dampening`,
-    category: 'office',
+    category: 'Kantor',
     client_name: 'TechStart Indonesia',
     location: 'Surabaya',
-    area_size: '250m²',
+    area_size: '250',
     completion_date: '2025-09-10',
     is_featured: true,
     order: 3,
+    theme: 'Industrial Loft',
+    budget: 400000000,
   },
   {
     title: 'Luxury Penthouse Residence',
@@ -136,13 +165,15 @@ Penthouse 3 lantai ini adalah puncak dari kemewahan urban living. Setiap detail 
 - Outdoor kitchen & BBQ area
 - Lounge seating dengan fire pit
 - Green wall untuk privacy`,
-    category: 'residential',
+    category: 'Rumah',
     client_name: 'Confidential Client',
     location: 'Jakarta Pusat',
-    area_size: '450m²',
+    area_size: '450',
     completion_date: '2025-12-01',
     is_featured: true,
     order: 4,
+    theme: 'Luxury Contemporary',
+    budget: 1500000000,
   },
   {
     title: 'Boutique Hotel Lobby Bali',
@@ -168,13 +199,15 @@ Lobby hotel ini menggabungkan kemewahan dengan kearifan lokal Bali. Material nat
 - Woven pendant lights handmade
 - Art pieces dari local artisan
 - Natural ventilation maksimal`,
-    category: 'hospitality',
+    category: 'Komersial',
     client_name: 'Bali Boutique Hotels',
     location: 'Ubud, Bali',
-    area_size: '180m²',
+    area_size: '180',
     completion_date: '2025-08-15',
     is_featured: false,
     order: 5,
+    theme: 'Tropical Modern',
+    budget: 500000000,
   },
   {
     title: 'Contemporary Cafe & Restaurant',
@@ -200,13 +233,15 @@ Cafe ini dirancang untuk generasi milenial dan Gen Z yang mencari tempat hangout
 - Hanging plants & fairy lights
 - Wooden furniture weather-resistant
 - Heater untuk malam hari`,
-    category: 'commercial',
+    category: 'Komersial',
     client_name: 'Kopi Kawan',
     location: 'Yogyakarta',
-    area_size: '150m²',
+    area_size: '150',
     completion_date: '2025-07-01',
     is_featured: false,
     order: 6,
+    theme: 'Contemporary',
+    budget: 300000000,
   },
 ];
 
@@ -674,6 +709,7 @@ Warna punya pengaruh besar ke mood dan energi ruangan. Ini dia panduan lengkap p
 ];
 
 module.exports = {
+  sampleAuthors,
   sampleProjects,
   sampleInsights,
 };

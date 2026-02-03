@@ -362,6 +362,185 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiAuthorAuthor extends Schema.CollectionType {
+  collectionName: 'authors';
+  info: {
+    description: 'Blog post authors and writers';
+    displayName: 'Author';
+    pluralName: 'authors';
+    singularName: 'author';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    bio: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::author.author',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    email: Attribute.Email;
+    job: Attribute.String & Attribute.Required;
+    name: Attribute.String & Attribute.Required;
+    photo: Attribute.Media<'images'>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::author.author',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiContactInfoContactInfo extends Schema.SingleType {
+  collectionName: 'contact_info';
+  info: {
+    description: 'Contact information for the website';
+    displayName: 'Contact Information';
+    pluralName: 'contact-infos';
+    singularName: 'contact-info';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Attribute.Text & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::contact-info.contact-info',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    email: Attribute.Email & Attribute.Required;
+    google_maps_embed: Attribute.Text;
+    google_maps_url: Attribute.String;
+    phone: Attribute.String & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::contact-info.contact-info',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    whatsapp_number: Attribute.String & Attribute.Required;
+    working_hours: Attribute.Text & Attribute.Required;
+  };
+}
+
+export interface ApiFaqFaq extends Schema.CollectionType {
+  collectionName: 'faqs';
+  info: {
+    description: 'Frequently Asked Questions';
+    displayName: 'FAQ';
+    pluralName: 'faqs';
+    singularName: 'faq';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    answer: Attribute.Text & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::faq.faq', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    publishedAt: Attribute.DateTime;
+    question: Attribute.String & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<'api::faq.faq', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiFooterFooter extends Schema.SingleType {
+  collectionName: 'footer';
+  info: {
+    description: 'Footer configuration for website';
+    displayName: 'Footer';
+    pluralName: 'footers';
+    singularName: 'footer';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    copyright_text: Attribute.String & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::footer.footer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    cta_button_text: Attribute.String & Attribute.Required;
+    cta_description: Attribute.Text & Attribute.Required;
+    cta_title: Attribute.String & Attribute.Required;
+    description: Attribute.Text & Attribute.Required;
+    instagram_url: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'https://instagram.com/sjdinterior'>;
+    navigation_links: Attribute.Component<'footer.link', true>;
+    service_links: Attribute.Component<'footer.link', true>;
+    tiktok_url: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'https://tiktok.com/@sjdinterior'>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::footer.footer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    youtube_url: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'https://youtube.com/@sjdinterior'>;
+  };
+}
+
+export interface ApiHeroBannerHeroBanner extends Schema.SingleType {
+  collectionName: 'hero_banner';
+  info: {
+    description: 'Homepage hero banner - fully customizable headline, background, and CTA button';
+    displayName: 'Hero Banner';
+    pluralName: 'hero-banners';
+    singularName: 'hero-banner';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    background: Attribute.Media<'images' | 'videos'>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::hero-banner.hero-banner',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    cta_page_url: Attribute.String & Attribute.DefaultTo<'/hubungi-kami'>;
+    cta_text: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'Mulai Konsultasi'>;
+    cta_type: Attribute.Enumeration<['whatsapp', 'internal_page']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'whatsapp'>;
+    headline: Attribute.Text &
+      Attribute.Required &
+      Attribute.DefaultTo<'Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional.'>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::hero-banner.hero-banner',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiInsightInsight extends Schema.CollectionType {
   collectionName: 'insights';
   info: {
@@ -374,7 +553,11 @@ export interface ApiInsightInsight extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    author: Attribute.String & Attribute.DefaultTo<'SJD Interior Team'>;
+    author: Attribute.Relation<
+      'api::insight.insight',
+      'manyToOne',
+      'api::author.author'
+    >;
     category: Attribute.Enumeration<
       ['tips', 'trends', 'inspiration', 'how-to', 'case-study', 'news']
     > &
@@ -389,7 +572,7 @@ export interface ApiInsightInsight extends Schema.CollectionType {
     > &
       Attribute.Private;
     excerpt: Attribute.Text;
-    featured_image: Attribute.Media<'images'> & Attribute.Required;
+    featured_image: Attribute.Media<'images'>;
     gallery: Attribute.Media<'images', true>;
     is_featured: Attribute.Boolean & Attribute.DefaultTo<false>;
     order: Attribute.Integer & Attribute.DefaultTo<0>;
@@ -410,62 +593,40 @@ export interface ApiInsightInsight extends Schema.CollectionType {
   };
 }
 
-export interface ApiPagePage extends Schema.CollectionType {
-  collectionName: 'pages';
+export interface ApiNavigationNavigation extends Schema.SingleType {
+  collectionName: 'navigation';
   info: {
-    description: 'Static pages content';
-    displayName: 'Page';
-    pluralName: 'pages';
-    singularName: 'page';
+    description: 'Main navigation bar configuration';
+    displayName: 'Navigation';
+    pluralName: 'navigations';
+    singularName: 'navigation';
   };
   options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
+    draftAndPublish: false;
   };
   attributes: {
-    content: Attribute.RichText &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::navigation.navigation',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    featured_image: Attribute.Media<'images'>;
-    locale: Attribute.String;
-    localizations: Attribute.Relation<
-      'api::page.page',
-      'oneToMany',
-      'api::page.page'
-    >;
-    publishedAt: Attribute.DateTime;
-    seo_description: Attribute.Text &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    seo_title: Attribute.String &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    slug: Attribute.UID<'api::page.page', 'title'> & Attribute.Required;
-    title: Attribute.String &
+    cta_page_url: Attribute.String & Attribute.DefaultTo<'/hubungi-kami'>;
+    cta_text: Attribute.String &
       Attribute.Required &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+      Attribute.DefaultTo<'Konsultasi'>;
+    cta_type: Attribute.Enumeration<['whatsapp', 'internal_page']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'whatsapp'>;
+    menuItems: Attribute.Component<'navigation.menu-item', true> &
+      Attribute.Required;
     updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::navigation.navigation',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -488,18 +649,12 @@ export interface ApiProjectProject extends Schema.CollectionType {
   };
   attributes: {
     area_size: Attribute.String;
+    budget: Attribute.BigInteger;
     category: Attribute.Enumeration<
-      [
-        'residential',
-        'commercial',
-        'hospitality',
-        'office',
-        'retail',
-        'renovation'
-      ]
+      ['Rumah', 'Apartemen', 'Komersial', 'Kantor']
     > &
       Attribute.Required &
-      Attribute.DefaultTo<'residential'>;
+      Attribute.DefaultTo<'Rumah'>;
     client_name: Attribute.String &
       Attribute.SetPluginOptions<{
         i18n: {
@@ -526,7 +681,7 @@ export interface ApiProjectProject extends Schema.CollectionType {
           localized: true;
         };
       }>;
-    featured_image: Attribute.Media<'images'> & Attribute.Required;
+    featured_image: Attribute.Media<'images'>;
     gallery: Attribute.Media<'images', true>;
     is_featured: Attribute.Boolean & Attribute.DefaultTo<false>;
     locale: Attribute.String;
@@ -543,12 +698,8 @@ export interface ApiProjectProject extends Schema.CollectionType {
       }>;
     order: Attribute.Integer & Attribute.DefaultTo<0>;
     publishedAt: Attribute.DateTime;
-    services: Attribute.Relation<
-      'api::project.project',
-      'manyToMany',
-      'api::service.service'
-    >;
     slug: Attribute.UID<'api::project.project', 'title'> & Attribute.Required;
+    theme: Attribute.String;
     title: Attribute.String &
       Attribute.Required &
       Attribute.SetPluginOptions<{
@@ -559,88 +710,6 @@ export interface ApiProjectProject extends Schema.CollectionType {
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::project.project',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiServiceService extends Schema.CollectionType {
-  collectionName: 'services';
-  info: {
-    description: 'Interior design services offered';
-    displayName: 'Service';
-    pluralName: 'services';
-    singularName: 'service';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::service.service',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    description: Attribute.RichText &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    features: Attribute.JSON &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    icon: Attribute.String;
-    image: Attribute.Media<'images'>;
-    is_featured: Attribute.Boolean & Attribute.DefaultTo<false>;
-    locale: Attribute.String;
-    localizations: Attribute.Relation<
-      'api::service.service',
-      'oneToMany',
-      'api::service.service'
-    >;
-    order: Attribute.Integer & Attribute.DefaultTo<0>;
-    price_range: Attribute.String &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    projects: Attribute.Relation<
-      'api::service.service',
-      'manyToMany',
-      'api::project.project'
-    >;
-    publishedAt: Attribute.DateTime;
-    short_description: Attribute.Text &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    slug: Attribute.UID<'api::service.service', 'title'> & Attribute.Required;
-    title: Attribute.String &
-      Attribute.Required &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<
-      'api::service.service',
       'oneToOne',
       'admin::user'
     > &
@@ -651,7 +720,7 @@ export interface ApiServiceService extends Schema.CollectionType {
 export interface ApiSiteSettingSiteSetting extends Schema.SingleType {
   collectionName: 'site_settings';
   info: {
-    description: 'Global site configuration including logos and favicon';
+    description: 'Global site configuration';
     displayName: 'Site Settings';
     pluralName: 'site-settings';
     singularName: 'site-setting';
@@ -660,9 +729,6 @@ export interface ApiSiteSettingSiteSetting extends Schema.SingleType {
     draftAndPublish: false;
   };
   attributes: {
-    address: Attribute.Text;
-    contactEmail: Attribute.Email;
-    contactPhone: Attribute.String;
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::site-setting.site-setting',
@@ -671,9 +737,11 @@ export interface ApiSiteSettingSiteSetting extends Schema.SingleType {
     > &
       Attribute.Private;
     siteDescription: Attribute.Text &
+      Attribute.Required &
       Attribute.DefaultTo<'Professional interior design services'>;
-    siteName: Attribute.String & Attribute.DefaultTo<'SJD Interior Design'>;
-    socialMedia: Attribute.Component<'shared.social-media'>;
+    siteName: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'SJD Interior Design'>;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::site-setting.site-setting',
@@ -681,149 +749,69 @@ export interface ApiSiteSettingSiteSetting extends Schema.SingleType {
       'admin::user'
     > &
       Attribute.Private;
+  };
+}
+
+export interface ApiStatsStats extends Schema.SingleType {
+  collectionName: 'site_statistics';
+  info: {
+    description: 'Website statistics and counters';
+    displayName: 'Stats';
+    pluralName: 'statistics';
+    singularName: 'stats';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::stats.stats',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    stats1: Attribute.Component<'shared.stat-item'>;
+    stats2: Attribute.Component<'shared.stat-item'>;
+    stats3: Attribute.Component<'shared.stat-item'>;
+    stats4: Attribute.Component<'shared.stat-item'>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::stats.stats',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiWebsiteLogosWebsiteLogos extends Schema.SingleType {
+  collectionName: 'website_logos';
+  info: {
+    description: 'Website logos and favicon configuration';
+    displayName: 'Website Logos';
+    pluralName: 'website-logo-settings';
+    singularName: 'website-logos';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::website-logos.website-logos',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::website-logos.website-logos',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
     websiteLogos: Attribute.Component<'settings.website-logos'>;
-  };
-}
-
-export interface ApiTeamMemberTeamMember extends Schema.CollectionType {
-  collectionName: 'team_members';
-  info: {
-    description: 'Team members and staff';
-    displayName: 'Team Member';
-    pluralName: 'team-members';
-    singularName: 'team-member';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    bio: Attribute.Text &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::team-member.team-member',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    email: Attribute.Email;
-    is_featured: Attribute.Boolean & Attribute.DefaultTo<false>;
-    locale: Attribute.String;
-    localizations: Attribute.Relation<
-      'api::team-member.team-member',
-      'oneToMany',
-      'api::team-member.team-member'
-    >;
-    name: Attribute.String & Attribute.Required;
-    order: Attribute.Integer & Attribute.DefaultTo<0>;
-    phone: Attribute.String;
-    photo: Attribute.Media<'images'>;
-    position: Attribute.String &
-      Attribute.Required &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    publishedAt: Attribute.DateTime;
-    slug: Attribute.UID<'api::team-member.team-member', 'name'> &
-      Attribute.Required;
-    social_links: Attribute.JSON;
-    specializations: Attribute.JSON &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<
-      'api::team-member.team-member',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiTestimonialTestimonial extends Schema.CollectionType {
-  collectionName: 'testimonials';
-  info: {
-    description: 'Client testimonials and reviews';
-    displayName: 'Testimonial';
-    pluralName: 'testimonials';
-    singularName: 'testimonial';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    client_company: Attribute.String;
-    client_image: Attribute.Media<'images'>;
-    client_name: Attribute.String & Attribute.Required;
-    client_title: Attribute.String &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    content: Attribute.Text &
-      Attribute.Required &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::testimonial.testimonial',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    is_featured: Attribute.Boolean & Attribute.DefaultTo<false>;
-    locale: Attribute.String;
-    localizations: Attribute.Relation<
-      'api::testimonial.testimonial',
-      'oneToMany',
-      'api::testimonial.testimonial'
-    >;
-    order: Attribute.Integer & Attribute.DefaultTo<0>;
-    project: Attribute.Relation<
-      'api::testimonial.testimonial',
-      'oneToOne',
-      'api::project.project'
-    >;
-    publishedAt: Attribute.DateTime;
-    rating: Attribute.Integer &
-      Attribute.SetMinMax<
-        {
-          max: 5;
-          min: 1;
-        },
-        number
-      > &
-      Attribute.DefaultTo<5>;
-    updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<
-      'api::testimonial.testimonial',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
   };
 }
 
@@ -1263,13 +1251,17 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::author.author': ApiAuthorAuthor;
+      'api::contact-info.contact-info': ApiContactInfoContactInfo;
+      'api::faq.faq': ApiFaqFaq;
+      'api::footer.footer': ApiFooterFooter;
+      'api::hero-banner.hero-banner': ApiHeroBannerHeroBanner;
       'api::insight.insight': ApiInsightInsight;
-      'api::page.page': ApiPagePage;
+      'api::navigation.navigation': ApiNavigationNavigation;
       'api::project.project': ApiProjectProject;
-      'api::service.service': ApiServiceService;
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
-      'api::team-member.team-member': ApiTeamMemberTeamMember;
-      'api::testimonial.testimonial': ApiTestimonialTestimonial;
+      'api::stats.stats': ApiStatsStats;
+      'api::website-logos.website-logos': ApiWebsiteLogosWebsiteLogos;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

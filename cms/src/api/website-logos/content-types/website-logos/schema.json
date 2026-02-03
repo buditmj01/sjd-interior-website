@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "website_logos",
+  "info": {
+    "singularName": "website-logos",
+    "pluralName": "website-logo-settings",
+    "displayName": "Website Logos",
+    "description": "Website logos and favicon configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "websiteLogos": {
+      "type": "component",
+      "repeatable": false,
+      "component": "settings.website-logos"
+    }
+  }
+}

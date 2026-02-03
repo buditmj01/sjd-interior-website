@@ -31,7 +31,7 @@
     "featured_image": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": ["images"]
     },
     "gallery": {
@@ -47,8 +47,9 @@
       "required": true
     },
     "author": {
-      "type": "string",
-      "default": "SJD Interior Team"
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author"
     },
     "reading_time": {
       "type": "integer",

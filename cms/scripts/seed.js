@@ -1,148 +1,196 @@
+#!/usr/bin/env node
+
 /**
- * Automated Strapi Data Seeding Script
- * Run this to automatically create sample projects and insights
- * 
+ * Seed Script for Strapi CMS
+ * Populates database with sample projects and insights
+ *
  * Usage: node scripts/seed.js
  */
 
 const { sampleProjects, sampleInsights } = require('../src/seed-data');
 
-const STRAPI_URL = 'http://localhost:1337';
-const API_URL = `${STRAPI_URL}/api`;
+const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'sjdstudiodesain@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'YourNewPassword123';
 
-// Helper: Fetch wrapper
-async function strapiAPI(endpoint, method = 'GET', data = null) {
-  const options = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+let authToken = null;
 
-  if (data) {
-    options.body = JSON.stringify({ data });
-  }
-
+// Authenticate with Strapi
+async function authenticate() {
   try {
-    const response = await fetch(`${API_URL}${endpoint}`, options);
+    const response = await fetch(`${STRAPI_URL}/admin/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+      }),
+    });
+
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(`API Error: ${response.status} - ${JSON.stringify(error)}`);
+      const errorText = await response.text();
+      throw new Error(`Authentication failed: ${errorText}`);
     }
-    return await response.json();
+
+    const data = await response.json();
+    authToken = data.data.token;
+    console.log('✅ Authenticated successfully');
+    return authToken;
   } catch (error) {
-    console.error(`Failed to ${method} ${endpoint}:`, error.message);
-    throw error;
-  }
-}
-
-// Clear existing data
-async function clearData() {
-  console.log('🗑️  Clearing existing data...\n');
-  
-  try {
-    // Get and delete existing projects
-    const projects = await strapiAPI('/projects');
-    for (const project of projects.data || []) {
-      await strapiAPI(`/projects/${project.id}`, 'DELETE');
-      console.log(`   Deleted project: ${project.attributes.title}`);
-    }
-
-    // Get and delete existing insights
-    const insights = await strapiAPI('/insights');
-    for (const insight of insights.data || []) {
-      await strapiAPI(`/insights/${insight.id}`, 'DELETE');
-      console.log(`   Deleted insight: ${insight.attributes.title}`);
-    }
-    
-    console.log('\n✅ Existing data cleared!\n');
-  } catch (error) {
-    console.log('⚠️  No existing data to clear or permission denied\n');
-  }
-}
-
-// Create projects
-async function createProjects() {
-  console.log('📁 Creating sample projects...\n');
-  
-  for (const project of sampleProjects) {
-    try {
-      // Prepare data for Strapi
-      const projectData = {
-        ...project,
-        publishedAt: new Date().toISOString(), // Publish immediately
-      };
-
-      const result = await strapiAPI('/projects', 'POST', projectData);
-      console.log(`   ✅ Created: ${project.title}`);
-    } catch (error) {
-      console.log(`   ❌ Failed: ${project.title} - ${error.message}`);
-    }
-  }
-  
-  console.log(`\n✅ Created ${sampleProjects.length} projects!\n`);
-}
-
-// Create insights
-async function createInsights() {
-  console.log('📝 Creating sample insights...\n');
-  
-  for (const insight of sampleInsights) {
-    try {
-      // Prepare data for Strapi
-      const insightData = {
-        ...insight,
-        publishedAt: new Date().toISOString(), // Publish immediately
-      };
-
-      const result = await strapiAPI('/insights', 'POST', insightData);
-      console.log(`   ✅ Created: ${insight.title}`);
-    } catch (error) {
-      console.log(`   ❌ Failed: ${insight.title} - ${error.message}`);
-    }
-  }
-  
-  console.log(`\n✅ Created ${sampleInsights.length} insights!\n`);
-}
-
-// Main execution
-async function main() {
-  console.log('\n🚀 Starting Strapi Data Seeding...\n');
-  console.log('=' .repeat(60) + '\n');
-
-  try {
-    // Test connection
-    console.log('🔌 Testing Strapi connection...');
-    await fetch(STRAPI_URL);
-    console.log('✅ Connected to Strapi!\n');
-
-    // Clear existing data (optional - comment out if you want to keep existing data)
-    // await clearData();
-
-    // Create new data
-    await createProjects();
-    await createInsights();
-
-    console.log('=' .repeat(60));
-    console.log('\n🎉 Seeding completed successfully!\n');
-    console.log('Next steps:');
-    console.log('1. Visit http://localhost:1337/admin to see the data');
-    console.log('2. Set API permissions: Settings → Roles → Public');
-    console.log('3. Enable find & findOne for Projects and Insights');
-    console.log('4. Test frontend: http://localhost:4322/portfolio\n');
-  } catch (error) {
-    console.error('\n❌ Seeding failed:', error.message);
-    console.log('\nTroubleshooting:');
-    console.log('- Is Strapi running? (npm run develop in /cms)');
-    console.log('- Have you set API permissions to Public?');
-    console.log('- Check Strapi logs for errors\n');
+    console.error('❌ Authentication error:', error.message);
+    console.log('\n💡 Make sure Strapi is running and admin credentials are correct.');
+    console.log(`   Email: ${ADMIN_EMAIL}`);
+    console.log('   Password: [hidden]');
     process.exit(1);
   }
 }
 
-// Run if executed directly
-if (require.main === module) {
-  main();
+// Create a project
+async function createProject(projectData) {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/projects`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        data: {
+          ...projectData,
+          slug: projectData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, ''),
+          publishedAt: new Date().toISOString(),
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(JSON.stringify(error));
+    }
+
+    const data = await response.json();
+    console.log(`✅ Created project: ${projectData.title}`);
+    return data;
+  } catch (error) {
+    console.error(`❌ Error creating project "${projectData.title}":`, error.message);
+  }
 }
 
-module.exports = { createProjects, createInsights, clearData };
+// Create an insight
+async function createInsight(insightData) {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/insights`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        data: {
+          ...insightData,
+          slug: insightData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, ''),
+          publishedAt: new Date().toISOString(),
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(JSON.stringify(error));
+    }
+
+    const data = await response.json();
+    console.log(`✅ Created insight: ${insightData.title}`);
+    return data;
+  } catch (error) {
+    console.error(`❌ Error creating insight "${insightData.title}":`, error.message);
+  }
+}
+
+// Clear existing data (optional)
+async function clearData() {
+  console.log('\n🗑️  Clearing existing data...\n');
+
+  try {
+    // Get all projects
+    const projectsRes = await fetch(`${STRAPI_URL}/api/projects`, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+    });
+    const projects = await projectsRes.json();
+
+    // Delete each project
+    for (const project of projects.data || []) {
+      await fetch(`${STRAPI_URL}/api/projects/${project.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` },
+      });
+      console.log(`🗑️  Deleted project: ${project.attributes.title}`);
+    }
+
+    // Get all insights
+    const insightsRes = await fetch(`${STRAPI_URL}/api/insights`, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+    });
+    const insights = await insightsRes.json();
+
+    // Delete each insight
+    for (const insight of insights.data || []) {
+      await fetch(`${STRAPI_URL}/api/insights/${insight.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` },
+      });
+      console.log(`🗑️  Deleted insight: ${insight.attributes.title}`);
+    }
+
+    console.log('\n✅ Cleared all existing data\n');
+  } catch (error) {
+    console.error('❌ Error clearing data:', error.message);
+  }
+}
+
+// Main seed function
+async function seed() {
+  console.log('🌱 Starting seed process...\n');
+
+  // Authenticate first
+  await authenticate();
+
+  // Ask if user wants to clear existing data
+  const args = process.argv.slice(2);
+  if (args.includes('--clear')) {
+    await clearData();
+  }
+
+  // Seed projects
+  console.log('\n📁 Creating sample projects...\n');
+  for (const project of sampleProjects) {
+    await createProject(project);
+  }
+
+  // Seed insights
+  console.log('\n📝 Creating sample insights...\n');
+  for (const insight of sampleInsights) {
+    await createInsight(insight);
+  }
+
+  console.log('\n✅ Seed process completed!\n');
+  console.log('📊 Summary:');
+  console.log(`   - ${sampleProjects.length} projects created`);
+  console.log(`   - ${sampleInsights.length} insights created`);
+  console.log('\n🎉 Your Strapi CMS is now populated with sample data!\n');
+  console.log('👉 Visit http://localhost:1337/admin to view your content\n');
+}
+
+// Run the seed
+seed().catch(error => {
+  console.error('❌ Seed process failed:', error);
+  process.exit(1);
+});

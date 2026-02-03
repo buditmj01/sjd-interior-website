@@ -5,6 +5,8 @@ import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import FAQSection from '../components/common/FAQSection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
+import { getInsights } from '../lib/getInsights';
+import { getStrapiMedia } from '../lib/strapi';
 
 const steps = [
   {
@@ -12,161 +14,161 @@ const steps = [
     title: "Konsultasi",
     description: "Ceritakan kebutuhan dan impian ruang Anda. Tim kami akan menganalisis gaya hidup, preferensi, dan budget Anda secara mendetail.",
     image: "/images/workflow-consult.jpg",
-    position: "right"
+    position: "left"
   },
   {
     label: "KUNJUNGAN",
     title: "Survei Lokasi",
     description: "Desainer kami akan mengunjungi lokasi untuk mengukur ruangan, memahami pencahayaan alami, dan menemukan potensi tersembunyi dari ruang Anda.",
     image: "/images/workflow-consult.jpg",
-    position: "left"
+    position: "right"
   },
   {
     label: "PERENCANAAN",
     title: "Design & Anggaran",
     description: "Desain disusun berdasarkan referensi dan kebutuhan Anda, lengkap dengan perhitungan RAB yang terukur. Setelah disetujui, proses dilanjutkan dengan persetujuan RAB sebagai dasar pelaksanaan proyek.",
     image: "/images/workflow-planning.jpg",
-    position: "right"
+    position: "left"
   },
   {
     label: "DESAIN",
     title: "Presentasi Konsep",
     description: "Kami sajikan konsep desain lengkap dengan moodboard, 3D rendering dan gambar teknis arsitektur.",
-    milestoneAfter: "Penerimaan & TTD RAB dengan DP 50%",
+    milestoneAfter: "Penerimaan & TTD RAB dengan <b>DP 50%</b>",
     image: "/images/workflow-design.png",
-    position: "left"
+    position: "right"
   },
   {
     label: "PERSIAPAN",
     title: "Pengadaan Material",
     description: "Seluruh furniture dikerjakan di workshop kami hingga selesai, kemudian dikirim ke lokasi setelah proses pembayaran tahap selanjutnya.",
-    milestoneBefore: "Eksekusi dimulai dengan DP 25%",
+    milestoneAfter: "<b>Termin 25%:</b> Dibayarkan saat produksi selesai dan siap kirim",
     image: "/images/workflow-materials.jpg",
-    position: "right"
+    position: "left"
   },
   {
     label: "EKSEKUSI",
     title: "Pengerjaan di Lokasi",
     description: "Tim kami melakukan instalasi dan pengerjaan langsung di lokasi sesuai desain yang telah disepakati. Setiap proses dijalankan dengan rapi, terukur, dan diawasi hingga hasil akhir sesuai ekspektasi Anda.",
     image: "/images/workflow-execution.jpg",
-    position: "left"
+    position: "right"
   },
   {
     label: "FINALISASI",
     title: "Serah terima & pembayaran",
-    description: "Tahap akhir penyelesaian proyek dilakukan melalui proses pengecekan bersama untuk memastikan seluruh pekerjaan sesuai desain dan standar kualitas. Setelah progress 90% dan pembayaran final dilakukan serah terima.",
+    description: "Tahap akhir penyelesaian proyek dilakukan melalui proses pengecekan bersama untuk memastikan seluruh pekerjaan sesuai desain dan standar kualitas. Setelah progress 100% dan pembayaran final dilakukan serah terima.",
     image: "/images/workflow-materials.jpg",
-    position: "right"
+    position: "left"
   }
 ];
 
-const insights = [
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  },
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  },
-  {
-    title: "8 Konsep Desain Interior yang Akan Tren di 2026",
-    author: "Nurhanif Kamal Putra",
-    date: "8 Januari 2026",
-    category: "NEWS",
-    image: "/images/insight-card.jpg",
-    slug: "8-konsep-desain-interior-2026"
-  }
-];
+// Fetch latest insights from Strapi (limit 4 for alur-kerja page)
+const insightsData = await getInsights({ limit: 4, sort: 'publishedAt:desc' });
+
+// Transform insights data for the component
+const insights = insightsData?.map((insight: any) => {
+  const attrs = insight.attributes;
+  const authorName = attrs.author?.data?.attributes?.name || 'SJD Team';
+  const publishedDate = attrs.publishedAt ? new Date(attrs.publishedAt).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }) : '';
+  const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/insight-card.jpg';
+
+  return {
+    title: attrs.title,
+    author: authorName,
+    date: publishedDate,
+    category: attrs.category?.toUpperCase() || 'ARTIKEL',
+    image: featuredImage,
+    slug: attrs.slug
+  };
+}) || [];
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Alur Kerja - SJD Interior"
+  description="Proses mudah dan profesional untuk mewujudkan interior impian Anda bersama SJD Interior"
+>
   <Header />
   
   <main class="bg-white">
     <!-- Hero Section with Background Image -->
-    <section class="relative min-h-[90vh] flex items-end overflow-hidden">
-      <!-- Background Image -->
-      <div class="absolute inset-0">
-        <img
-          src="/images/hero-background.jpg"
-          alt="Proses Interior"
-          class="w-full h-full object-cover"
-        />
-        <!-- Gradient Overlay - Fade to Black -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black"></div>
-      </div>
-
-      <!-- Content -->
-      <div class="relative z-10 w-full max-w-[1761px] mx-auto px-[151px] pb-20">
-        <h1 class="text-[128px] font-light text-white mb-6" style="letter-spacing: -6.40px; line-height: 98.83%;">
+    <!-- Hero Section -->
+    <section class="pt-32 md:pt-44 lg:pt-56 pb-14 md:pb-24 lg:pb-32 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h1 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8" style="letter-spacing: -2.4px; line-height: 98.83%;">
           Prosesnya mudah.
         </h1>
-        <p class="text-[28px] font-light text-white/70 leading-[1.4] max-w-[800px]" style="letter-spacing: -1.4px;">
-          <span class="text-white font-medium">Kami tangani</span> semuanya dengan profesional.
-          <span class="text-white font-medium">Anda tinggal</span> nikmati hasilnya.
+        <p class="text-[24px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.2] max-w-5xl" style="letter-spacing: -1px;">
+          Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.
         </p>
+      </div>
+
+      <!-- Hero Image - Full Width of Content Container -->
+      <div class="w-full max-w-[1761px] mx-auto mt-12 md:mt-16 lg:mt-20">
+        <div class="w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+          <img
+            src="/images/hero-background.jpg"
+            alt="Proses Interior"
+            class="w-full h-[120%] object-cover -mt-[10%]"
+            data-parallax-hero
+          />
+        </div>
       </div>
     </section>
 
     <!-- Timeline Process -->
-    <section class="relative py-28 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px] relative">
+    <section class="relative py-12 md:py-20 lg:py-28 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] relative">
         <!-- Section Title -->
-        <div class="text-center mb-16">
-          <h2 class="text-[80px] font-light text-black" style="letter-spacing: -4.00px;">Alur Pengerjaan</h2>
+        <div class="text-center mb-8 md:mb-12 lg:mb-16">
+          <h2 class="text-[40px] md:text-[60px] lg:text-[80px] font-light text-black" style="letter-spacing: -2.0px; md:letter-spacing: -3.0px; lg:letter-spacing: -4.0px;">Alur Pengerjaan</h2>
         </div>
 
         <!-- Steps -->
         {steps.map((step, index) => (
-          <div class={`relative scroll-mt-20 ${step.milestoneAfter || step.milestoneBefore ? 'mb-40' : 'mb-28'} last:mb-0`} id={`step-${index + 1}`}>
+          <div class={`relative scroll-mt-20 mb-32 md:mb-48 lg:mb-64 last:mb-0`} id={`step-${index + 1}`}>
             <!-- Content - Text on one side, Image on opposite side -->
             {step.position === 'right' ? (
               <>
                 <!-- Milestone Before (appears before content) -->
                 {step.milestoneBefore && (
-                  <div class="flex justify-center mb-10 relative z-10">
-                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
-                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                  <div class="flex justify-center mb-8 md:mb-10 relative z-10">
+                    <div class="w-auto min-w-[280px] md:min-w-[350px] lg:min-w-[420px] py-6 md:py-7 lg:py-8 px-6 md:px-8 lg:px-10 border border-black rounded-[20px] md:rounded-[25px] lg:rounded-[30px] bg-white">
+                      <p class="text-[18px] md:text-[21px] lg:text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -0.9px; md:letter-spacing: -1.05px; lg:letter-spacing: -1.2px;">
                         {step.milestoneBefore}
                       </p>
                     </div>
                   </div>
                 )}
                 <!-- Text LEFT, Image RIGHT with Dot in center -->
-                <div class="grid grid-cols-2 gap-0 items-start relative">
-                  <!-- Text on Left (aligned right) -->
-                  <div class="pr-12 text-right flex flex-col justify-start pt-2">
-                    <p class="text-[23px] font-normal text-[#929292] mb-2" style="letter-spacing: -1.15px; line-height: 1.4;">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center relative">
+                  <!-- Text on Left (aligned right on desktop, center on mobile) -->
+                  <div class="px-6 lg:px-12 text-center lg:text-right flex flex-col justify-center order-2 lg:order-1">
+                    <p class="text-[14px] md:text-[15px] lg:text-[16px] font-bold text-[#929292] mb-2 md:mb-3 tracking-widest uppercase">
                       {step.label}
                     </p>
-                    <h3 class="text-[55px] font-light text-black mb-4" style="letter-spacing: -2.75px; line-height: 1;">
+                    <h3 class="text-[32px] md:text-[40px] lg:text-[48px] font-light text-black mb-4 md:mb-5 leading-[1.1]">
                       {step.title}
                     </h3>
-                    <p class="text-[23px] font-normal text-[#929292] leading-[1.4]" style="letter-spacing: -1.15px;">
+                    <p class="text-[16px] md:text-[18px] lg:text-[20px] font-normal text-[#666] leading-[1.6]">
                       {step.description}
                     </p>
                   </div>
-                  <!-- Dot at center line -->
-                  <div class="absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
-                    <div class="w-[30px] h-[30px] bg-black rounded-full"></div>
+                  <!-- Dot at center line (hidden on mobile) -->
+                  <div class="hidden lg:block absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
+                    <div class="w-[16px] h-[16px] bg-[#D1D1D1] rounded-full ring-[20px] ring-white"></div>
                   </div>
-                  <!-- Image on Right -->
-                  <div class="pl-12">
+                  <!-- Image on Right (first on mobile) -->
+                  <div class="px-6 lg:px-12 order-1 lg:order-2">
                     {step.image && (
-                      <div class="overflow-hidden">
+                      <div class="overflow-hidden rounded-[20px]">
                         <img
                           src={step.image}
                           alt={step.title}
-                          class="w-[628px] h-[418px] object-cover"
+                          class="w-full h-auto aspect-[628/418] object-cover"
                         />
                       </div>
                     )}
@@ -174,11 +176,9 @@ const insights = [
                 </div>
                 <!-- Milestone After (appears after content) -->
                 {step.milestoneAfter && (
-                  <div class="flex justify-center mt-10 relative z-10">
-                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
-                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
-                        {step.milestoneAfter}
-                      </p>
+                  <div class="flex justify-center mt-20 md:mt-24 lg:mt-32 relative z-10">
+                    <div class="w-auto min-w-[280px] md:min-w-[350px] lg:min-w-[420px] py-6 md:py-7 lg:py-8 px-6 md:px-8 lg:px-10 border border-black rounded-[20px] md:rounded-[25px] lg:rounded-[30px] bg-white">
+                      <p class="text-[18px] md:text-[21px] lg:text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -0.9px; md:letter-spacing: -1.05px; lg:letter-spacing: -1.2px;" set:html={step.milestoneAfter}></p>
                     </div>
                   </div>
                 )}
@@ -187,52 +187,50 @@ const insights = [
               <>
                 <!-- Milestone Before (appears before content) -->
                 {step.milestoneBefore && (
-                  <div class="flex justify-center mb-10 relative z-10">
-                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
-                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+                  <div class="flex justify-center mb-8 md:mb-10 relative z-10">
+                    <div class="w-auto min-w-[280px] md:min-w-[350px] lg:min-w-[420px] py-6 md:py-7 lg:py-8 px-6 md:px-8 lg:px-10 border border-black rounded-[20px] md:rounded-[25px] lg:rounded-[30px] bg-white">
+                      <p class="text-[18px] md:text-[21px] lg:text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -0.9px; md:letter-spacing: -1.05px; lg:letter-spacing: -1.2px;">
                         {step.milestoneBefore}
                       </p>
                     </div>
                   </div>
                 )}
                 <!-- Image LEFT, Text RIGHT with Dot in center -->
-                <div class="grid grid-cols-2 gap-0 items-start relative">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center relative">
                   <!-- Image on Left -->
-                  <div class="pr-12 flex justify-end">
+                  <div class="px-6 lg:px-12 flex justify-center lg:justify-end">
                     {step.image && (
-                      <div class="overflow-hidden">
+                      <div class="overflow-hidden rounded-[20px]">
                         <img
                           src={step.image}
                           alt={step.title}
-                          class="w-[628px] h-[418px] object-cover"
+                          class="w-full h-auto aspect-[628/418] object-cover"
                         />
                       </div>
                     )}
                   </div>
-                  <!-- Dot at center line -->
-                  <div class="absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
-                    <div class="w-[30px] h-[30px] bg-black rounded-full"></div>
+                  <!-- Dot at center line (hidden on mobile) -->
+                  <div class="hidden lg:block absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
+                    <div class="w-[16px] h-[16px] bg-[#D1D1D1] rounded-full ring-[20px] ring-white"></div>
                   </div>
                   <!-- Text on Right -->
-                  <div class="pl-12 flex flex-col justify-start pt-2">
-                    <p class="text-[23px] font-normal text-[#929292] mb-2" style="letter-spacing: -1.15px; line-height: 1.4;">
+                  <div class="px-6 lg:px-12 text-center lg:text-left flex flex-col justify-center">
+                    <p class="text-[14px] md:text-[15px] lg:text-[16px] font-bold text-[#929292] mb-2 md:mb-3 tracking-widest uppercase">
                       {step.label}
                     </p>
-                    <h3 class="text-[55px] font-light text-black mb-4" style="letter-spacing: -2.75px; line-height: 1;">
+                    <h3 class="text-[32px] md:text-[40px] lg:text-[48px] font-light text-black mb-4 md:mb-5 leading-[1.1]">
                       {step.title}
                     </h3>
-                    <p class="text-[23px] font-normal text-[#929292] leading-[1.4]" style="letter-spacing: -1.15px;">
+                    <p class="text-[16px] md:text-[18px] lg:text-[20px] font-normal text-[#666] leading-[1.6]">
                       {step.description}
                     </p>
                   </div>
                 </div>
                 <!-- Milestone After (appears after content) -->
                 {step.milestoneAfter && (
-                  <div class="flex justify-center mt-10 relative z-10">
-                    <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
-                      <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
-                        {step.milestoneAfter}
-                      </p>
+                  <div class="flex justify-center mt-20 md:mt-24 lg:mt-32 relative z-10">
+                    <div class="w-auto min-w-[280px] md:min-w-[350px] lg:min-w-[420px] py-6 md:py-7 lg:py-8 px-6 md:px-8 lg:px-10 border border-black rounded-[20px] md:rounded-[25px] lg:rounded-[30px] bg-white">
+                      <p class="text-[18px] md:text-[21px] lg:text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -0.9px; md:letter-spacing: -1.05px; lg:letter-spacing: -1.2px;" set:html={step.milestoneAfter}></p>
                     </div>
                   </div>
                 )}
@@ -241,13 +239,13 @@ const insights = [
           </div>
         ))}
 
-        <!-- Center timeline line -->
-        <div class="absolute left-1/2 top-[200px] bottom-[80px] w-[9px] bg-black rounded-full transform -translate-x-1/2 z-0"></div>
+        <!-- Center timeline line (hidden on mobile) -->
+        <div class="hidden lg:block absolute left-1/2 top-[228px] bottom-[80px] w-[2px] bg-[#D1D1D1] rounded-full transform -translate-x-1/2 z-0"></div>
 
         <!-- Pengerjaan Selesai - End of Timeline -->
-        <div class="flex justify-center mt-12 relative z-10">
-          <div class="w-[337px] py-6 px-6 border border-black rounded-[21px] bg-white">
-            <p class="text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -1.2px;">
+        <div class="flex justify-center mt-32 md:mt-44 lg:mt-56 relative z-10">
+          <div class="w-auto min-w-[280px] md:min-w-[350px] lg:min-w-[420px] py-6 md:py-7 lg:py-8 px-6 md:px-8 lg:px-10 border border-black rounded-[20px] md:rounded-[25px] lg:rounded-[30px] bg-white">
+            <p class="text-[18px] md:text-[21px] lg:text-[24px] font-light text-black text-center leading-normal" style="letter-spacing: -0.9px; md:letter-spacing: -1.05px; lg:letter-spacing: -1.2px;">
               Pengerjaan selesai
             </p>
           </div>
@@ -257,8 +255,8 @@ const insights = [
     </section>
 
     <!-- Background Image Section for FAQ -->
-    <section class="relative py-0 bg-white -mt-10">
-      <div class="w-full h-[800px] overflow-hidden relative">
+    <section class="relative py-0 bg-white -mt-8 md:-mt-10">
+      <div class="w-full h-[500px] md:h-[650px] lg:h-[800px] overflow-hidden relative">
         <img
           src="/images/hero-background.jpg"
           alt="Background"
@@ -267,9 +265,9 @@ const insights = [
         <div class="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.5)] via-[rgba(0,0,0,0.3)] to-white"></div>
         <!-- Copywriting Overlay -->
         <div class="absolute inset-0 flex items-center justify-center">
-          <div class="text-center max-w-[900px] px-8">
-            <h2 class="text-[80px] font-light text-white" style="letter-spacing: -4px; line-height: 1;">
-              Interior Idaman<br/>Telah Siap
+          <div class="text-center max-w-[700px] md:max-w-[800px] lg:max-w-[900px] px-6 md:px-8">
+            <h2 class="text-[48px] md:text-[64px] lg:text-[80px] font-light text-white" style="letter-spacing: -2.4px; md:letter-spacing: -3.2px; lg:letter-spacing: -4px; line-height: 1;">
+              Wujudkan Interior<br/>Impian Anda
             </h2>
           </div>
         </div>
@@ -282,24 +280,24 @@ const insights = [
     </div>
 
     <!-- Insights Section -->
-    <section class="py-28 bg-gradient-to-b from-white via-white to-[#f9f9f9]">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="text-center mb-16">
-            <p class="text-[18px] font-medium text-[#636363] uppercase tracking-wider mb-3">Pelajari Lebih Lanjut</p>
-          <h2 class="text-[80px] font-light text-black mb-4" style="letter-spacing: -4.00px;">Insight & Tips<br />Desain Interior</h2>
-          <p class="text-[20px] text-[#636363] max-w-2xl mx-auto leading-[1.6]">Dapatkan inspirasi dan pengetahuan tentang tren desain terkini dari tim ahli kami.</p>
+    <section class="py-16 md:py-20 lg:py-28 bg-gradient-to-b from-white via-white to-[#f9f9f9]">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="text-center mb-10 md:mb-12 lg:mb-16">
+            <p class="text-[14px] md:text-[16px] lg:text-[18px] font-medium text-[#636363] uppercase tracking-wider mb-2 md:mb-3">Pelajari Lebih Lanjut</p>
+          <h2 class="text-[40px] md:text-[60px] lg:text-[80px] font-light text-black mb-3 md:mb-4" style="letter-spacing: -2.00px; md:letter-spacing: -3.00px; lg:letter-spacing: -4.00px;">Insight & Tips<br />Desain Interior</h2>
+          <p class="text-[16px] md:text-[18px] lg:text-[20px] text-[#636363] max-w-2xl mx-auto leading-[1.6]">Dapatkan inspirasi dan pengetahuan tentang tren desain terkini dari tim ahli kami.</p>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-10 md:mb-12 lg:mb-16">
           {insights.map((insight) => (
             <InsightCard {...insight} />
           ))}
         </div>
-        
+
         <div class="text-center">
             <a
               href="/insight"
-              class="inline-flex items-center justify-center px-10 py-4 text-[18px] font-medium text-[#313131] bg-transparent border-[3px] border-[#313131] rounded-full hover:bg-[#313131] hover:text-white transition-all duration-300"
+              class="inline-flex items-center justify-center px-8 md:px-10 py-3 md:py-4 text-[16px] md:text-[17px] lg:text-[18px] font-medium text-[#313131] bg-transparent border-2 md:border-[3px] border-[#313131] rounded-full hover:bg-[#313131] hover:text-white transition-all duration-300"
             >
               Jelajahi Semua Artikel
             </a>
@@ -312,4 +310,42 @@ const insights = [
   </main>
 
   <Footer />
+
+  <script>
+    import { gsap, ScrollTrigger } from '../utils/gsap';
+
+    document.addEventListener('astro:page-load', () => {
+      // Parallax for Hero Image
+      const heroImg = document.querySelector('[data-parallax-hero]');
+      if (heroImg) {
+        gsap.to(heroImg, {
+          y: '15%',
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroImg.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+      }
+    });
+
+    // Initial load fallback
+    document.addEventListener('DOMContentLoaded', () => {
+      const heroImg = document.querySelector('[data-parallax-hero]');
+      if (heroImg) {
+        gsap.to(heroImg, {
+          y: '15%',
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroImg.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+      }
+    });
+  </script>
 </BaseLayout>

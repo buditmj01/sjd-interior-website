@@ -1,18 +1,47 @@
 ---
 import Button from './Button.astro';
-import { getSiteSettings } from '../../lib/getSiteSettings.js';
+import { getWebsiteLogos } from '../../lib/getWebsiteLogos.js';
+import { getNavigation } from '../../lib/getNavigation.js';
+import { getContactInfo } from '../../lib/getContactInfo';
 
-// Fetch site settings for logo
-const siteSettings = await getSiteSettings();
+// Fetch website logos
+const logosData = await getWebsiteLogos();
+const logos = logosData?.attributes?.websiteLogos || {};
 
-// Navigation items - matching Figma design
-const navItems = [
-  { label: 'Beranda', href: '/' },
-  { label: 'Alur Kerja', href: '/alur-kerja' },
-  { label: 'Portofolio', href: '/portfolio' },
-  { label: 'Insight', href: '/insight' },
-  { label: 'Hubungi Kami', href: '/hubungi-kami' },
+// Fetch navigation from Strapi
+const navigationData = await getNavigation();
+
+// Default fallback navigation
+const defaultNavItems = [
+  { label: 'Beranda', url: '/' },
+  { label: 'Alur Kerja', url: '/alur-kerja' },
+  { label: 'Portofolio', url: '/portfolio' },
+  { label: 'Insight', url: '/insight' },
+  { label: 'Hubungi Kami', url: '/hubungi-kami' },
 ];
+
+const defaultCta = {
+  text: 'Konsultasi',
+  type: 'whatsapp',
+  pageUrl: '/hubungi-kami'
+};
+
+// Use Strapi data if available, otherwise use defaults
+const navItems = navigationData?.attributes?.menuItems || defaultNavItems;
+const ctaConfig = navigationData?.attributes ? {
+  text: navigationData.attributes.cta_text || defaultCta.text,
+  type: navigationData.attributes.cta_type || defaultCta.type,
+  pageUrl: navigationData.attributes.cta_page_url || defaultCta.pageUrl
+} : defaultCta;
+
+// Fetch contact info for WhatsApp number
+const contactData = await getContactInfo();
+const whatsappNumber = contactData?.attributes?.whatsapp_number || '6285398989810';
+
+// Build CTA URL based on type
+const ctaUrl = ctaConfig.type === 'whatsapp'
+  ? `https://wa.me/${whatsappNumber}?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya.`
+  : ctaConfig.pageUrl;
 
 const currentPath = Astro.url.pathname;
 ---
@@ -28,22 +57,22 @@ const currentPath = Astro.url.pathname;
         href="/"
         class="hover:opacity-80 transition-opacity header-logo-link relative"
       >
-        {(siteSettings.logo || siteSettings.logoLight) ? (
+        {(logos.logo?.data || logos.logoLight?.data) ? (
           <>
             {/* Dark logo - shown on white/scrolled header */}
-            {siteSettings.logo && (
+            {logos.logo?.data && (
               <img
-                src={siteSettings.logo.url}
-                alt={siteSettings.logo.alt}
+                src={`${import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337'}${logos.logo.data.attributes.url}`}
+                alt={logos.logo.data.attributes.alternativeText || 'Logo'}
                 class="h-12 md:h-16 w-auto object-contain logo-dark absolute top-0 left-0"
                 loading="eager"
               />
             )}
             {/* Light logo - shown on transparent/hero header */}
-            {siteSettings.logoLight && (
+            {logos.logoLight?.data && (
               <img
-                src={siteSettings.logoLight.url}
-                alt={siteSettings.logoLight.alt}
+                src={`${import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337'}${logos.logoLight.data.attributes.url}`}
+                alt={logos.logoLight.data.attributes.alternativeText || 'Logo'}
                 class="h-12 md:h-16 w-auto object-contain logo-light"
                 loading="eager"
               />
@@ -61,10 +90,10 @@ const currentPath = Astro.url.pathname;
       <nav class="hidden lg:flex items-center gap-[19px]">
         {navItems.map((item) => (
           <a
-            href={item.href}
+            href={item.url}
             class:list={[
               'text-[15px] font-normal hover:opacity-70 transition-opacity header-link',
-              currentPath === item.href ? 'opacity-70' : ''
+              currentPath === item.url ? 'opacity-70' : ''
             ]}
           >
             {item.label}
@@ -72,16 +101,25 @@ const currentPath = Astro.url.pathname;
         ))}
       </nav>
 
-      <!-- CTA Button (Desktop) - matching Figma -->
+      <!-- CTA Button (Desktop) - Dynamic from Strapi -->
       <div class="hidden lg:block">
-        <a
-          href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center w-[136px] h-[45px] text-[15px] font-medium bg-[#0096f7] text-white rounded-[22.5px] hover:bg-[#0085e0] transition-colors header-cta-btn"
-        >
-          Konsultasi
-        </a>
+        {ctaConfig.type === 'whatsapp' ? (
+          <a
+            href={ctaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center px-6 h-[45px] text-[15px] font-medium rounded-[22.5px] transition-all duration-300 header-cta-btn whitespace-nowrap"
+          >
+            {ctaConfig.text}
+          </a>
+        ) : (
+          <a
+            href={ctaUrl}
+            class="inline-flex items-center justify-center px-6 h-[45px] text-[15px] font-medium rounded-[22.5px] transition-all duration-300 header-cta-btn whitespace-nowrap"
+          >
+            {ctaConfig.text}
+          </a>
+        )}
       </div>
 
       <!-- Mobile Menu Button -->
@@ -100,42 +138,63 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
 
-  <!-- Mobile Menu -->
+  <!-- Mobile Menu - Premium Full Screen Overlay -->
   <nav
     id="mobile-menu"
-    class="lg:hidden fixed inset-0 top-16 bg-black transform translate-x-full transition-transform duration-300 ease-in-out"
+    class="lg:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-xl transform translate-x-full transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)"
+    style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
   >
-    <div class="container py-6 space-y-1">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class:list={[
-            'block px-4 py-3 rounded-lg text-base font-medium transition-colors text-white',
-            currentPath === item.href
-              ? 'bg-primary/20 text-primary'
-              : 'hover:bg-white/10'
-          ]}
-        >
-          {item.label}
-        </a>
-      ))}
+    <div class="h-full flex flex-col justify-center px-8 relative">
+      <!-- Background Abstract Shape (Optional premium touch) -->
+      <div class="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <!-- Mobile CTA Button -->
-      <div class="mt-6 mx-4">
-        <a
-          href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya."
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center w-full px-6 py-2.5 text-[15px] font-medium bg-[#0096f7] text-white rounded-full hover:bg-[#0085e0] transition-colors"
-        >
-          Konsultasi
-        </a>
+      <div class="space-y-6 md:space-y-8 flex flex-col items-center text-center">
+        {navItems.map((item, index) => (
+          <a
+            href={item.url}
+            class:list={[
+              'mobile-nav-link text-[32px] md:text-[40px] font-light tracking-tight transition-all duration-300 transform translate-y-8 opacity-0',
+              currentPath === item.url
+                ? 'text-white font-normal'
+                : 'text-[#888888] hover:text-white'
+            ]}
+            style={`transition-delay: ${100 + index * 50}ms`}
+          >
+            {item.label}
+          </a>
+        ))}
+
+        <!-- Mobile CTA Button -->
+        <div class="pt-8 w-full flex justify-center mobile-nav-link transform translate-y-8 opacity-0" style={`transition-delay: ${100 + navItems.length * 50}ms`}>
+          {ctaConfig.type === 'whatsapp' ? (
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-10 py-4 text-[18px] font-medium bg-white text-black rounded-full hover:bg-gray-200 transition-colors w-full max-w-[280px]"
+            >
+              {ctaConfig.text}
+            </a>
+          ) : (
+            <a
+              href={ctaUrl}
+              class="inline-flex items-center justify-center px-10 py-4 text-[18px] font-medium bg-white text-black rounded-full hover:bg-gray-200 transition-colors w-full max-w-[280px]"
+            >
+              {ctaConfig.text}
+            </a>
+          )}
+        </div>
+      </div>
+
+      <!-- Footer Info in Menu -->
+      <div class="absolute bottom-10 left-0 right-0 text-center mobile-nav-link transform translate-y-8 opacity-0" style={`transition-delay: ${200 + navItems.length * 50}ms`}>
+        <p class="text-[#666] text-sm font-light">
+          &copy; {new Date().getFullYear()} SJD Interior Design
+        </p>
       </div>
     </div>
   </nav>
 </header>
-
-<!-- Spacer removed - all pages now have transparent header at top -->
 
 <script>
   // Mobile menu toggle
@@ -143,45 +202,64 @@ const currentPath = Astro.url.pathname;
   const mobileMenu = document.getElementById('mobile-menu');
   const menuIcon = document.getElementById('menu-icon');
   const closeIcon = document.getElementById('close-icon');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
   let isMenuOpen = false;
 
-  menuButton?.addEventListener('click', () => {
+  const toggleMenu = () => {
     isMenuOpen = !isMenuOpen;
 
     if (isMenuOpen) {
+      // Open Menu
       mobileMenu?.classList.remove('translate-x-full');
+      mobileMenu?.classList.add('translate-x-0');
+      
+      // Icon Animation
       menuIcon?.classList.add('hidden');
       closeIcon?.classList.remove('hidden');
+      
+      // Lock Body Scroll
       document.body.style.overflow = 'hidden';
+
+      // Animate Links In
+      setTimeout(() => {
+        mobileLinks.forEach((link) => {
+          link.classList.remove('translate-y-8', 'opacity-0');
+        });
+      }, 100);
+
     } else {
+      // Close Menu
       mobileMenu?.classList.add('translate-x-full');
+      mobileMenu?.classList.remove('translate-x-0');
+      
+      // Icon Animation
       menuIcon?.classList.remove('hidden');
       closeIcon?.classList.add('hidden');
+      
+      // Unlock Body Scroll
       document.body.style.overflow = '';
+
+      // Reset Links (for next animation)
+      mobileLinks.forEach((link) => {
+        link.classList.add('translate-y-8', 'opacity-0');
+      });
     }
-  });
+  };
+
+  menuButton?.addEventListener('click', toggleMenu);
 
   // Close mobile menu when clicking on a link
-  const mobileLinks = mobileMenu?.querySelectorAll('a');
-  mobileLinks?.forEach(link => {
+  mobileLinks.forEach(link => {
     link.addEventListener('click', () => {
-      mobileMenu?.classList.add('translate-x-full');
-      menuIcon?.classList.remove('hidden');
-      closeIcon?.classList.add('hidden');
-      document.body.style.overflow = '';
-      isMenuOpen = false;
+      if (isMenuOpen) toggleMenu();
     });
   });
 
   // Close menu on escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isMenuOpen) {
-      mobileMenu?.classList.add('translate-x-full');
-      menuIcon?.classList.remove('hidden');
-      closeIcon?.classList.add('hidden');
-      document.body.style.overflow = '';
-      isMenuOpen = false;
+      toggleMenu();
     }
   });
 
@@ -198,6 +276,9 @@ const currentPath = Astro.url.pathname;
 
       const updateHeader = () => {
         const scrollY = window.scrollY;
+
+        // If menu is open, force transparent (dark overlay covers it) or keep it consistent
+        if (isMenuOpen) return;
 
         if (shouldBeTransparent) {
           // Page has hero - use transparent mode at top
@@ -233,9 +314,9 @@ const currentPath = Astro.url.pathname;
 </script>
 
 <style>
-  /* Ensure smooth mobile menu animation */
-  #mobile-menu {
-    will-change: transform;
+  /* Cubic Bezier for smooth premium feel */
+  .cubic-bezier {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Header transitions */
@@ -276,11 +357,19 @@ const currentPath = Astro.url.pathname;
     background-color: #ffffff;
     color: #000000;
   }
-  
+
+  #main-header.bg-transparent .header-cta-btn:hover {
+    background-color: #f0f0f0;
+  }
+
   /* Black button on scrolled header */
   #main-header.bg-white .header-cta-btn {
     background-color: #000000;
     color: #ffffff;
+  }
+
+  #main-header.bg-white .header-cta-btn:hover {
+    background-color: #1a1a1a;
   }
 
   /* Logo switching based on header background */

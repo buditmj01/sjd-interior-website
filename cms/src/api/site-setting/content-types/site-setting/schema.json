@@ -5,7 +5,7 @@
     "singularName": "site-setting",
     "pluralName": "site-settings",
     "displayName": "Site Settings",
-    "description": "Global site configuration including logos and favicon"
+    "description": "Global site configuration"
   },
   "options": {
     "draftAndPublish": false
@@ -14,30 +14,13 @@
   "attributes": {
     "siteName": {
       "type": "string",
-      "default": "SJD Interior Design"
-    },
-    "websiteLogos": {
-      "type": "component",
-      "repeatable": false,
-      "component": "settings.website-logos"
+      "default": "SJD Interior Design",
+      "required": true
     },
     "siteDescription": {
       "type": "text",
-      "default": "Professional interior design services"
-    },
-    "contactEmail": {
-      "type": "email"
-    },
-    "contactPhone": {
-      "type": "string"
-    },
-    "address": {
-      "type": "text"
-    },
-    "socialMedia": {
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.social-media"
+      "default": "Professional interior design services",
+      "required": true
     }
   }
 }

@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_statistics",
+  "info": {
+    "singularName": "stats",
+    "pluralName": "statistics",
+    "displayName": "Stats",
+    "description": "Website statistics and counters"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "stats1": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stat-item"
+    },
+    "stats2": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stat-item"
+    },
+    "stats3": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stat-item"
+    },
+    "stats4": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stat-item"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "kind": "singleType",
+  "collectionName": "hero_banner",
+  "info": {
+    "singularName": "hero-banner",
+    "pluralName": "hero-banners",
+    "displayName": "Hero Banner",
+    "description": "Homepage hero banner - fully customizable headline, background, and CTA button"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "headline": {
+      "type": "text",
+      "required": true,
+      "default": "Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional."
+    },
+    "background": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "cta_text": {
+      "type": "string",
+      "required": true,
+      "default": "Mulai Konsultasi"
+    },
+    "cta_type": {
+      "type": "enumeration",
+      "enum": ["whatsapp", "internal_page"],
+      "default": "whatsapp",
+      "required": true
+    },
+    "cta_page_url": {
+      "type": "string",
+      "default": "/hubungi-kami"
+    }
+  }
+}

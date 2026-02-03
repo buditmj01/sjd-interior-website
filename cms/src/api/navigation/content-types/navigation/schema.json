@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "navigation",
+  "info": {
+    "singularName": "navigation",
+    "pluralName": "navigations",
+    "displayName": "Navigation",
+    "description": "Main navigation bar configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "menuItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "navigation.menu-item",
+      "required": true
+    },
+    "cta_text": {
+      "type": "string",
+      "required": true,
+      "default": "Konsultasi"
+    },
+    "cta_type": {
+      "type": "enumeration",
+      "enum": ["whatsapp", "internal_page"],
+      "default": "whatsapp",
+      "required": true
+    },
+    "cta_page_url": {
+      "type": "string",
+      "default": "/hubungi-kami"
+    }
+  }
+}

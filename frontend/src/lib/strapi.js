@@ -52,11 +52,11 @@ export const fetchAPI = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(getStrapiURL(`/api${endpoint}`), mergedOptions);
-    
+
     if (!response.ok) {
       throw new Error(`Strapi API error: ${response.status} ${response.statusText}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -194,14 +194,14 @@ export const getImageUrl = (media, size = 'medium') => {
   if (!media?.data?.attributes) {
     return null;
   }
-  
+
   const { url, formats } = media.data.attributes;
-  
+
   // Try to get the requested size, fallback to original
   if (formats && formats[size]) {
     return getStrapiMedia(formats[size].url);
   }
-  
+
   return getStrapiMedia(url);
 };
 
@@ -212,14 +212,14 @@ export const getGalleryUrls = (media, size = 'medium') => {
   if (!media?.data || !Array.isArray(media.data)) {
     return [];
   }
-  
+
   return media.data.map((item) => {
     const { url, formats } = item.attributes;
-    
+
     if (formats && formats[size]) {
       return getStrapiMedia(formats[size].url);
     }
-    
+
     return getStrapiMedia(url);
   });
 };
@@ -229,7 +229,8 @@ export const getGalleryUrls = (media, size = 'medium') => {
  */
 export const getInsights = async (params = {}) => {
   const queryParams = new URLSearchParams({
-    populate: '*',
+    'populate[author][populate][0]': 'photo',
+    'populate[featured_image][populate]': '*',
     'sort[0]': 'createdAt:desc',
     ...params,
   });
@@ -242,7 +243,9 @@ export const getInsights = async (params = {}) => {
 export const getInsightBySlug = async (slug) => {
   const queryParams = new URLSearchParams({
     'filters[slug][$eq]': slug,
-    populate: '*',
+    'populate[author][populate][0]': 'photo',
+    'populate[featured_image][populate]': '*',
+    'populate[gallery][populate]': '*',
   });
   const response = await fetchAPI(`/insights?${queryParams}`);
   return response.data?.[0] || null;

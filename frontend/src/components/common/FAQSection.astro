@@ -1,6 +1,11 @@
 ---
 // FAQ Section with accordion functionality
-const faqs = [
+import { getFaqs } from '../../lib/getFaqs';
+
+const faqsData = await getFaqs();
+
+// Default fallback FAQs
+const defaultFaqs = [
   {
     question: "Berapa lama proses pengerjaan dari awal hingga selesai?",
     answer: `Waktu pengerjaan dibagi menjadi beberapa tahap berikut:
@@ -37,16 +42,24 @@ Timeline detail akan kami lampirkan setelah kesepakatan awal.`
     answer: "Sangat bisa. Kami akan membantu menyesuaikan desain dan pemilihan material yang tepat agar tetap optimal dengan budget yang Anda miliki."
   }
 ];
+
+// Use Strapi FAQs if available, otherwise use defaults
+const faqs = faqsData && faqsData.length > 0
+  ? faqsData.map(faq => ({
+      question: faq.attributes.question,
+      answer: faq.attributes.answer
+    }))
+  : defaultFaqs;
 ---
 
-<section class="py-16 md:py-20 lg:py-24 bg-white">
-  <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+<section id="faq" class="py-16 md:py-20 lg:py-24 bg-white">
+  <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
     <div class="max-w-3xl">
-      <h2 class="text-[56px] font-light text-black mb-6" style="letter-spacing: -2.80px;">
+      <h2 class="text-[32px] md:text-[48px] lg:text-[56px] font-light text-black mb-4 md:mb-6 leading-tight" style="letter-spacing: -0.05em;">
         Pertanyaan yang Sering Diajukan
       </h2>
       
-      <p class="text-[18px] font-light text-[#636363] mb-10 leading-relaxed">
+      <p class="text-[16px] md:text-[18px] font-light text-[#636363] mb-8 md:mb-10 leading-relaxed">
         Butuh informasi lebih lanjut? Kami siap membantu menjawab pertanyaan Anda tentang layanan dan proses kami.
       </p>
       

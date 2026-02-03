@@ -1,0 +1,44 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_info",
+  "info": {
+    "singularName": "contact-info",
+    "pluralName": "contact-infos",
+    "displayName": "Contact Information",
+    "description": "Contact information for the website"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "whatsapp_number": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "address": {
+      "type": "text",
+      "required": true
+    },
+    "working_hours": {
+      "type": "text",
+      "required": true
+    },
+    "google_maps_url": {
+      "type": "string",
+      "required": false
+    },
+    "google_maps_embed": {
+      "type": "text",
+      "required": false
+    }
+  }
+}

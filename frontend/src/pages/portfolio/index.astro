@@ -5,34 +5,49 @@ import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
+import Stats from '../../components/home/Stats.astro';
 import { getProjects, getImageUrl } from '../../lib/strapi';
 
-// Fetch projects from Strapi
+// Fetch projects from Strapi (Fetching more for client-side filtering)
 let portfolios = [];
 try {
-  const response = await getProjects({ 'pagination[limit]': 12 });
+  const response = await getProjects({ 'pagination[limit]': 16, 'sort[0]': 'createdAt:desc' }); // Increased limit for 8 rows x 2 cols
   portfolios = response.data?.map((project) => ({
     title: project.attributes.title,
     category: project.attributes.category.toUpperCase(),
     location: project.attributes.location || 'Indonesia',
     area: project.attributes.area_size || '-',
-    style: 'Modern',
+    style: project.attributes.theme || 'Modern Minimalis',
     image: getImageUrl(project.attributes.featured_image, 'medium') || '/images/insight-card.jpg',
-    slug: project.attributes.slug
+    slug: project.attributes.slug,
+    createdAt: project.attributes.createdAt
   })) || [];
 } catch (error) {
   console.error('Error fetching projects:', error);
-  // Fallback to mock data if Strapi fails
-  portfolios = Array(6).fill(null).map(() => ({
-    title: "Modern Tropical House",
-    category: "RUMAH TINGGAL",
+  // Fallback to mock data
+  portfolios = Array(16).fill(null).map((_, i) => ({
+    title: `Modern Tropical House ${i + 1}`,
+    category: i % 3 === 0 ? "RUMAH" : (i % 3 === 1 ? "KANTOR" : "KOMERSIAL"),
     location: "Jakarta Selatan",
     area: "350 m²",
     style: "Modern Minimalis",
     image: "/images/insight-card.jpg",
-    slug: "modern-tropical-house"
+    slug: `project-${i + 1}`,
+    createdAt: new Date(Date.now() - i * 86400000).toISOString()
   }));
 }
+
+const categories = [
+  { id: 'semua', label: 'Semua' },
+  { id: 'rumah', label: 'Rumah' },
+  { id: 'kantor', label: 'Kantor' },
+  { id: 'komersial', label: 'Komersial' }
+];
+
+const sortOptions = [
+  { id: 'latest', label: 'Terbaru' },
+  { id: 'oldest', label: 'Terlama' }
+];
 ---
 
 <BaseLayout
@@ -43,77 +58,94 @@ try {
   
   <main>
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-16 md:pb-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h1 class="text-[128px] font-light text-black mb-12" style="letter-spacing: -6.40px; line-height: 98.83%;">
+    <section class="relative pt-32 md:pt-40 lg:pt-44 pb-12 md:pb-16 lg:pb-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h1 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-8 md:mb-10 lg:mb-12" style="letter-spacing: -2.4px; line-height: 98.83%;">
           Koleksi Karya Pilihan Kami.
         </h1>
       </div>
     </section>
 
-    <!-- Filter Buttons -->
-    <section class="py-8 bg-white border-b border-[#e5e5e5]">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="flex gap-4 items-center justify-center">
-          <button class="px-6 py-3 border-2 border-[#5e5151] text-black font-medium rounded-full hover:bg-black hover:text-white transition-all">
-            Semua
-          </button>
-          <button class="px-6 py-3 border-2 border-[#5e5151] text-black font-medium rounded-full hover:bg-black hover:text-white transition-all">
-            Rumah
-          </button>
-          <button class="px-6 py-3 border-2 border-[#5e5151] text-black font-medium rounded-full hover:bg-black hover:text-white transition-all">
-            Kantor
-          </button>
-          <button class="px-6 py-3 border-2 border-[#5e5151] text-black font-medium rounded-full hover:bg-black hover:text-white transition-all">
-            Komersial
-          </button>
+    <!-- Filter & Sort Section -->
+    <section class="py-4 md:py-10 lg:py-12 bg-white sticky top-[60px] md:top-[80px] z-30 shadow-sm md:shadow-none transition-all duration-300">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-8">
+          <!-- Filter Buttons - Horizontal Scroll on Mobile -->
+          <div class="w-full md:w-auto -mx-6 px-6 md:mx-0 md:px-0 overflow-x-auto scrollbar-hide">
+            <div class="flex flex-nowrap md:flex-wrap gap-3 items-center filter-container md:justify-center min-w-max">
+              {categories.map((cat) => (
+                <button 
+                  data-category-filter={cat.id}
+                  class={`px-6 md:px-8 py-2.5 md:py-3 border font-medium rounded-full transition-all text-[14px] md:text-[16px] whitespace-nowrap filter-btn ${
+                    cat.id === 'semua' 
+                    ? 'bg-black border-black text-white active-filter shadow-md hover:text-white hover:bg-black' 
+                    : 'border-[#e0e0e0] text-[#666] hover:border-black hover:text-black bg-white'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Sort Dropdown - Optimized for Mobile -->
+          <div class="relative w-full md:min-w-[200px] md:w-auto sort-dropdown z-40">
+            <button 
+              id="sort-trigger"
+              class="w-full flex items-center justify-between px-6 py-3 border border-black rounded-full cursor-pointer bg-white hover:bg-gray-50 transition-colors"
+            >
+              <span class="text-[14px] md:text-[16px] font-medium text-black selected-sort-label">
+                Urutkan: Terbaru
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 transition-transform duration-300" id="sort-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            <div 
+              id="sort-menu"
+              class="absolute right-0 top-full mt-2 w-full bg-white border border-[#e5e5e5] rounded-[20px] overflow-hidden opacity-0 invisible transition-all duration-200 transform origin-top scale-95 shadow-xl"
+            >
+              {sortOptions.map((opt) => (
+                <button 
+                  data-sort-val={opt.id}
+                  class="w-full text-left block px-6 py-3 text-[14px] md:text-[16px] font-medium transition-colors hover:bg-gray-50 sort-btn text-[#333]"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Portfolio Grid -->
-    <section class="py-12 md:py-16 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <section class="py-8 md:py-16 bg-white min-h-screen">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <!-- Mobile 2 cols, Tablet 2 cols, Desktop 3 cols -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-8 portfolio-grid">
           {portfolios.map((portfolio) => (
-            <PortfolioCard {...portfolio} />
+            <div class="portfolio-card-wrapper transition-all duration-500 opacity-100 scale-100">
+              <PortfolioCard {...portfolio} />
+            </div>
           ))}
         </div>
 
-        <div class="flex justify-center items-center gap-2 mb-8">
-          <div class="w-2 h-2 bg-black rounded-full"></div>
-          <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-          <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-          <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-          <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-          <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+        <div class="flex justify-center items-center gap-2 mb-12 md:mb-16">
+          <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-black rounded-full transition-all hover:scale-125 cursor-pointer"></div>
+          <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
+          <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
         </div>
 
-        <div class="text-center mb-12">
-          <button class="px-8 py-3 border-2 border-[#5e5151] text-black font-medium rounded-full hover:bg-black hover:text-white transition-all">
-            Next
+        <div class="text-center mb-16 md:mb-20 lg:mb-24">
+          <button class="px-8 md:px-10 py-3 md:py-4 text-[14px] md:text-[16px] border border-[#e5e5e5] text-black font-medium rounded-full hover:bg-black hover:text-white hover:border-black transition-all shadow-sm hover:shadow-lg active:scale-95">
+            Load More Projects
           </button>
         </div>
 
-        <!-- Stats Section -->
-        <div class="border-t border-[#e5e5e5] pt-12 grid grid-cols-4 gap-6">
-          <div class="border-2 border-black rounded-[35px] p-6 text-center flex flex-col items-center justify-center w-full aspect-square">
-            <p class="text-[56px] font-light text-black mb-2" style="letter-spacing: -3.95px;">100+</p>
-            <p class="text-[18px] font-light text-black" style="letter-spacing: -1.4px;">Proyek Selesai</p>
-          </div>
-          <div class="border-2 border-black rounded-[35px] p-6 text-center flex flex-col items-center justify-center w-full aspect-square">
-            <p class="text-[56px] font-light text-black mb-2" style="letter-spacing: -3.95px;">7+</p>
-            <p class="text-[18px] font-light text-black" style="letter-spacing: -1.4px;">Tahun Pengalaman</p>
-          </div>
-          <div class="border-2 border-black rounded-[35px] p-6 text-center flex flex-col items-center justify-center w-full aspect-square">
-            <p class="text-[56px] font-light text-black mb-2" style="letter-spacing: -3.95px;">98%</p>
-            <p class="text-[18px] font-light text-black" style="letter-spacing: -1.4px;">Klien Puas</p>
-          </div>
-          <div class="border-2 border-black rounded-[35px] p-6 text-center flex flex-col items-center justify-center w-full aspect-square">
-            <p class="text-[56px] font-light text-black mb-2" style="letter-spacing: -3.95px;">25+</p>
-            <p class="text-[18px] font-light text-black" style="letter-spacing: -1.4px;">Kota di Indonesia</p>
-          </div>
-        </div>
+        <!-- Stats Section (Using Optimized Component) -->
+        <Stats />
       </div>
     </section>
 
@@ -125,4 +157,159 @@ try {
   </main>
 
   <Footer />
+
+  <script>
+    import gsap from 'gsap';
+
+    function initPortfolioFilters() {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const sortBtns = document.querySelectorAll('.sort-btn');
+      const grid = document.querySelector('.portfolio-grid');
+      const cards = Array.from(document.querySelectorAll('.portfolio-card-wrapper'));
+      const sortLabel = document.querySelector('.selected-sort-label');
+      
+      let currentCategory = 'semua';
+      let currentSort = 'latest';
+
+      // Read from URL on load
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('category')) currentCategory = urlParams.get('category');
+      if (urlParams.has('sort')) currentSort = urlParams.get('sort');
+
+      const sortTrigger = document.getElementById('sort-trigger');
+      const sortMenu = document.getElementById('sort-menu');
+      const sortArrow = document.getElementById('sort-arrow');
+      let isSortOpen = false;
+
+      // Toggle Sort Dropdown
+      if (sortTrigger && sortMenu) {
+        sortTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isSortOpen = !isSortOpen;
+          toggleSortMenu(isSortOpen);
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', () => {
+          if (isSortOpen) {
+            isSortOpen = false;
+            toggleSortMenu(false);
+          }
+        });
+      }
+
+      function toggleSortMenu(open) {
+        if (open) {
+          sortMenu.classList.remove('opacity-0', 'invisible', 'scale-95');
+          sortMenu.classList.add('opacity-100', 'visible', 'scale-100');
+          sortArrow.classList.add('rotate-180');
+        } else {
+          sortMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+          sortMenu.classList.remove('opacity-100', 'visible', 'scale-100');
+          sortArrow.classList.remove('rotate-180');
+        }
+      }
+
+      function updateUI(isInitial = false) {
+        // Update filter buttons
+        filterBtns.forEach(btn => {
+          const cat = btn.getAttribute('data-category-filter');
+          if (cat === currentCategory) {
+            btn.classList.add('bg-black', 'text-white', 'border-black', 'active-filter', 'shadow-md', 'hover:text-white', 'hover:bg-black');
+            btn.classList.remove('bg-white', 'text-[#666]', 'text-black', 'border-[#e0e0e0]', 'hover:text-black');
+          } else {
+            btn.classList.remove('bg-black', 'text-white', 'border-black', 'active-filter', 'shadow-md', 'hover:text-white', 'hover:bg-black');
+            btn.classList.add('bg-white', 'text-[#666]', 'border-[#e0e0e0]', 'hover:text-black');
+          }
+        });
+
+        // Update sort label
+        const activeSort = Array.from(sortBtns).find(b => b.getAttribute('data-sort-val') === currentSort);
+        if (activeSort && sortLabel) {
+          sortLabel.textContent = `Urutkan: ${activeSort.textContent.trim()}`;
+        }
+
+        // Apply filters and sorting
+        const visibleCards = cards.filter(card => {
+          const cardCategory = card.querySelector('.portfolio-item').getAttribute('data-category');
+          return currentCategory === 'semua' || cardCategory.includes(currentCategory);
+        });
+
+        // Sort visible cards
+        visibleCards.sort((a, b) => {
+          const dateA = new Date(a.querySelector('.portfolio-item').getAttribute('data-date')).getTime();
+          const dateB = new Date(b.querySelector('.portfolio-item').getAttribute('data-date')).getTime();
+          return currentSort === 'latest' ? dateB - dateA : dateA - dateB;
+        });
+
+        // Animate out all cards
+        if (!isInitial) {
+           gsap.to(cards, {
+            opacity: 0,
+            scale: 0.95,
+            y: 20,
+            duration: 0.3,
+            stagger: 0.02,
+            ease: "power2.inOut",
+            onComplete: () => {
+              cards.forEach(card => card.style.display = 'none');
+              showFiltered();
+            }
+          });
+        } else {
+          cards.forEach(card => card.style.display = 'none');
+          showFiltered();
+        }
+
+        function showFiltered() {
+          visibleCards.forEach(card => {
+            card.style.display = 'block';
+            grid.appendChild(card); // Re-append in sorted order
+          });
+
+          gsap.fromTo(visibleCards, 
+            { opacity: 0, scale: 0.9, y: 30 },
+            { 
+              opacity: 1, 
+              scale: 1, 
+              y: 0, 
+              duration: 0.5, 
+              stagger: 0.08, 
+              ease: "power3.out",
+              clearProps: "all" 
+            }
+          );
+        }
+
+        // Update URL without reload
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('category', currentCategory);
+        newUrl.searchParams.set('sort', currentSort);
+        window.history.replaceState({}, '', newUrl);
+      }
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (currentCategory === btn.getAttribute('data-category-filter')) return;
+          currentCategory = btn.getAttribute('data-category-filter');
+          updateUI();
+        });
+      });
+
+      sortBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (currentSort === btn.getAttribute('data-sort-val')) return;
+          currentSort = btn.getAttribute('data-sort-val');
+          updateUI();
+        });
+      });
+
+      // Initial run
+      updateUI(true);
+    }
+
+    // Run on load and on Astro swap (if using View Transitions)
+    initPortfolioFilters();
+    document.addEventListener('astro:after-swap', initPortfolioFilters);
+  </script>
 </BaseLayout>

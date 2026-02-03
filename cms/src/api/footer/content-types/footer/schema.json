@@ -1,0 +1,61 @@
+{
+  "kind": "singleType",
+  "collectionName": "footer",
+  "info": {
+    "singularName": "footer",
+    "pluralName": "footers",
+    "displayName": "Footer",
+    "description": "Footer configuration for website"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "navigation_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "footer.link"
+    },
+    "service_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "footer.link"
+    },
+    "instagram_url": {
+      "type": "string",
+      "required": true,
+      "default": "https://instagram.com/sjdinterior"
+    },
+    "tiktok_url": {
+      "type": "string",
+      "required": true,
+      "default": "https://tiktok.com/@sjdinterior"
+    },
+    "youtube_url": {
+      "type": "string",
+      "required": true,
+      "default": "https://youtube.com/@sjdinterior"
+    },
+    "cta_title": {
+      "type": "string",
+      "required": true
+    },
+    "cta_description": {
+      "type": "text",
+      "required": true
+    },
+    "cta_button_text": {
+      "type": "string",
+      "required": true
+    },
+    "copyright_text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

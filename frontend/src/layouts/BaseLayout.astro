@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getWebsiteLogos } from '../lib/getWebsiteLogos.js';
 import { getSiteSettings } from '../lib/getSiteSettings.js';
 
 interface Props {
@@ -7,16 +8,28 @@ interface Props {
   description?: string;
 }
 
-const siteSettings = await getSiteSettings();
+const logosData = await getWebsiteLogos();
+const logos = logosData?.attributes?.websiteLogos || {};
+
+const siteSettingsData = await getSiteSettings();
+const defaultSiteName = siteSettingsData?.siteName || 'SJD Interior Design';
+const defaultSiteDescription = siteSettingsData?.siteDescription || 'Professional interior design services';
 
 const {
-  title = 'SJD Interior - Solusi Desain Interior Terbaik',
-  description = 'SJD Interior adalah solusi desain lengkap personal dari Rumah, apartemen dan lainnya'
+  title = defaultSiteName,
+  description = defaultSiteDescription
 } = Astro.props;
 
 // Use favicon if uploaded, otherwise use header logo, fallback to default
-const faviconUrl = siteSettings.favicon?.url || siteSettings.logo?.url || siteSettings.logoLight?.url || '/favicon.svg';
-const faviconType = siteSettings.favicon?.type || siteSettings.logo?.type || siteSettings.logoLight?.type || 'image/svg+xml';
+const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const faviconUrl = logos.favicon?.data?.attributes?.url
+  ? `${STRAPI_URL}${logos.favicon.data.attributes.url}`
+  : logos.logo?.data?.attributes?.url
+    ? `${STRAPI_URL}${logos.logo.data.attributes.url}`
+    : logos.logoLight?.data?.attributes?.url
+      ? `${STRAPI_URL}${logos.logoLight.data.attributes.url}`
+      : '/favicon.svg';
+const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.attributes?.mime || logos.logoLight?.data?.attributes?.mime || 'image/svg+xml';
 ---
 
 <!doctype html>

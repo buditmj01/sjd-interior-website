@@ -4,6 +4,7 @@ import Header from '../../components/common/Header.astro';
 import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import InsightCard from '../../components/common/InsightCard.astro';
+import ReelsCard from '../../components/common/ReelsCard.astro';
 import { getInsights, getImageUrl } from '../../lib/strapi';
 
 // Format date to Indonesian
@@ -24,7 +25,8 @@ try {
   const response = await getInsights({ 'pagination[limit]': 12 });
   const insights = response.data?.map((insight) => ({
     title: insight.attributes.title,
-    author: insight.attributes.author || 'SJD Interior Team',
+    author: insight.attributes.author?.data?.attributes?.name || 'SJD Interior Team',
+    authorPhoto: getImageUrl(insight.attributes.author?.data?.attributes?.photo, 'thumbnail'),
     date: formatDate(insight.attributes.publishedAt || insight.attributes.createdAt),
     category: insight.attributes.category.toUpperCase(),
     image: getImageUrl(insight.attributes.featured_image, 'medium') || '/images/insight-card.jpg',
@@ -83,142 +85,148 @@ try {
 
   <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative pt-20 pb-8 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h1 class="text-[80px] font-light text-black mb-2" style="letter-spacing: -4.00px; line-height: 98.83%;">
-          Insight & Artikel
+    <!-- Hero Section -->
+    <section class="relative pt-32 md:pt-40 lg:pt-52 pb-12 md:pb-16 lg:pb-24 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h1 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8" style="letter-spacing: -2.4px; line-height: 98.83%;">
+          Insight hari ini.
         </h1>
-        <p class="text-[16px] font-light text-[#636363]" style="letter-spacing: -0.80px;">
+        <p class="text-[24px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.2] max-w-5xl" style="letter-spacing: -1px;">
           Tips, tren, dan inspirasi desain interior terkini
         </p>
       </div>
     </section>
 
-    <!-- Latest Articles Section -->
-    <section class="py-10 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <!-- Section Title -->
-        <h2 class="text-[28px] font-light text-black mb-6" style="letter-spacing: -1.40px;">
-          Artikel Terbaru
-        </h2>
-
-        <!-- Latest Articles Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-          <!-- Featured/Latest Article (Full Width) -->
-          <div class="lg:col-span-2 bg-white rounded-[12px] overflow-hidden border border-[#e5e5e5] hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-            <div class="h-[280px] overflow-hidden bg-gray-200">
-              <img src={latestArticles[0].image} alt={latestArticles[0].title} class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-            </div>
-            <div class="p-6">
-              <div class="mb-3">
-                <span class="inline-block px-2 py-1 bg-[#0096f7] text-white text-[12px] font-medium rounded-full mb-2">
-                  {latestArticles[0].category}
-                </span>
-                <p class="text-[12px] font-light text-[#848484]">
-                  {latestArticles[0].date}
-                </p>
-              </div>
-              <h3 class="text-[20px] font-light text-black mb-3 leading-[1.3] line-clamp-2" style="letter-spacing: -1.00px;">
-                {latestArticles[0].title}
-              </h3>
-              <div class="flex items-center gap-3 pt-3 border-t border-[#e5e5e5]">
-                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="24" cy="24" r="23" stroke="#969696" stroke-width="2"/>
-                  <circle cx="24" cy="19" r="8" stroke="#969696" stroke-width="2"/>
-                  <path d="M9.5 42C9.5 35.0964 15.0964 29.5 22 29.5H26C32.9036 29.5 38.5 35.0964 38.5 42" stroke="#969696" stroke-width="2"/>
-                </svg>
-                <span class="text-[14px] font-light text-[#636363]">
-                  {latestArticles[0].author}
-                </span>
-              </div>
-            </div>
+    <!-- Instagram Reels Section -->
+    <section class="py-4 md:py-8 lg:py-12 bg-white overflow-hidden">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <div class="flex items-end justify-between mb-8 md:mb-12">
+          <div>
+            <h2 class="text-[28px] md:text-[40px] font-light mb-2 text-black" style="letter-spacing: -1px;">Instagram Reels</h2>
+            <p class="text-[#666] text-[16px]">Follow our journey @sjd_interior</p>
           </div>
+          <a href="https://www.instagram.com/sjd_interior" target="_blank" class="hidden md:inline-flex px-6 py-2 rounded-full border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all text-sm font-medium text-black">
+            Lihat Instagram
+          </a>
+        </div>
 
-          <!-- Recent Articles Sidebar -->
-          <div class="space-y-3">
-            {latestArticles.slice(1, 3).map((article) => (
-              <div class="bg-[#f9f9f9] rounded-[10px] p-4 border border-[#e5e5e5] hover:bg-white hover:shadow-md transition-all duration-300 cursor-pointer">
-                <div class="flex items-start gap-2 mb-2">
-                  <span class="inline-block px-2 py-0.5 bg-[#e5e5e5] text-[#636363] text-[11px] font-medium rounded-full flex-shrink-0">
-                    {article.category}
-                  </span>
-                  <p class="text-[11px] font-light text-[#848484]">
-                    {article.date}
-                  </p>
-                </div>
-                <h4 class="text-[14px] font-light text-black leading-[1.3] line-clamp-2" style="letter-spacing: -0.70px;">
-                  {article.title}
-                </h4>
-              </div>
-            ))}
-          </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <ReelsCard 
+            caption="Transformasi ruang tamu minimalis modern. Swipe for before/after! ✨ #interiordesign" 
+            views="45.2K" 
+            thumbnail="/images/insight-card.jpg" 
+            url="https://www.instagram.com/sjd_interior"
+          />
+          <ReelsCard 
+            caption="Proses pemasangan custom furniture di project Bintaro. Precision is key. 📏" 
+            views="32.1K" 
+            thumbnail="/images/insight-card.jpg" 
+            url="https://www.instagram.com/sjd_interior"
+          />
+          <ReelsCard 
+            caption="Master bedroom vibes. Warm lighting + texture = perfection. 🛏️" 
+            views="68.9K" 
+            thumbnail="/images/insight-card.jpg" 
+            url="https://www.instagram.com/sjd_interior"
+          />
+          <ReelsCard 
+            caption="Tips memilih material lantai untuk rumah tropis. Save for later! 💡" 
+            views="18.5K" 
+            thumbnail="/images/insight-card.jpg" 
+            url="https://www.instagram.com/sjd_interior"
+          />
+        </div>
+
+        <div class="mt-8 text-center md:hidden">
+          <a href="https://www.instagram.com/sjd_interior" target="_blank" class="inline-flex px-6 py-2.5 rounded-full border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all text-sm font-medium text-black">
+             Lihat Instagram
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Search & Filter Section -->
-    <section class="py-8 bg-[#f9f9f9] border-y border-[#e5e5e5]">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
+    <section class="py-6 md:py-7 lg:py-8 bg-[#f9f9f9] border-y border-[#e5e5e5]">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Search Bar -->
-        <div class="max-w-2xl mb-5">
+        <div class="max-w-2xl mb-4 md:mb-5">
           <div class="relative">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#636363]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-[#636363]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/>
               <path d="M21 21l-4.35-4.35"/>
             </svg>
             <input
               type="search"
               placeholder="Cari artikel..."
-              class="w-full pl-12 pr-6 py-3 text-[14px] font-light text-[#636363] bg-white border border-[#d9d9d9] rounded-[10px] focus:outline-none focus:border-[#0096f7] placeholder:text-[#848484]"
+              class="w-full pl-10 md:pl-12 pr-4 md:pr-6 py-2.5 md:py-3 text-[13px] md:text-[14px] font-light text-[#636363] bg-white border border-[#d9d9d9] rounded-[10px] focus:outline-none focus:border-[#0096f7] placeholder:text-[#848484]"
             />
           </div>
         </div>
 
         <!-- Category Filter -->
-        <div class="flex gap-2 flex-wrap">
-          <button class="px-4 py-2 bg-black text-white text-[13px] font-medium rounded-full hover:bg-[#333333] transition-colors">
-            Semua
-          </button>
-          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
-            Tips
-          </button>
-          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
-            Trend
-          </button>
-          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
-            News
-          </button>
-          <button class="px-4 py-2 bg-white text-black text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors">
-            Tutorial
-          </button>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+          <!-- Category Filter -->
+          <div class="flex gap-2 flex-wrap" id="category-filters">
+            <button class="filter-btn active px-3 md:px-4 py-1.5 md:py-2 bg-black text-white text-[12px] md:text-[13px] font-medium rounded-full hover:bg-[#333333] transition-colors" data-category="ALL">
+              Semua
+            </button>
+            <button class="filter-btn px-3 md:px-4 py-1.5 md:py-2 bg-white text-black text-[12px] md:text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors" data-category="TIPS">
+              Tips
+            </button>
+            <button class="filter-btn px-3 md:px-4 py-1.5 md:py-2 bg-white text-black text-[12px] md:text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors" data-category="TREND">
+              Trend
+            </button>
+            <button class="filter-btn px-3 md:px-4 py-1.5 md:py-2 bg-white text-black text-[12px] md:text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors" data-category="NEWS">
+              News
+            </button>
+            <button class="filter-btn px-3 md:px-4 py-1.5 md:py-2 bg-white text-black text-[12px] md:text-[13px] font-medium border border-[#d9d9d9] rounded-full hover:border-black transition-colors" data-category="TUTORIAL">
+              Tutorial
+            </button>
+          </div>
+
+          <!-- Sort Filter -->
+          <div class="flex items-center gap-2 md:gap-3">
+            <label for="sort-select" class="text-[13px] md:text-[14px] font-light text-[#636363]">Urutkan:</label>
+            <div class="relative">
+              <select id="sort-select" class="appearance-none pl-3 md:pl-4 pr-8 md:pr-10 py-1.5 md:py-2 bg-white border border-[#d9d9d9] rounded-full text-[12px] md:text-[13px] font-medium text-black focus:outline-none focus:border-black cursor-pointer">
+                <option value="latest">Terbaru</option>
+                <option value="oldest">Terlama</option>
+              </select>
+              <svg class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-black pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- All Articles Grid -->
-    <section class="py-12">
-      <div class="w-full max-w-[1761px] mx-auto px-[151px]">
-        <h2 class="text-[28px] font-light text-black mb-6" style="letter-spacing: -1.40px;">
+    <section class="py-10 md:py-11 lg:py-12">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+        <h2 class="text-[22px] md:text-[25px] lg:text-[28px] font-light text-black mb-5 md:mb-6" style="letter-spacing: -1.10px; md:letter-spacing: -1.25px; lg:letter-spacing: -1.40px;">
           Semua Artikel
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8 md:mb-9 lg:mb-10">
           {allArticles.map((article) => (
-            <InsightCard {...article} />
+            <div class="article-item" data-category={article.category} data-date={new Date(article.date).getTime()} data-title={article.title.toLowerCase()}>
+              <InsightCard {...article} />
+            </div>
           ))}
         </div>
 
         <!-- Pagination -->
-        <div class="flex justify-center items-center gap-6">
-          <div class="flex gap-2">
+        <div class="flex justify-center items-center gap-4 md:gap-6">
+          <div class="flex gap-1.5 md:gap-2">
             {[1, 2, 3, 4, 5, 6].map((page, index) => (
               <button
-                class={`w-[10px] h-[10px] rounded-full transition-colors ${index === 0 ? 'bg-black' : 'bg-[#d9d9d9] hover:bg-[#b0b0b0]'}`}
+                class={`w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full transition-colors ${index === 0 ? 'bg-black' : 'bg-[#d9d9d9] hover:bg-[#b0b0b0]'}`}
                 aria-label={`Page ${page}`}
               />
             ))}
           </div>
-          <button class="px-6 py-2 text-[14px] font-medium text-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
+          <button class="px-5 md:px-6 py-1.5 md:py-2 text-[13px] md:text-[14px] font-medium text-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
             Next
           </button>
         </div>
@@ -231,3 +239,77 @@ try {
 
   <Footer />
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('articles-grid');
+    const articles = Array.from(document.querySelectorAll('.article-item'));
+    const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const searchInput = document.querySelector('input[type="search"]') as HTMLInputElement;
+
+    let currentCategory = 'ALL';
+    let currentSort = 'latest';
+    let searchQuery = '';
+
+    // Sort Function
+    const sortArticles = () => {
+      const sortedArticles = articles.sort((a, b) => {
+        const dateA = parseInt((a as HTMLElement).dataset.date || '0');
+        const dateB = parseInt((b as HTMLElement).dataset.date || '0');
+        
+        return currentSort === 'latest' ? dateB - dateA : dateA - dateB;
+      });
+
+      // Re-append sorted articles
+      sortedArticles.forEach(article => grid?.appendChild(article));
+    };
+
+    // Filter Function
+    const filterArticles = () => {
+      articles.forEach(article => {
+        const articleEl = article as HTMLElement;
+        const category = articleEl.dataset.category || '';
+        const title = articleEl.dataset.title || '';
+        
+        const matchesCategory = currentCategory === 'ALL' || category === currentCategory;
+        const matchesSearch = title.includes(searchQuery.toLowerCase());
+
+        if (matchesCategory && matchesSearch) {
+          articleEl.style.display = 'block';
+        } else {
+          articleEl.style.display = 'none';
+        }
+      });
+    };
+
+    // Event Listeners
+    sortSelect?.addEventListener('change', (e) => {
+      currentSort = (e.target as HTMLSelectElement).value;
+      sortArticles();
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active class
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-black', 'text-white');
+          b.classList.add('bg-white', 'text-black', 'border', 'border-[#d9d9d9]');
+        });
+        btn.classList.remove('bg-white', 'text-black', 'border', 'border-[#d9d9d9]');
+        btn.classList.add('bg-black', 'text-white');
+
+        currentCategory = (btn as HTMLElement).dataset.category || 'ALL';
+        filterArticles();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value;
+      filterArticles();
+    });
+
+    // Initial Sort
+    sortArticles();
+  });
+</script>

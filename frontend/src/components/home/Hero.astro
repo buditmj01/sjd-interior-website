@@ -1,63 +1,131 @@
 ---
 // Hero section matching Figma design
+import { getHeroBanner, getMediaUrl, isVideo } from '../../lib/getHeroBanner';
+import { getContactInfo } from '../../lib/getContactInfo';
+
+// Fetch hero banner data from Strapi
+const heroBannerData = await getHeroBanner();
+
+// Fetch contact info for WhatsApp number
+const contactData = await getContactInfo();
+const whatsappNumber = contactData?.attributes?.whatsapp_number || '6285398989810';
+
+// Default fallback data
+const defaultHero = {
+  headline: "Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional.",
+  background_url: "https://images.unsplash.com/photo-1758448755778-90ebf4d0f1e7?q=85&w=2070&fit=crop",
+  is_video: false,
+  cta_text: "Mulai Konsultasi",
+  cta_type: "whatsapp",
+  cta_page_url: "/hubungi-kami"
+};
+
+// Use Strapi data if available, otherwise use defaults
+const hero = heroBannerData ? {
+  headline: heroBannerData.attributes.headline || defaultHero.headline,
+  background_url: getMediaUrl(heroBannerData.attributes.background) || defaultHero.background_url,
+  is_video: isVideo(heroBannerData.attributes.background),
+  cta_text: heroBannerData.attributes.cta_text || defaultHero.cta_text,
+  cta_type: heroBannerData.attributes.cta_type || defaultHero.cta_type,
+  cta_page_url: heroBannerData.attributes.cta_page_url || defaultHero.cta_page_url
+} : defaultHero;
+
+// Split headline by line breaks for styling
+const headlineLines = hero.headline.split('\n').filter(line => line.trim());
+
+// Build CTA URL based on type
+const ctaUrl = hero.cta_type === 'whatsapp'
+  ? `https://wa.me/${whatsappNumber}?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya.`
+  : hero.cta_page_url;
 ---
 
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden" data-hero-section>
-  <!-- Background Video with Fallback Image -->
-  <div class="absolute inset-0 z-0" data-hero-bg>
-    <!-- High-quality background image (fallback) -->
-    <img 
-      src="https://images.unsplash.com/photo-1758448755778-90ebf4d0f1e7?q=85&w=2070&fit=crop" 
-      alt="Luxurious modern interior design" 
-      class="w-full h-full object-cover"
-      data-parallax-img
-    />
-    
-    <!-- Video Background -->
-    <video 
-      autoplay 
-      muted 
-      loop 
-      playsinline
-      class="absolute inset-0 w-full h-full object-cover"
-      data-parallax-video
-    >
-      <source src="https://videos.pexels.com/video-files/30667070/13123417_360_640_30fps.mp4" type="video/mp4" />
-    </video>
-    
+<section class="relative min-h-screen w-full flex items-center justify-center overflow-hidden" data-hero-section>
+  <!-- Background Media - Full fill -->
+  <div class="absolute inset-0 w-full h-full z-0 overflow-hidden" data-hero-bg>
+    {hero.is_video ? (
+      <>
+        <!-- Video Background -->
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          class="absolute inset-0 w-full h-full object-cover"
+          data-parallax-video
+        >
+          <source src={hero.background_url} type="video/mp4" />
+        </video>
+      </>
+    ) : (
+      <>
+        <!-- Background Image -->
+        <img
+          src={hero.background_url}
+          alt="Interior Design Background"
+          class="absolute inset-0 w-full h-full object-cover"
+          data-parallax-img
+        />
+      </>
+    )}
+
     <!-- Dark gradient overlay for text readability -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40"></div>
+    <div class="absolute inset-0 w-full h-full bg-gradient-to-b from-black/80 via-black/60 to-black/40"></div>
   </div>
 
   <!-- Content -->
   <div class="container mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 pt-24 md:pt-32 pb-16" data-hero-content>
-    <div class="max-w-4xl">
+    <div class="w-full max-w-[90%] md:max-w-full mx-auto text-center md:text-left">
       <!-- Hero Text -->
-      <h1 class="text-white mb-8">
-        <div 
-          class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" 
-          style="letter-spacing: -5.78px;"
-          data-hero-text-1
-        >
-          Be the next
-        </div>
-        <div 
-          class="text-[clamp(3rem,8vw,115.56px)] font-light leading-[1.1]" 
-          style="letter-spacing: -5.78px;"
-          data-hero-text-2
-        >
-          Your Design.
-        </div>
+      <h1 class="text-white mb-8 md:mb-10 w-full">
+        {headlineLines.map((line, index) => {
+          // First 2 lines are massive, rest are subtitle
+          const isLargeText = index < 2;
+          return (
+            <div
+              class={isLargeText
+                ? "text-[52px] md:text-[clamp(5rem,14vw,220px)] font-light leading-[0.9] md:leading-[0.85] tracking-[-2.5px] md:tracking-[-8px] -ml-[2px] md:-ml-[10px]"
+                : "text-[20px] md:text-[clamp(1.5rem,3.5vw,40px)] font-light leading-[1.3] opacity-90 mt-6 md:mt-8 tracking-wide max-w-4xl"
+              }
+              data-hero-text={index + 1}
+            >
+              {line}
+            </div>
+          );
+        })}
       </h1>
 
-      <!-- CTA Button -->
-      <a
-        href="/contact"
-        class="inline-flex items-center justify-center px-10 py-3 text-[22.83px] font-medium text-white bg-transparent border-2 border-white rounded-[23px] hover:bg-white hover:text-black transition-all duration-300"
-        data-hero-cta
-      >
-        Consultation
-      </a>
+      <!-- CTA Button - Beautiful with smooth animations, perfectly centered -->
+      {hero.cta_type === 'whatsapp' ? (
+        <a
+          href={ctaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[18px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-500 ease-out whitespace-nowrap overflow-hidden text-center"
+          data-hero-cta
+        >
+          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-500 ease-out rounded-full"></span>
+          <span class="relative z-10 flex items-center justify-center gap-2 w-full">
+            <span class="transition-transform duration-500 group-hover:scale-105">{hero.cta_text}</span>
+            <svg class="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+            </svg>
+          </span>
+        </a>
+      ) : (
+        <a
+          href={ctaUrl}
+          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[18px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-500 ease-out whitespace-nowrap overflow-hidden text-center"
+          data-hero-cta
+        >
+          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-500 ease-out rounded-full"></span>
+          <span class="relative z-10 flex items-center justify-center gap-2 w-full">
+            <span class="transition-transform duration-500 group-hover:scale-105">{hero.cta_text}</span>
+            <svg class="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          </span>
+        </a>
+      )}
     </div>
   </div>
 
@@ -81,23 +149,47 @@
     // Parallax effect on background media (slow movement)
     const parallaxImg = document.querySelector('[data-parallax-img]');
     const parallaxVideo = document.querySelector('[data-parallax-video]');
-    
+
     if (parallaxImg) {
-      createParallax(parallaxImg as HTMLElement, {
-        speed: 0.5,
-        direction: 'vertical',
-        start: 'top top',
-        end: 'bottom top',
-      });
+      // Set initial scale
+      gsap.set(parallaxImg, { scale: 1.3 });
+
+      // Create parallax animation with scale preserved
+      gsap.fromTo(
+        parallaxImg,
+        { y: '10%' },
+        {
+          y: '-10%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: parallaxImg,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        }
+      );
     }
 
     if (parallaxVideo) {
-      createParallax(parallaxVideo as HTMLElement, {
-        speed: 0.5,
-        direction: 'vertical',
-        start: 'top top',
-        end: 'bottom top',
-      });
+      // Set initial scale
+      gsap.set(parallaxVideo, { scale: 1.3 });
+
+      // Create parallax animation with scale preserved
+      gsap.fromTo(
+        parallaxVideo,
+        { y: '10%' },
+        {
+          y: '-10%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: parallaxVideo,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        }
+      );
     }
 
     // Fade out hero content as user scrolls down
@@ -112,39 +204,24 @@
     }
 
     // Initial reveal animations for hero text (staggered)
-    const heroText1 = document.querySelector('[data-hero-text-1]');
-    const heroText2 = document.querySelector('[data-hero-text-2]');
+    const heroTextElements = document.querySelectorAll('[data-hero-text]');
     const heroCta = document.querySelector('[data-hero-cta]');
     const scrollIndicator = document.querySelector('[data-scroll-indicator]');
 
     // Reveal text with stagger
-    if (heroText1) {
+    heroTextElements.forEach((element, index) => {
       gsap.fromTo(
-        heroText1,
-        { opacity: 0, y: 100 },
+        element,
+        { opacity: 0, y: index < 2 ? 100 : 50 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.2,
+          duration: index < 2 ? 1.2 : 1,
           ease: 'power3.out',
-          delay: 0.3,
+          delay: 0.3 + (index * 0.2),
         }
       );
-    }
-
-    if (heroText2) {
-      gsap.fromTo(
-        heroText2,
-        { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          delay: 0.5,
-        }
-      );
-    }
+    });
 
     if (heroCta) {
       gsap.fromTo(
@@ -155,7 +232,7 @@
           y: 0,
           duration: 1,
           ease: 'power3.out',
-          delay: 0.8,
+          delay: 0.3 + (heroTextElements.length * 0.2),
         }
       );
     }
@@ -186,10 +263,47 @@
   [data-parallax-img],
   [data-parallax-video],
   [data-hero-content],
-  [data-hero-text-1],
-  [data-hero-text-2],
+  [data-hero-text],
   [data-hero-cta] {
     will-change: transform;
+  }
+
+  /* Beautiful CTA Button animations */
+  [data-hero-cta] {
+    position: relative;
+    overflow: hidden;
+  }
+
+  [data-hero-cta]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+  }
+
+  [data-hero-cta]:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Smooth hover glow effect */
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  [data-hero-cta]:hover {
+    animation: glow-pulse 2s ease-in-out infinite;
   }
 
   /* Remove will-change after animations complete (handled by GSAP) */
@@ -199,6 +313,13 @@
     [data-hero-content] {
       will-change: auto;
       transform: none !important;
+    }
+
+    [data-hero-cta],
+    [data-hero-cta]:hover,
+    [data-hero-cta]::before {
+      animation: none !important;
+      transition: none !important;
     }
   }
 </style>
