@@ -22,9 +22,13 @@ async function seedHeroBanner() {
     // Create default hero banner
     const heroBanner = await strapi.entityService.create('api::hero-banner.hero-banner', {
       data: {
-        headline: 'Wujudkan ruang impian dengan desain interior yang personal dan fungsional.',
-        subheadline: 'Kami hadir untuk mewujudkan ruang impian Anda dengan desain interior yang tidak hanya indah, tetapi juga mencerminkan kepribadian dan gaya hidup Anda.',
-        background_type: 'image',
+        headline: 'Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional.',
+        headline_font_size_mobile: '48px',
+        headline_font_size_tablet: '88px',
+        headline_font_size_desktop: '128px',
+        cta_text: 'Mulai Konsultasi',
+        cta_type: 'whatsapp',
+        cta_page_url: '/hubungi-kami',
       },
     });
 

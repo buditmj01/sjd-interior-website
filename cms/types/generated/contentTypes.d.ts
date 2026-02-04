@@ -531,6 +531,9 @@ export interface ApiHeroBannerHeroBanner extends Schema.SingleType {
     headline: Attribute.Text &
       Attribute.Required &
       Attribute.DefaultTo<'Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional.'>;
+    headline_font_size_desktop: Attribute.String & Attribute.DefaultTo<'128px'>;
+    headline_font_size_mobile: Attribute.String & Attribute.DefaultTo<'48px'>;
+    headline_font_size_tablet: Attribute.String & Attribute.DefaultTo<'88px'>;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::hero-banner.hero-banner',

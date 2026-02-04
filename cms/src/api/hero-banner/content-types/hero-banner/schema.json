@@ -17,6 +17,24 @@
       "required": true,
       "default": "Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional."
     },
+    "headline_font_size_mobile": {
+      "type": "string",
+      "required": false,
+      "default": "48px",
+      "regex": "^\\d+px$"
+    },
+    "headline_font_size_tablet": {
+      "type": "string",
+      "required": false,
+      "default": "88px",
+      "regex": "^\\d+px$"
+    },
+    "headline_font_size_desktop": {
+      "type": "string",
+      "required": false,
+      "default": "128px",
+      "regex": "^\\d+px$"
+    },
     "background": {
       "type": "media",
       "multiple": false,

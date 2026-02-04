@@ -17,7 +17,10 @@ const defaultHero = {
   is_video: false,
   cta_text: "Mulai Konsultasi",
   cta_type: "whatsapp",
-  cta_page_url: "/hubungi-kami"
+  cta_page_url: "/hubungi-kami",
+  headline_font_size_mobile: "48px",
+  headline_font_size_tablet: "88px",
+  headline_font_size_desktop: "128px"
 };
 
 // Use Strapi data if available, otherwise use defaults
@@ -27,7 +30,10 @@ const hero = heroBannerData ? {
   is_video: isVideo(heroBannerData.attributes.background),
   cta_text: heroBannerData.attributes.cta_text || defaultHero.cta_text,
   cta_type: heroBannerData.attributes.cta_type || defaultHero.cta_type,
-  cta_page_url: heroBannerData.attributes.cta_page_url || defaultHero.cta_page_url
+  cta_page_url: heroBannerData.attributes.cta_page_url || defaultHero.cta_page_url,
+  headline_font_size_mobile: heroBannerData.attributes.headline_font_size_mobile || defaultHero.headline_font_size_mobile,
+  headline_font_size_tablet: heroBannerData.attributes.headline_font_size_tablet || defaultHero.headline_font_size_tablet,
+  headline_font_size_desktop: heroBannerData.attributes.headline_font_size_desktop || defaultHero.headline_font_size_desktop
 } : defaultHero;
 
 // Split headline by line breaks for styling
@@ -75,15 +81,22 @@ const ctaUrl = hero.cta_type === 'whatsapp'
   <!-- Content -->
   <div class="container mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 pt-24 md:pt-32 pb-16" data-hero-content>
     <div class="w-full max-w-[90%] md:max-w-full mx-auto text-center md:text-left">
-      <!-- Hero Text -->
-      <h1 class="text-white mb-8 md:mb-10 w-full">
+      <!-- Hero Text with custom font sizes from CMS -->
+      <h1
+        class="text-white mb-8 md:mb-10 w-full"
+        style={`
+          --headline-font-size-mobile: ${hero.headline_font_size_mobile};
+          --headline-font-size-tablet: ${hero.headline_font_size_tablet};
+          --headline-font-size-desktop: ${hero.headline_font_size_desktop};
+        `}
+      >
         {headlineLines.map((line, index) => {
           // First 2 lines are massive, rest are subtitle
           const isLargeText = index < 2;
           return (
             <div
               class={isLargeText
-                ? "text-[52px] md:text-[clamp(5rem,14vw,220px)] font-light leading-[0.9] md:leading-[0.85] tracking-[-2.5px] md:tracking-[-8px] -ml-[2px] md:-ml-[10px]"
+                ? "hero-headline-large font-light leading-[0.9] md:leading-[0.85] tracking-[-2.5px] md:tracking-[-8px] -ml-[2px] md:-ml-[10px]"
                 : "text-[20px] md:text-[clamp(1.5rem,3.5vw,40px)] font-light leading-[1.3] opacity-90 mt-6 md:mt-8 tracking-wide max-w-4xl"
               }
               data-hero-text={index + 1}
@@ -259,6 +272,23 @@ const ctaUrl = hero.cta_type === 'whatsapp'
 </script>
 
 <style>
+  /* Custom headline font sizes from CMS */
+  .hero-headline-large {
+    font-size: var(--headline-font-size-mobile, 48px);
+  }
+
+  @media (min-width: 768px) {
+    .hero-headline-large {
+      font-size: var(--headline-font-size-tablet, 88px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-headline-large {
+      font-size: var(--headline-font-size-desktop, 128px);
+    }
+  }
+
   /* Performance optimization: GPU acceleration */
   [data-parallax-img],
   [data-parallax-video],

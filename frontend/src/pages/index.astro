@@ -7,33 +7,34 @@ import InsightCard from '../components/common/InsightCard.astro';
 import PortfolioCard from '../components/common/PortfolioCard.astro';
 import Stats from '../components/home/Stats.astro';
 import Hero from '../components/home/Hero.astro';
-import { getInsights } from '../lib/getInsights';
+import { getInsights, getImageUrl } from '../lib/strapi';
 import { getProjects } from '../lib/getProjects';
 import { getStrapiMedia } from '../lib/strapi';
 
-// Fetch latest insights from Strapi (limit 4 for homepage)
-const insightsData = await getInsights({ limit: 4, sort: 'publishedAt:desc' });
-
-// Transform insights data for the component
-const insights = insightsData?.map((insight: any) => {
-  const attrs = insight.attributes;
-  const authorName = attrs.author?.data?.attributes?.name || 'SJD Team';
-  const publishedDate = attrs.publishedAt ? new Date(attrs.publishedAt).toLocaleDateString('id-ID', {
+// Format date to Indonesian (same as insight page)
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }) : '';
-  const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/insight-card.jpg';
+  });
+};
 
-  return {
-    title: attrs.title,
-    author: authorName,
-    date: publishedDate,
-    category: attrs.category?.toUpperCase() || 'ARTIKEL',
-    image: featuredImage,
-    slug: attrs.slug
-  };
-}) || [];
+// Fetch latest insights from Strapi (limit 4 for homepage)
+const insightsResponse = await getInsights({ 'pagination[limit]': 4 });
+
+// Transform insights data using the same approach as insight page
+const insights = insightsResponse?.data?.map((insight: any) => ({
+  title: insight.attributes.title,
+  author: insight.attributes.author?.data?.attributes?.name || 'SJD Interior Team',
+  authorPhoto: getImageUrl(insight.attributes.author?.data?.attributes?.photo, 'thumbnail'),
+  date: formatDate(insight.attributes.publishedAt || insight.attributes.createdAt),
+  category: insight.attributes.category.toUpperCase(),
+  image: getImageUrl(insight.attributes.featured_image, 'medium') || '/images/insight-card.jpg',
+  slug: insight.attributes.slug,
+  featured: insight.attributes.is_featured || false
+})) || [];
 
 // Fetch latest portfolio projects from Strapi (limit 4 for homepage)
 const projectsData = await getProjects({ limit: 4, sort: 'publishedAt:desc' });
@@ -223,12 +224,12 @@ const testimonials = [
     <section class="py-12 md:py-16 lg:py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Title -->
-        <div class="text-left mb-10 md:mb-14 lg:mb-16">
-          <h2 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8" style="letter-spacing: -2.4px; line-height: 98.83%;" data-animate-title>
-            Prosesnya mudah.
+        <div class="text-center mb-10 md:mb-14 lg:mb-16 px-4 md:px-0">
+          <h2 class="text-[36px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8 leading-[1.1] md:leading-[0.99]" style="letter-spacing: -1.8px;" data-animate-title>
+            Dapatkan interior impian dalam empat langkah.
           </h2>
-          <p class="text-[24px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.2] max-w-5xl" style="letter-spacing: -1px;" data-animate-subtitle>
-            Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.
+          <p class="text-[18px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.3]" style="letter-spacing: -0.8px;" data-animate-subtitle>
+            Secepat 2-8 minggu pengerjaan.
           </p>
         </div>
 
@@ -241,25 +242,25 @@ const testimonials = [
           
           <div class="relative z-10 flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-5 mb-10 md:mb-14 lg:mb-16 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 pb-4 md:pb-0">
             {processSteps.map((step, index) => (
-              <div class="text-center flex flex-col min-w-[80vw] md:min-w-0 snap-center">
+              <div class="text-center flex flex-col min-w-[85vw] md:min-w-0 snap-center px-2">
                 <!-- Number with rounded shape - 1&3 filled, 2&4 outline -->
-                <div class="flex justify-center mb-3 md:mb-4">
-                  <div class={`w-[44px] h-[44px] md:w-[52px] md:h-[52px] rounded-[12px] md:rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border border-[#c4c4c4]'}`}>
-                    <span class={`text-[16px] md:text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.8px;">
+                <div class="flex justify-center mb-5 md:mb-4">
+                  <div class={`w-[56px] h-[56px] md:w-[52px] md:h-[52px] rounded-[14px] md:rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border border-[#c4c4c4]'}`}>
+                    <span class={`text-[20px] md:text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.8px;">
                       {step.number}
                     </span>
                   </div>
                 </div>
                 <!-- Title -->
-                <h3 class="text-[24px] md:text-[28px] lg:text-[32px] font-light text-black mb-3 md:mb-4" style="letter-spacing: -1.2px;">
+                <h3 class="text-[32px] md:text-[28px] lg:text-[32px] font-light text-black mb-5 md:mb-4 px-2" style="letter-spacing: -1.2px;">
                   {step.title}
                 </h3>
                 <!-- Description -->
-                <p class="text-[15px] md:text-[16px] lg:text-[18px] font-normal text-[#929292] leading-[1.4] mb-4 md:mb-6" style="letter-spacing: -0.75px;">
+                <p class="text-[17px] md:text-[16px] lg:text-[18px] font-normal text-[#929292] leading-[1.6] mb-8 md:mb-6 px-4" style="letter-spacing: -0.4px;">
                   {step.description}
                 </p>
-                <!-- Image with same aspect ratio as portfolio card (3:4) -->
-                <div class="relative overflow-hidden rounded-[20px] aspect-[3/4] mt-auto">
+                <!-- Image with smaller aspect ratio for mobile - text dominant -->
+                <div class="relative overflow-hidden rounded-[20px] aspect-[5/4] md:aspect-[3/4] mt-auto">
                   <img
                     src={step.image}
                     alt={step.title}

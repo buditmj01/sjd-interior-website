@@ -49,7 +49,10 @@ export async function getInsights(options = {}) {
 
 export async function getInsightBySlug(slug) {
   try {
-    const response = await fetch(`${STRAPI_URL}/api/insights?filters[slug][$eq]=${slug}&populate=*`);
+    // Explicitly populate author.photo to ensure it's included
+    const response = await fetch(
+      `${STRAPI_URL}/api/insights?filters[slug][$eq]=${slug}&populate[author][populate][0]=photo&populate[featured_image][populate]=*&populate[gallery][populate]=*`
+    );
 
     if (!response.ok) {
       console.error('Failed to fetch insight:', response.statusText);

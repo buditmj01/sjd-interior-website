@@ -5,8 +5,7 @@ import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import FAQSection from '../components/common/FAQSection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
-import { getInsights } from '../lib/getInsights';
-import { getStrapiMedia } from '../lib/strapi';
+import { getInsights, getImageUrl } from '../lib/strapi';
 
 const steps = [
   {
@@ -20,7 +19,7 @@ const steps = [
     label: "KUNJUNGAN",
     title: "Survei Lokasi",
     description: "Desainer kami akan mengunjungi lokasi untuk mengukur ruangan, memahami pencahayaan alami, dan menemukan potensi tersembunyi dari ruang Anda.",
-    image: "/images/workflow-consult.jpg",
+    image: "/images/workflow-survey.jpg",
     position: "right"
   },
   {
@@ -57,34 +56,35 @@ const steps = [
     label: "FINALISASI",
     title: "Serah terima & pembayaran",
     description: "Tahap akhir penyelesaian proyek dilakukan melalui proses pengecekan bersama untuk memastikan seluruh pekerjaan sesuai desain dan standar kualitas. Setelah progress 100% dan pembayaran final dilakukan serah terima.",
-    image: "/images/workflow-materials.jpg",
+    image: "/images/process-handover.jpg",
     position: "left"
   }
 ];
 
-// Fetch latest insights from Strapi (limit 4 for alur-kerja page)
-const insightsData = await getInsights({ limit: 4, sort: 'publishedAt:desc' });
-
-// Transform insights data for the component
-const insights = insightsData?.map((insight: any) => {
-  const attrs = insight.attributes;
-  const authorName = attrs.author?.data?.attributes?.name || 'SJD Team';
-  const publishedDate = attrs.publishedAt ? new Date(attrs.publishedAt).toLocaleDateString('id-ID', {
+// Format date to Indonesian (same as insight page)
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }) : '';
-  const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/insight-card.jpg';
+  });
+};
 
-  return {
-    title: attrs.title,
-    author: authorName,
-    date: publishedDate,
-    category: attrs.category?.toUpperCase() || 'ARTIKEL',
-    image: featuredImage,
-    slug: attrs.slug
-  };
-}) || [];
+// Fetch latest insights from Strapi (limit 4 for alur-kerja)
+const insightsResponse = await getInsights({ 'pagination[limit]': 4 });
+
+// Transform insights data using the same approach as insight page
+const insights = insightsResponse?.data?.map((insight: any) => ({
+  title: insight.attributes.title,
+  author: insight.attributes.author?.data?.attributes?.name || 'SJD Interior Team',
+  authorPhoto: getImageUrl(insight.attributes.author?.data?.attributes?.photo, 'thumbnail'),
+  date: formatDate(insight.attributes.publishedAt || insight.attributes.createdAt),
+  category: insight.attributes.category.toUpperCase(),
+  image: getImageUrl(insight.attributes.featured_image, 'medium') || '/images/insight-card.jpg',
+  slug: insight.attributes.slug,
+  featured: insight.attributes.is_featured || false
+})) || [];
 ---
 
 <BaseLayout

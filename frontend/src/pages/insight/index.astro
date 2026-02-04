@@ -203,12 +203,12 @@ try {
 
     <!-- All Articles Grid -->
     <section class="py-10 md:py-11 lg:py-12">
-      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+      <div class="w-full max-w-[1761px] mx-auto px-4 md:px-12 lg:px-[151px]">
         <h2 class="text-[22px] md:text-[25px] lg:text-[28px] font-light text-black mb-5 md:mb-6" style="letter-spacing: -1.10px; md:letter-spacing: -1.25px; lg:letter-spacing: -1.40px;">
           Semua Artikel
         </h2>
 
-        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8 md:mb-9 lg:mb-10">
+        <div id="articles-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 lg:gap-6 mb-8 md:mb-9 lg:mb-10">
           {allArticles.map((article) => (
             <div class="article-item" data-category={article.category} data-date={new Date(article.date).getTime()} data-title={article.title.toLowerCase()}>
               <InsightCard {...article} />
