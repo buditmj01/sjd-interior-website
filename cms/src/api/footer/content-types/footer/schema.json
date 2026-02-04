@@ -36,10 +36,10 @@
       "required": true,
       "default": "https://tiktok.com/@sjdinterior"
     },
-    "youtube_url": {
+    "facebook_url": {
       "type": "string",
       "required": true,
-      "default": "https://youtube.com/@sjdinterior"
+      "default": "https://facebook.com/sjdinterior"
     },
     "cta_title": {
       "type": "string",

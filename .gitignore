@@ -30,11 +30,19 @@ cms/public/uploads/*
 cms/.strapi-updater.json
 cms/exports/
 cms/.env
+cms/.env.*
+!cms/.env.example
 cms/package-lock.json
 cms/yarn.lock
 
+# Database backups
+cms/backups/
+*.sql
+*.sql.gz
+
 # Frontend
 frontend/dist/
+frontend/dist-*/
 frontend/.astro/
 frontend/package-lock.json
 frontend/yarn.lock
@@ -72,3 +80,8 @@ coverage/
 .cache/
 temp/
 tmp/
+*.pid
+.cms.pid
+.frontend.pid
+frontend/.env.*
+!frontend/.env.example

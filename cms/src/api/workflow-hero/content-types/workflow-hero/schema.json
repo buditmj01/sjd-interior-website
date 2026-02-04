@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "workflow_hero",
+  "info": {
+    "singularName": "workflow-hero",
+    "pluralName": "workflow-heroes",
+    "displayName": "Workflow Hero",
+    "description": "Alur Kerja page hero section with video player"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "default": "Prosesnya mudah."
+    },
+    "subheadline": {
+      "type": "text",
+      "required": true,
+      "default": "Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya."
+    },
+    "badge_text": {
+      "type": "string",
+      "required": false,
+      "default": "Secepat 2-8 minggu pengerjaan"
+    },
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos"]
+    },
+    "poster_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

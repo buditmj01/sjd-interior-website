@@ -59,10 +59,9 @@
       "allowedTypes": ["images"]
     },
     "category": {
-      "type": "enumeration",
-      "enum": ["Rumah", "Apartemen", "Komersial", "Kantor"],
-      "default": "Rumah",
-      "required": true
+      "type": "string",
+      "required": true,
+      "default": "rumah"
     },
     "client_name": {
       "type": "string",

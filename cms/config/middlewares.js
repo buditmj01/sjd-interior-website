@@ -17,6 +17,8 @@ module.exports = [
             'market-assets.strapi.io',
             'cdn.jsdelivr.net',
             'strapi.io',
+            'https://sjdinterior.com',
+            'https://staging.sjdinterior.com',
           ],
           'media-src': [
             "'self'",
@@ -25,6 +27,8 @@ module.exports = [
             'dl.airtable.com',
             'res.cloudinary.com',
             'market-assets.strapi.io',
+            'https://sjdinterior.com',
+            'https://staging.sjdinterior.com',
           ],
           upgradeInsecureRequests: null,
         },
@@ -34,7 +38,14 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:4321', 'http://localhost:3000', 'http://127.0.0.1:4321'],
+      origin: [
+        'http://localhost:4321',
+        'http://localhost:3000',
+        'http://127.0.0.1:4321',
+        'https://sjdinterior.com',
+        'https://www.sjdinterior.com',
+        'https://staging.sjdinterior.com',
+      ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,

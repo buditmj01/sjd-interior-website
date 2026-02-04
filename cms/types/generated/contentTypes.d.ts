@@ -480,6 +480,9 @@ export interface ApiFooterFooter extends Schema.SingleType {
     cta_description: Attribute.Text & Attribute.Required;
     cta_title: Attribute.String & Attribute.Required;
     description: Attribute.Text & Attribute.Required;
+    facebook_url: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'https://facebook.com/sjdinterior'>;
     instagram_url: Attribute.String &
       Attribute.Required &
       Attribute.DefaultTo<'https://instagram.com/sjdinterior'>;
@@ -495,9 +498,6 @@ export interface ApiFooterFooter extends Schema.SingleType {
       'admin::user'
     > &
       Attribute.Private;
-    youtube_url: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'https://youtube.com/@sjdinterior'>;
   };
 }
 
@@ -634,6 +634,39 @@ export interface ApiNavigationNavigation extends Schema.SingleType {
   };
 }
 
+export interface ApiPortfolioCategoryPortfolioCategory
+  extends Schema.CollectionType {
+  collectionName: 'portfolio_categories';
+  info: {
+    description: 'Categories for portfolio filtering';
+    displayName: 'Portfolio Category';
+    pluralName: 'portfolio-categories';
+    singularName: 'portfolio-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::portfolio-category.portfolio-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    label: Attribute.String & Attribute.Required;
+    order: Attribute.Integer & Attribute.DefaultTo<0>;
+    slug: Attribute.String & Attribute.Required & Attribute.Unique;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::portfolio-category.portfolio-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiProjectProject extends Schema.CollectionType {
   collectionName: 'projects';
   info: {
@@ -653,11 +686,9 @@ export interface ApiProjectProject extends Schema.CollectionType {
   attributes: {
     area_size: Attribute.String;
     budget: Attribute.BigInteger;
-    category: Attribute.Enumeration<
-      ['Rumah', 'Apartemen', 'Komersial', 'Kantor']
-    > &
+    category: Attribute.String &
       Attribute.Required &
-      Attribute.DefaultTo<'Rumah'>;
+      Attribute.DefaultTo<'rumah'>;
     client_name: Attribute.String &
       Attribute.SetPluginOptions<{
         i18n: {
@@ -815,6 +846,45 @@ export interface ApiWebsiteLogosWebsiteLogos extends Schema.SingleType {
     > &
       Attribute.Private;
     websiteLogos: Attribute.Component<'settings.website-logos'>;
+  };
+}
+
+export interface ApiWorkflowHeroWorkflowHero extends Schema.SingleType {
+  collectionName: 'workflow_hero';
+  info: {
+    description: 'Alur Kerja page hero section with video player';
+    displayName: 'Workflow Hero';
+    pluralName: 'workflow-heroes';
+    singularName: 'workflow-hero';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    badge_text: Attribute.String &
+      Attribute.DefaultTo<'Secepat 2-8 minggu pengerjaan'>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::workflow-hero.workflow-hero',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    headline: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'Prosesnya mudah.'>;
+    poster_image: Attribute.Media<'images'>;
+    subheadline: Attribute.Text &
+      Attribute.Required &
+      Attribute.DefaultTo<'Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.'>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::workflow-hero.workflow-hero',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    video: Attribute.Media<'videos'>;
   };
 }
 
@@ -1261,10 +1331,12 @@ declare module '@strapi/types' {
       'api::hero-banner.hero-banner': ApiHeroBannerHeroBanner;
       'api::insight.insight': ApiInsightInsight;
       'api::navigation.navigation': ApiNavigationNavigation;
+      'api::portfolio-category.portfolio-category': ApiPortfolioCategoryPortfolioCategory;
       'api::project.project': ApiProjectProject;
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
       'api::stats.stats': ApiStatsStats;
       'api::website-logos.website-logos': ApiWebsiteLogosWebsiteLogos;
+      'api::workflow-hero.workflow-hero': ApiWorkflowHeroWorkflowHero;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

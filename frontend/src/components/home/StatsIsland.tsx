@@ -102,21 +102,25 @@ export default function StatsIsland({ stats }: StatsIslandProps) {
     }, [stats]);
 
     return (
-        <section class="py-20 bg-white" ref={containerRef}>
+        <section class="py-16 md:py-20 bg-white" ref={containerRef}>
             <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
                 {/* Heading */}
-                <div class="text-center mb-10 md:mb-16">
+                <div class="text-center mb-12 md:mb-14 px-2 md:px-4">
                     <h2
                         ref={titleRef}
-                        class="text-[36px] md:text-[70px] font-light text-black leading-[1.1] opacity-0 tracking-[-1.5px] md:tracking-[-3.5px]"
+                        class="opacity-0"
                     >
-                        <span class="block mb-2 md:mb-0">Rumah. Apartemen. Kantor.<br class="md:hidden" /> Semua bisa.</span>
-                        <span class="block text-[#888] md:text-black mt-2 md:mt-0">Maksimalkan setiap meter ruang Anda.</span>
+                        <span class="block text-[clamp(28px,6vw,70px)] font-light text-black leading-[1.15] md:leading-[1.1] tracking-[-0.02em] md:tracking-[-0.03em] mb-3 md:mb-2">
+                            Rumah. Apartemen. Kantor. Semua bisa.
+                        </span>
+                        <span class="block text-[clamp(16px,3.5vw,32px)] font-light text-[#666] md:text-neutral-500 leading-[1.3] tracking-[-0.01em]">
+                            Maksimalkan setiap meter ruang Anda.
+                        </span>
                     </h2>
                 </div>
 
                 {/* Grid - Strictly Square Cards */}
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-10 md:mt-16">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                     {stats.map((stat, index) => (
                         <div
                             key={index}

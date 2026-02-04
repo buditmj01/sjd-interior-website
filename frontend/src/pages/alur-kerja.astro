@@ -5,7 +5,7 @@ import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import FAQSection from '../components/common/FAQSection.astro';
 import InsightCard from '../components/common/InsightCard.astro';
-import { getInsights, getImageUrl } from '../lib/strapi';
+import { getInsights, getImageUrl, getWorkflowHero, getStrapiMedia } from '../lib/strapi';
 
 const steps = [
   {
@@ -71,6 +71,22 @@ const formatDate = (dateString: string) => {
   });
 };
 
+// Fetch workflow hero data from Strapi
+const workflowHeroData = await getWorkflowHero();
+
+// Extract hero content with fallback to defaults
+const heroContent = {
+  headline: workflowHeroData?.attributes?.headline || 'Prosesnya mudah.',
+  subheadline: workflowHeroData?.attributes?.subheadline || 'Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.',
+  badgeText: workflowHeroData?.attributes?.badge_text || 'Secepat 2-8 minggu pengerjaan',
+  videoUrl: workflowHeroData?.attributes?.video?.data?.attributes?.url
+    ? getStrapiMedia(workflowHeroData.attributes.video.data.attributes.url)
+    : '/videos/workflow-process.mp4',
+  posterUrl: workflowHeroData?.attributes?.poster_image?.data?.attributes?.url
+    ? getStrapiMedia(workflowHeroData.attributes.poster_image.data.attributes.url)
+    : '/images/hero-background.jpg'
+};
+
 // Fetch latest insights from Strapi (limit 4 for alur-kerja)
 const insightsResponse = await getInsights({ 'pagination[limit]': 4 });
 
@@ -94,27 +110,94 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
   <Header />
   
   <main class="bg-white">
-    <!-- Hero Section with Background Image -->
-    <!-- Hero Section -->
-    <section class="pt-32 md:pt-44 lg:pt-56 pb-14 md:pb-24 lg:pb-32 bg-white">
+    <!-- Hero Section - Split Layout with Video Player -->
+    <section class="relative pt-44 pb-16 md:pt-44 md:pb-20 lg:pt-48 lg:pb-24 bg-white overflow-hidden">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <h1 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8" style="letter-spacing: -2.4px; line-height: 98.83%;">
-          Prosesnya mudah.
-        </h1>
-        <p class="text-[24px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.2] max-w-5xl" style="letter-spacing: -1px;">
-          Kami tangani semuanya dengan profesional. Anda tinggal nikmati hasilnya.
-        </p>
-      </div>
 
-      <!-- Hero Image - Full Width of Content Container -->
-      <div class="w-full max-w-[1761px] mx-auto mt-12 md:mt-16 lg:mt-20">
-        <div class="w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
-          <img
-            src="/images/hero-background.jpg"
-            alt="Proses Interior"
-            class="w-full h-[120%] object-cover -mt-[10%]"
-            data-parallax-hero
-          />
+        <!-- Grid Layout: Text Left, Video Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-8 md:gap-10 lg:gap-12 xl:gap-16 items-center">
+
+          <!-- Left: Text Content -->
+          <div class="xl:col-span-5 text-center lg:text-left z-10">
+            <!-- Main Heading -->
+            <h1 class="text-[clamp(48px,7vw,128px)] font-light text-black mb-4 md:mb-7 lg:mb-8 leading-[0.95] tracking-[-0.02em]">
+              {heroContent.headline}
+            </h1>
+
+            <!-- Description -->
+            <p class="text-[clamp(16px,2vw,28px)] font-light text-[#666] leading-[1.35] max-w-xl mx-auto lg:mx-0 mb-6 md:mb-8 lg:mb-10">
+              {heroContent.subheadline}
+            </p>
+
+            <!-- CTA Badge -->
+            <div class="inline-flex items-center gap-3 px-5 py-3 bg-black/5 rounded-full border border-black/10 hover:bg-black/10 transition-colors">
+              <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span class="text-[14px] md:text-[15px] font-medium text-[#333]">{heroContent.badgeText}</span>
+            </div>
+          </div>
+
+          <!-- Right: Video Player -->
+          <div class="xl:col-span-7 relative">
+            <div
+              class="relative aspect-video w-full rounded-[32px] md:rounded-[40px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] group cursor-pointer"
+              id="video-player"
+            >
+              <!-- Video Poster/Thumbnail -->
+              <img
+                src={heroContent.posterUrl}
+                alt="Video Proses Interior"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                id="video-poster"
+              />
+
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+
+              <!-- Play Button -->
+              <div class="absolute inset-0 flex items-center justify-center z-10 transition-all duration-300">
+                <div class="relative group-hover:scale-110 transition-transform duration-300">
+                  <!-- Outer Ring -->
+                  <div class="absolute inset-0 bg-white/20 rounded-full scale-150 animate-pulse"></div>
+
+                  <!-- Play Button Circle -->
+                  <button
+                    class="relative w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:bg-black focus:outline-none focus:ring-4 focus:ring-white/50"
+                    aria-label="Play video"
+                  >
+                    <svg class="w-8 h-8 md:w-10 md:h-10 text-black transition-colors duration-300 group-hover:text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Video Duration Badge -->
+              <div class="absolute bottom-4 md:bottom-6 left-4 md:left-6 px-3 py-1.5 bg-black/80 backdrop-blur-md rounded-lg">
+                <span class="text-white text-xs md:text-sm font-medium">2:30</span>
+              </div>
+
+              <!-- Hover Label -->
+              <div class="absolute bottom-4 md:bottom-6 right-4 md:right-6 px-4 py-2 bg-white/95 backdrop-blur-md rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <span class="text-black text-xs md:text-sm font-medium whitespace-nowrap">Lihat Proses Kami</span>
+              </div>
+
+              <!-- Actual Video Element (Hidden by default) -->
+              <video
+                id="workflow-video"
+                class="absolute inset-0 w-full h-full object-cover hidden"
+                controls
+                poster={heroContent.posterUrl}
+              >
+                <source src={heroContent.videoUrl} type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <!-- Decorative Elements -->
+            <div class="hidden lg:block absolute -bottom-6 -right-6 w-48 h-48 bg-gradient-to-br from-black/5 to-transparent rounded-full blur-2xl -z-10"></div>
+            <div class="hidden lg:block absolute -top-6 -left-6 w-32 h-32 bg-gradient-to-br from-black/5 to-transparent rounded-full blur-2xl -z-10"></div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -157,9 +240,9 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
                       {step.description}
                     </p>
                   </div>
-                  <!-- Dot at center line (hidden on mobile) -->
-                  <div class="hidden lg:block absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
-                    <div class="w-[16px] h-[16px] bg-[#D1D1D1] rounded-full ring-[20px] ring-white"></div>
+                  <!-- Dot at center line (left on mobile, center on desktop) -->
+                  <div class="absolute left-[30px] lg:left-1/2 top-[60px] transform lg:-translate-x-1/2 z-10">
+                    <div class="w-[12px] h-[12px] lg:w-[16px] lg:h-[16px] bg-[#D1D1D1] rounded-full ring-[12px] lg:ring-[20px] ring-white"></div>
                   </div>
                   <!-- Image on Right (first on mobile) -->
                   <div class="px-6 lg:px-12 order-1 lg:order-2">
@@ -209,9 +292,9 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
                       </div>
                     )}
                   </div>
-                  <!-- Dot at center line (hidden on mobile) -->
-                  <div class="hidden lg:block absolute left-1/2 top-[60px] transform -translate-x-1/2 z-10">
-                    <div class="w-[16px] h-[16px] bg-[#D1D1D1] rounded-full ring-[20px] ring-white"></div>
+                  <!-- Dot at center line (left on mobile, center on desktop) -->
+                  <div class="absolute left-[30px] lg:left-1/2 top-[60px] transform lg:-translate-x-1/2 z-10">
+                    <div class="w-[12px] h-[12px] lg:w-[16px] lg:h-[16px] bg-[#D1D1D1] rounded-full ring-[12px] lg:ring-[20px] ring-white"></div>
                   </div>
                   <!-- Text on Right -->
                   <div class="px-6 lg:px-12 text-center lg:text-left flex flex-col justify-center">
@@ -239,8 +322,8 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
           </div>
         ))}
 
-        <!-- Center timeline line (hidden on mobile) -->
-        <div class="hidden lg:block absolute left-1/2 top-[228px] bottom-[80px] w-[2px] bg-[#D1D1D1] rounded-full transform -translate-x-1/2 z-0"></div>
+        <!-- Center timeline line (left on mobile, center on desktop) -->
+        <div class="absolute left-[30px] lg:left-1/2 top-[228px] bottom-[80px] w-[2px] bg-[#D1D1D1] rounded-full transform lg:-translate-x-1/2 z-0"></div>
 
         <!-- Pengerjaan Selesai - End of Timeline -->
         <div class="flex justify-center mt-32 md:mt-44 lg:mt-56 relative z-10">
@@ -344,6 +427,41 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
             end: "bottom top",
             scrub: true
           }
+        });
+      }
+
+      // Video Player Functionality
+      const videoPlayer = document.getElementById('video-player');
+      const video = document.getElementById('workflow-video');
+      const poster = document.getElementById('video-poster');
+
+      if (videoPlayer && video && poster) {
+        videoPlayer.addEventListener('click', (e) => {
+          // Don't trigger if clicking on video controls
+          if (e.target.tagName === 'VIDEO') return;
+
+          // Hide poster and play button overlays
+          poster.style.display = 'none';
+          const overlays = videoPlayer.querySelectorAll('.absolute:not(video)');
+          overlays.forEach(overlay => {
+            if (!overlay.classList.contains('hidden')) {
+              overlay.style.display = 'none';
+            }
+          });
+
+          // Show and play video
+          video.classList.remove('hidden');
+          video.play();
+        });
+
+        // Show poster again when video ends
+        video.addEventListener('ended', () => {
+          video.classList.add('hidden');
+          poster.style.display = 'block';
+          const overlays = videoPlayer.querySelectorAll('.absolute:not(video)');
+          overlays.forEach(overlay => {
+            overlay.style.display = '';
+          });
         });
       }
     });

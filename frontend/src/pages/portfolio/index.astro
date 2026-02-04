@@ -6,7 +6,7 @@ import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
 import Stats from '../../components/home/Stats.astro';
-import { getProjects, getImageUrl } from '../../lib/strapi';
+import { getProjects, getImageUrl, getPortfolioCategories } from '../../lib/strapi';
 
 // Fetch projects from Strapi (Fetching more for client-side filtering)
 let portfolios = [];
@@ -14,7 +14,7 @@ try {
   const response = await getProjects({ 'pagination[limit]': 16, 'sort[0]': 'createdAt:desc' }); // Increased limit for 8 rows x 2 cols
   portfolios = response.data?.map((project) => ({
     title: project.attributes.title,
-    category: project.attributes.category.toUpperCase(),
+    category: project.attributes.category?.toLowerCase() || 'rumah',
     location: project.attributes.location || 'Indonesia',
     area: project.attributes.area_size || '-',
     style: project.attributes.theme || 'Modern Minimalis',
@@ -27,7 +27,7 @@ try {
   // Fallback to mock data
   portfolios = Array(16).fill(null).map((_, i) => ({
     title: `Modern Tropical House ${i + 1}`,
-    category: i % 3 === 0 ? "RUMAH" : (i % 3 === 1 ? "KANTOR" : "KOMERSIAL"),
+    category: i % 3 === 0 ? "rumah" : (i % 3 === 1 ? "kantor" : "komersial"),
     location: "Jakarta Selatan",
     area: "350 m²",
     style: "Modern Minimalis",
@@ -37,12 +37,28 @@ try {
   }));
 }
 
-const categories = [
-  { id: 'semua', label: 'Semua' },
-  { id: 'rumah', label: 'Rumah' },
-  { id: 'kantor', label: 'Kantor' },
-  { id: 'komersial', label: 'Komersial' }
-];
+// Fetch categories from Strapi
+let categories = [{ id: 'semua', label: 'Semua', slug: 'semua' }];
+try {
+  const categoriesResponse = await getPortfolioCategories();
+  if (categoriesResponse && Array.isArray(categoriesResponse)) {
+    const dynamicCategories = categoriesResponse.map((cat) => ({
+      id: cat.attributes.slug,
+      label: cat.attributes.label,
+      slug: cat.attributes.slug
+    }));
+    categories = [{ id: 'semua', label: 'Semua', slug: 'semua' }, ...dynamicCategories];
+  }
+} catch (error) {
+  console.error('Error fetching categories:', error);
+  // Fallback to default categories
+  categories = [
+    { id: 'semua', label: 'Semua', slug: 'semua' },
+    { id: 'rumah', label: 'Rumah', slug: 'rumah' },
+    { id: 'kantor', label: 'Kantor', slug: 'kantor' },
+    { id: 'komersial', label: 'Komersial', slug: 'komersial' }
+  ];
+}
 
 const sortOptions = [
   { id: 'latest', label: 'Terbaru' },
@@ -58,63 +74,101 @@ const sortOptions = [
   
   <main>
     <!-- Hero Section -->
-    <section class="relative pt-32 md:pt-40 lg:pt-44 pb-12 md:pb-16 lg:pb-20 bg-white">
-      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <h1 class="text-[48px] md:text-[88px] lg:text-[128px] font-light text-black mb-8 md:mb-10 lg:mb-12" style="letter-spacing: -2.4px; line-height: 98.83%;">
+    <section class="relative pt-52 md:pt-40 lg:pt-44 pb-20 md:pb-16 lg:pb-20 bg-white">
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] text-center md:text-left">
+        <h1 class="text-[72px] md:text-[88px] lg:text-[128px] font-light text-black mb-8 md:mb-10 lg:mb-12 mx-auto md:mx-0" style="letter-spacing: -2.4px; line-height: 98.83%;">
           Koleksi Karya Pilihan Kami.
         </h1>
       </div>
     </section>
 
     <!-- Filter & Sort Section -->
-    <section class="py-4 md:py-10 lg:py-12 bg-white sticky top-[60px] md:top-[80px] z-30 shadow-sm md:shadow-none transition-all duration-300">
+    <section class="pt-24 pb-5 md:pt-12 md:pb-8 lg:pt-14 lg:pb-10 bg-white sticky top-[60px] md:top-[80px] z-30 shadow-sm md:shadow-none transition-all duration-300 border-b border-[#e5e5e5]">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-8">
-          <!-- Filter Buttons - Horizontal Scroll on Mobile -->
-          <div class="w-full md:w-auto -mx-6 px-6 md:mx-0 md:px-0 overflow-x-auto scrollbar-hide">
-            <div class="flex flex-nowrap md:flex-wrap gap-3 items-center filter-container md:justify-center min-w-max">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
+
+          <!-- Left: Category Filters -->
+          {categories.length <= 5 ? (
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0" id="category-filters">
               {categories.map((cat) => (
-                <button 
+                <button
                   data-category-filter={cat.id}
-                  class={`px-6 md:px-8 py-2.5 md:py-3 border font-medium rounded-full transition-all text-[14px] md:text-[16px] whitespace-nowrap filter-btn ${
-                    cat.id === 'semua' 
-                    ? 'bg-black border-black text-white active-filter shadow-md hover:text-white hover:bg-black' 
-                    : 'border-[#e0e0e0] text-[#666] hover:border-black hover:text-black bg-white'
+                  class={`filter-btn px-4 py-2 font-medium rounded-full transition-all text-[13px] md:text-[14px] whitespace-nowrap ${
+                    cat.id === 'semua'
+                    ? 'bg-black border-black text-white active-filter shadow-md hover:text-white hover:bg-black'
+                    : 'border border-[#e0e5e5] text-[#666] hover:border-black hover:text-black bg-white'
                   }`}
                 >
                   {cat.label}
                 </button>
               ))}
             </div>
-          </div>
+          ) : (
+            <div class="relative category-dropdown" id="category-dropdown">
+              <button
+                id="category-trigger"
+                class="appearance-none flex items-center gap-2 pl-4 pr-8 py-2 bg-white border border-[#e5e5e5] rounded-full text-[13px] md:text-[14px] font-medium text-black cursor-pointer transition-all hover:border-[#999]"
+              >
+                <span class="selected-category-label">Semua</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black pointer-events-none transition-transform duration-300" id="category-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-          <!-- Sort Dropdown - Optimized for Mobile -->
-          <div class="relative w-full md:min-w-[200px] md:w-auto sort-dropdown z-40">
-            <button 
-              id="sort-trigger"
-              class="w-full flex items-center justify-between px-6 py-3 border border-black rounded-full cursor-pointer bg-white hover:bg-gray-50 transition-colors"
-            >
-              <span class="text-[14px] md:text-[16px] font-medium text-black selected-sort-label">
-                Urutkan: Terbaru
-              </span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 transition-transform duration-300" id="sort-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            <div 
-              id="sort-menu"
-              class="absolute right-0 top-full mt-2 w-full bg-white border border-[#e5e5e5] rounded-[20px] overflow-hidden opacity-0 invisible transition-all duration-200 transform origin-top scale-95 shadow-xl"
-            >
-              {sortOptions.map((opt) => (
-                <button 
-                  data-sort-val={opt.id}
-                  class="w-full text-left block px-6 py-3 text-[14px] md:text-[16px] font-medium transition-colors hover:bg-gray-50 sort-btn text-[#333]"
-                >
-                  {opt.label}
-                </button>
-              ))}
+              <div
+                id="category-menu"
+                class="absolute left-0 top-full mt-2 w-full min-w-[160px] bg-white border border-[#e5e5e5] rounded-[20px] overflow-hidden opacity-0 invisible transition-all duration-200 transform origin-top scale-95 shadow-xl max-h-[300px] overflow-y-auto"
+              >
+                {categories.map((cat) => (
+                  <button
+                    data-category-filter={cat.id}
+                    class="filter-btn w-full text-left block px-4 py-2.5 text-[13px] md:text-[14px] font-medium transition-colors hover:bg-gray-50 text-[#333]"
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
             </div>
+          )}
+
+          <!-- Right: Sort & Results Count -->
+          <div class="flex items-center gap-4 md:gap-6 px-6 md:px-0 -mx-6 md:mx-0">
+            <!-- Sort Dropdown -->
+            <div class="flex items-center gap-2">
+              <div class="relative sort-dropdown">
+                <button
+                  id="sort-trigger"
+                  class="appearance-none flex items-center gap-2 pl-3 pr-8 py-1.5 bg-white border border-[#e5e5e5] rounded-full text-[13px] md:text-[14px] font-medium text-black cursor-pointer transition-all hover:border-[#999]"
+                >
+                  <span class="selected-sort-label">Terbaru</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black pointer-events-none transition-transform duration-300" id="sort-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <div
+                  id="sort-menu"
+                  class="absolute right-0 top-full mt-2 w-full min-w-[120px] bg-white border border-[#e5e5e5] rounded-[20px] overflow-hidden opacity-0 invisible transition-all duration-200 transform origin-top scale-95 shadow-xl"
+                >
+                  {sortOptions.map((opt) => (
+                    <button
+                      data-sort-val={opt.id}
+                      class="w-full text-left block px-4 py-2.5 text-[13px] md:text-[14px] font-medium transition-colors hover:bg-gray-50 sort-btn text-[#333]"
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="w-px h-4 bg-[#e5e5e5]"></div>
+
+            <!-- Results Count -->
+            <p class="text-[13px] md:text-[14px] text-[#666] whitespace-nowrap" id="results-count">
+              <span class="font-medium text-black" id="count-number">{portfolios.length}</span> proyek
+            </p>
           </div>
         </div>
       </div>
@@ -132,15 +186,27 @@ const sortOptions = [
           ))}
         </div>
 
-        <div class="flex justify-center items-center gap-2 mb-12 md:mb-16">
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 md:py-24">
+          <svg class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-[#ddd]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <h3 class="text-xl md:text-2xl font-light text-[#666] mb-2">Tidak ada proyek ditemukan</h3>
+          <p class="text-[14px] md:text-[15px] text-[#999]">Coba ubah filter atau kategori</p>
+        </div>
+
+        <div class="flex justify-center items-center gap-2 mb-12 md:mb-16" id="pagination-dots">
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-black rounded-full transition-all hover:scale-125 cursor-pointer"></div>
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
         </div>
 
-        <div class="text-center mb-16 md:mb-20 lg:mb-24">
-          <button class="px-8 md:px-10 py-3 md:py-4 text-[14px] md:text-[16px] border border-[#e5e5e5] text-black font-medium rounded-full hover:bg-black hover:text-white hover:border-black transition-all shadow-sm hover:shadow-lg active:scale-95">
-            Load More Projects
+        <div class="text-center mb-16 md:mb-20 lg:mb-24 hidden" id="load-more-container">
+          <button class="inline-flex items-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[15px] md:text-[16px] font-medium text-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span>Muat Lebih Banyak</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
         </div>
 
@@ -181,16 +247,31 @@ const sortOptions = [
       const sortArrow = document.getElementById('sort-arrow');
       let isSortOpen = false;
 
+      const categoryTrigger = document.getElementById('category-trigger');
+      const categoryMenu = document.getElementById('category-menu');
+      const categoryArrow = document.getElementById('category-arrow');
+      const categoryLabel = document.querySelector('.selected-category-label');
+      let isCategoryOpen = false;
+
       // Toggle Sort Dropdown
       if (sortTrigger && sortMenu) {
         sortTrigger.addEventListener('click', (e) => {
           e.stopPropagation();
           isSortOpen = !isSortOpen;
           toggleSortMenu(isSortOpen);
+          if (isCategoryOpen) {
+            isCategoryOpen = false;
+            toggleCategoryMenu(false);
+          }
         });
+      }
 
-        // Close when clicking outside
-        document.addEventListener('click', () => {
+      // Toggle Category Dropdown
+      if (categoryTrigger && categoryMenu) {
+        categoryTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isCategoryOpen = !isCategoryOpen;
+          toggleCategoryMenu(isCategoryOpen);
           if (isSortOpen) {
             isSortOpen = false;
             toggleSortMenu(false);
@@ -198,15 +279,39 @@ const sortOptions = [
         });
       }
 
+      // Close when clicking outside
+      document.addEventListener('click', () => {
+        if (isSortOpen) {
+          isSortOpen = false;
+          toggleSortMenu(false);
+        }
+        if (isCategoryOpen) {
+          isCategoryOpen = false;
+          toggleCategoryMenu(false);
+        }
+      });
+
       function toggleSortMenu(open) {
-        if (open) {
+        if (open && sortMenu && sortArrow) {
           sortMenu.classList.remove('opacity-0', 'invisible', 'scale-95');
           sortMenu.classList.add('opacity-100', 'visible', 'scale-100');
           sortArrow.classList.add('rotate-180');
-        } else {
+        } else if (sortMenu && sortArrow) {
           sortMenu.classList.add('opacity-0', 'invisible', 'scale-95');
           sortMenu.classList.remove('opacity-100', 'visible', 'scale-100');
           sortArrow.classList.remove('rotate-180');
+        }
+      }
+
+      function toggleCategoryMenu(open) {
+        if (open && categoryMenu && categoryArrow) {
+          categoryMenu.classList.remove('opacity-0', 'invisible', 'scale-95');
+          categoryMenu.classList.add('opacity-100', 'visible', 'scale-100');
+          categoryArrow.classList.add('rotate-180');
+        } else if (categoryMenu && categoryArrow) {
+          categoryMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+          categoryMenu.classList.remove('opacity-100', 'visible', 'scale-100');
+          categoryArrow.classList.remove('rotate-180');
         }
       }
 
@@ -262,23 +367,53 @@ const sortOptions = [
         }
 
         function showFiltered() {
-          visibleCards.forEach(card => {
-            card.style.display = 'block';
-            grid.appendChild(card); // Re-append in sorted order
-          });
+          const emptyState = document.getElementById('empty-state');
+          const paginationDots = document.getElementById('pagination-dots');
+          const loadMoreContainer = document.getElementById('load-more-container');
+          const countNumber = document.getElementById('count-number');
 
-          gsap.fromTo(visibleCards, 
-            { opacity: 0, scale: 0.9, y: 30 },
-            { 
-              opacity: 1, 
-              scale: 1, 
-              y: 0, 
-              duration: 0.5, 
-              stagger: 0.08, 
-              ease: "power3.out",
-              clearProps: "all" 
+          // Update results count
+          if (countNumber) {
+            countNumber.textContent = visibleCards.length.toString();
+          }
+
+          // Show/hide empty state based on visible cards
+          if (visibleCards.length === 0) {
+            emptyState?.classList.remove('hidden');
+            grid?.classList.add('hidden');
+            paginationDots?.classList.add('hidden');
+            loadMoreContainer?.classList.add('hidden');
+          } else {
+            emptyState?.classList.add('hidden');
+            grid?.classList.remove('hidden');
+
+            // Show pagination and load more only if more than 9 projects
+            if (visibleCards.length > 9) {
+              paginationDots?.classList.remove('hidden');
+              loadMoreContainer?.classList.remove('hidden');
+            } else {
+              paginationDots?.classList.add('hidden');
+              loadMoreContainer?.classList.add('hidden');
             }
-          );
+
+            visibleCards.forEach(card => {
+              card.style.display = 'block';
+              grid.appendChild(card); // Re-append in sorted order
+            });
+
+            gsap.fromTo(visibleCards,
+              { opacity: 0, scale: 0.9, y: 30 },
+              {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.5,
+                stagger: 0.08,
+                ease: "power3.out",
+                clearProps: "all"
+              }
+            );
+          }
         }
 
         // Update URL without reload
@@ -290,8 +425,21 @@ const sortOptions = [
 
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          if (currentCategory === btn.getAttribute('data-category-filter')) return;
-          currentCategory = btn.getAttribute('data-category-filter');
+          const newCategory = btn.getAttribute('data-category-filter');
+          if (currentCategory === newCategory) return;
+          currentCategory = newCategory;
+
+          // Update category dropdown label if dropdown exists
+          if (categoryLabel) {
+            categoryLabel.textContent = btn.textContent.trim();
+          }
+
+          // Close category dropdown if open
+          if (isCategoryOpen) {
+            isCategoryOpen = false;
+            toggleCategoryMenu(false);
+          }
+
           updateUI();
         });
       });
@@ -312,4 +460,20 @@ const sortOptions = [
     initPortfolioFilters();
     document.addEventListener('astro:after-swap', initPortfolioFilters);
   </script>
+
+  <style>
+    /* Hide scrollbar but keep functionality */
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Smooth transitions for filter buttons */
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+  </style>
 </BaseLayout>

@@ -102,21 +102,20 @@ const testimonials = [
     <Hero />
 
     <!-- Introduction Section -->
-    <section class="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
+    <section class="py-16 md:py-16 lg:py-20 bg-gradient-to-b from-white via-[#fff7ee] to-[#fff7ee]">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <!-- Title - Left aligned -->
-        <div class="mb-10 md:mb-14 lg:mb-16">
-          <h2 class="text-left" data-animate-title>
-            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">SJD Interior adalah</span>
-            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">solusi desain lengkap</span>
-            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">personal dan tanpa</span>
-            <span class="block text-[40px] md:text-[64px] lg:text-[96px] font-light text-black leading-[1.05]" style="letter-spacing: -2px;">ribet.</span>
+        <!-- Title - Centered on mobile, left on desktop -->
+        <div class="mb-12 md:mb-14 lg:mb-16">
+          <h2 class="text-center md:text-left" data-animate-title>
+            <span class="block text-[clamp(32px,8vw,96px)] font-light text-black leading-[1.1] md:leading-[1.05] tracking-[-0.02em]">SJD Interior adalah</span>
+            <span class="block text-[clamp(32px,8vw,96px)] font-light text-black leading-[1.1] md:leading-[1.05] tracking-[-0.02em]">solusi desain lengkap</span>
+            <span class="block text-[clamp(32px,8vw,96px)] font-light text-black leading-[1.1] md:leading-[1.05] tracking-[-0.02em]">personal dan tanpa</span>
+            <span class="block text-[clamp(32px,8vw,96px)] font-light text-black leading-[1.1] md:leading-[1.05] tracking-[-0.02em]">ribet.</span>
           </h2>
 
-          <!-- Subtitle - Left aligned with proper spacing -->
-          <p class="text-[18px] md:text-[26px] lg:text-[36px] font-light text-black mt-6 md:mt-7 lg:mt-8 leading-[1.3]" style="letter-spacing: -0.9px;" data-animate-subtitle>
-            Kami handle semuanya, dari desain hingga furniture.<br />
-            Tersedia sekarang di Jabodetabek.
+          <!-- Subtitle - Centered on mobile, left on desktop -->
+          <p class="text-[16px] md:text-[26px] lg:text-[36px] font-light text-black/80 mt-6 md:mt-7 lg:mt-8 leading-[1.4] md:leading-[1.3] tracking-[-0.01em] text-center md:text-left max-w-3xl mx-auto md:mx-0" data-animate-subtitle>
+            Kami handle semuanya, dari desain hingga furniture. Tersedia sekarang di Jabodetabek.
           </p>
         </div>
 
@@ -144,26 +143,26 @@ const testimonials = [
     <Stats />
 
     <!-- Features Section -->
-    <section class="py-12 md:py-20 lg:py-24 bg-gradient-to-b from-[#fff7ee] to-white">
+    <section class="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-[#fff7ee] to-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <h2 class="text-[36px] md:text-[52px] lg:text-[70px] font-light text-black text-center mb-10 md:mb-16 lg:mb-20" style="letter-spacing: -1.8px;" data-animate-title>
+        <h2 class="text-[clamp(28px,6vw,70px)] font-light text-black text-center mb-12 md:mb-16 lg:mb-20 leading-[1.15] tracking-[-0.02em] px-4" data-animate-title>
           Fasilitas yang anda dapatkan.
         </h2>
 
         <!-- Mobile: 2x3 Grid (fits in one view) | Desktop: 3 Columns -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-12 lg:gap-x-16 md:gap-y-12 lg:gap-y-16">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10 md:gap-x-12 lg:gap-x-16 md:gap-y-12 lg:gap-y-16">
           {features.map((feature) => (
             <div class="group flex flex-col items-center text-center">
-              <!-- Icon Container -->
-              <div class="w-[56px] h-[56px] md:w-[72px] md:h-[72px] mb-3 md:mb-5 flex items-center justify-center rounded-2xl bg-[#f5f5f5] transition-all duration-300 group-hover:bg-[#0096f7]/10 group-hover:scale-110">
+              <!-- Icon Container - Larger touch target on mobile -->
+              <div class="w-[64px] h-[64px] md:w-[72px] md:h-[72px] mb-4 md:mb-5 flex items-center justify-center rounded-2xl bg-[#f5f5f5] transition-all duration-300 group-hover:bg-[#0096f7]/10 group-hover:scale-110">
                 <img
                   src={feature.icon}
                   alt={feature.title}
-                  class="w-7 h-7 md:w-10 md:h-10 object-contain opacity-70 transition-all duration-300 group-hover:opacity-100"
+                  class="w-8 h-8 md:w-10 md:h-10 object-contain opacity-70 transition-all duration-300 group-hover:opacity-100"
                 />
               </div>
               <!-- Title -->
-              <h3 class="text-[15px] md:text-[19px] lg:text-[20px] font-normal text-[#313131] leading-tight transition-colors duration-300 group-hover:text-[#0096f7] max-w-[140px] md:max-w-none mx-auto">
+              <h3 class="text-[14px] md:text-[19px] lg:text-[20px] font-normal text-[#313131] leading-snug transition-colors duration-300 group-hover:text-[#0096f7] max-w-[140px] md:max-w-none mx-auto px-2">
                 {feature.title}
               </h3>
             </div>
@@ -174,8 +173,8 @@ const testimonials = [
 
     <!-- Testimonials Section -->
     <section class="py-16 md:py-20 lg:py-24 bg-white overflow-hidden">
-      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] mb-10 md:mb-14 lg:mb-16">
-        <h2 class="text-[36px] md:text-[52px] lg:text-[70px] font-light text-black text-center" style="letter-spacing: -1.8px;" data-animate-title>
+      <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] mb-12 md:mb-14 lg:mb-16">
+        <h2 class="text-[clamp(28px,6vw,70px)] font-light text-black text-center leading-[1.15] tracking-[-0.02em] px-4" data-animate-title>
           Apa kata mereka tentang SJD Interior
         </h2>
       </div>
@@ -221,14 +220,14 @@ const testimonials = [
     </section>
 
     <!-- Process Steps Section -->
-    <section class="py-12 md:py-16 lg:py-20 bg-white">
+    <section class="py-16 md:py-16 lg:py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <!-- Title -->
-        <div class="text-center mb-10 md:mb-14 lg:mb-16 px-4 md:px-0">
-          <h2 class="text-[36px] md:text-[88px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-8 leading-[1.1] md:leading-[0.99]" style="letter-spacing: -1.8px;" data-animate-title>
+        <div class="text-center mb-12 md:mb-14 lg:mb-16 px-2 md:px-0">
+          <h2 class="text-[clamp(32px,7vw,128px)] font-light text-black mb-5 md:mb-6 lg:mb-8 leading-[1.1] tracking-[-0.02em]" data-animate-title>
             Dapatkan interior impian dalam empat langkah.
           </h2>
-          <p class="text-[18px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.3]" style="letter-spacing: -0.8px;" data-animate-subtitle>
+          <p class="text-[16px] md:text-[36px] lg:text-[48px] font-light text-[#929292] leading-[1.3] tracking-[-0.01em]" data-animate-subtitle>
             Secepat 2-8 minggu pengerjaan.
           </p>
         </div>
@@ -239,28 +238,28 @@ const testimonials = [
           <div class="hidden lg:block absolute top-[26px] left-[calc(12.5%-10px)] right-[calc(12.5%-10px)] h-[1px] bg-[#d4d4d4] z-0"></div>
 
 
-          
-          <div class="relative z-10 flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-5 mb-10 md:mb-14 lg:mb-16 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 pb-4 md:pb-0">
+
+          <div class="relative z-10 flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-5 mb-12 md:mb-14 lg:mb-16 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 pb-6 md:pb-0">
             {processSteps.map((step, index) => (
-              <div class="text-center flex flex-col min-w-[85vw] md:min-w-0 snap-center px-2">
+              <div class="text-center flex flex-col min-w-[82vw] md:min-w-0 snap-center px-1">
                 <!-- Number with rounded shape - 1&3 filled, 2&4 outline -->
-                <div class="flex justify-center mb-5 md:mb-4">
-                  <div class={`w-[56px] h-[56px] md:w-[52px] md:h-[52px] rounded-[14px] md:rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border border-[#c4c4c4]'}`}>
-                    <span class={`text-[20px] md:text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.8px;">
+                <div class="flex justify-center mb-4 md:mb-4">
+                  <div class={`w-[52px] h-[52px] md:w-[52px] md:h-[52px] rounded-[14px] flex items-center justify-center ${index === 0 || index === 2 ? 'bg-black' : 'bg-white border-2 border-[#c4c4c4]'}`}>
+                    <span class={`text-[18px] md:text-[18px] font-medium ${index === 0 || index === 2 ? 'text-white' : 'text-[#c4c4c4]'}`} style="letter-spacing: -0.8px;">
                       {step.number}
                     </span>
                   </div>
                 </div>
                 <!-- Title -->
-                <h3 class="text-[32px] md:text-[28px] lg:text-[32px] font-light text-black mb-5 md:mb-4 px-2" style="letter-spacing: -1.2px;">
+                <h3 class="text-[28px] md:text-[28px] lg:text-[32px] font-light text-black mb-4 md:mb-4 px-1 tracking-[-0.02em]">
                   {step.title}
                 </h3>
                 <!-- Description -->
-                <p class="text-[17px] md:text-[16px] lg:text-[18px] font-normal text-[#929292] leading-[1.6] mb-8 md:mb-6 px-4" style="letter-spacing: -0.4px;">
+                <p class="text-[15px] md:text-[16px] lg:text-[18px] font-normal text-[#666] md:text-[#929292] leading-[1.5] mb-6 md:mb-6 px-2 tracking-[-0.01em]">
                   {step.description}
                 </p>
-                <!-- Image with smaller aspect ratio for mobile - text dominant -->
-                <div class="relative overflow-hidden rounded-[20px] aspect-[5/4] md:aspect-[3/4] mt-auto">
+                <!-- Image with aspect ratio for mobile -->
+                <div class="relative overflow-hidden rounded-[18px] md:rounded-[20px] aspect-[4/3] md:aspect-[3/4] mt-auto shadow-sm">
                   <img
                     src={step.image}
                     alt={step.title}
@@ -273,18 +272,17 @@ const testimonials = [
         </div>
 
         <!-- CTA -->
-        <!-- CTA -->
-        <div class="text-center mt-8 md:mt-0">
-          <p class="text-[24px] md:text-[36px] lg:text-[46.21px] font-light text-black mb-3 md:mb-2 leading-tight tracking-[-1px] md:tracking-[-1.4px]" data-animate-title>
+        <div class="text-center mt-4 md:mt-0 px-4">
+          <p class="text-[22px] md:text-[36px] lg:text-[46.21px] font-light text-black mb-2 md:mb-2 leading-tight tracking-[-0.02em]" data-animate-title>
             Mau tahu lebih detail?
           </p>
-          <p class="text-[24px] md:text-[36px] lg:text-[46.21px] font-light text-[#666] md:text-[#919191] mb-10 md:mb-10 leading-tight tracking-[-1px] md:tracking-[-1.4px]" data-animate-subtitle>
+          <p class="text-[22px] md:text-[36px] lg:text-[46.21px] font-light text-[#666] md:text-[#919191] mb-8 md:mb-10 leading-tight tracking-[-0.02em]" data-animate-subtitle>
             Pelajari proses kerja kami dari awal sampai akhir.
           </p>
-          <div class="flex flex-col md:flex-row justify-center gap-4 md:gap-4 w-full md:w-auto">
+          <div class="flex flex-col md:flex-row justify-center gap-3 md:gap-4 w-full md:w-auto max-w-md md:max-w-none mx-auto">
             <a
               href="/alur-kerja"
-              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[16px] md:text-[21.41px] font-medium text-[#1a1a1a] border border-[#e5e5e5] md:border-[#424242] rounded-full hover:bg-[#1a1a1a] hover:text-white hover:border-[#1a1a1a] transition-all duration-300"
+              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[15px] md:text-[21.41px] font-medium text-[#1a1a1a] border-2 border-[#1a1a1a] md:border-[#424242] rounded-full hover:bg-[#1a1a1a] hover:text-white hover:border-[#1a1a1a] transition-all duration-300 active:scale-95"
             >
               Cara Kerja
             </a>
@@ -292,7 +290,7 @@ const testimonials = [
               href="https://wa.me/6285398989810?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi."
               target="_blank"
               rel="noopener noreferrer"
-              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[16px] md:text-[21.41px] font-medium text-white bg-[#1a1a1a] rounded-full hover:bg-black hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg md:shadow-none"
+              class="w-full md:w-auto inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-4 text-[15px] md:text-[21.41px] font-medium text-white bg-[#1a1a1a] rounded-full hover:bg-black hover:scale-105 active:scale-95 transition-all duration-300 shadow-md"
             >
               Konsultasi
             </a>
@@ -302,22 +300,22 @@ const testimonials = [
     </section>
 
     <!-- Insight Section -->
-    <section class="py-12 md:py-16 lg:py-20 bg-white">
+    <section class="py-16 md:py-16 lg:py-20 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <h2 class="text-[44px] md:text-[72px] lg:text-[103.13px] font-light text-black text-center mb-10 md:mb-14 lg:mb-16" style="letter-spacing: -2.2px;" data-animate-title>
+        <h2 class="text-[clamp(36px,7vw,103px)] font-light text-black text-center mb-12 md:mb-14 lg:mb-16 leading-[1.1] tracking-[-0.02em] px-4" data-animate-title>
           Insight untuk anda.
         </h2>
 
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-8 md:mb-10 lg:mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-10 md:mb-10 lg:mb-12">
           {insights.map((insight) => (
             <InsightCard {...insight} />
           ))}
         </div>
 
-        <div class="text-center">
+        <div class="text-center px-4">
           <a
             href="/insight"
-            class="inline-flex items-center justify-center px-10 py-4 text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300"
+            class="inline-flex items-center justify-center px-8 md:px-10 py-4 text-[15px] md:text-[21.41px] font-medium text-[#424242] border-2 border-[#424242] rounded-full hover:bg-[#424242] hover:text-white transition-all duration-300 active:scale-95 w-full md:w-auto max-w-xs md:max-w-none"
           >
             Lihat Selengkapnya
           </a>

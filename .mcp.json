@@ -1,7 +1,14 @@
 {
   "mcpServers": {
-    "Figma MCP Server": {
-      "url": "http://127.0.0.1:3845/mcp"
+    "figma": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-figma"
+      ],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "figd_Yctf2Xtbn91tO3VAADcwQe_1Fi5H4qiPfc9DArix"
+      }
     }
   }
 }

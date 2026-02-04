@@ -54,14 +54,17 @@ export const fetchAPI = async (endpoint, options = {}) => {
     const response = await fetch(getStrapiURL(`/api${endpoint}`), mergedOptions);
 
     if (!response.ok) {
-      throw new Error(`Strapi API error: ${response.status} ${response.statusText}`);
+      console.warn(`Strapi API error: ${response.status} ${response.statusText} for ${endpoint}`);
+      // Return empty data structure instead of throwing
+      return { data: null };
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
     console.error('Error fetching from Strapi:', error);
-    throw error;
+    // Return empty data structure instead of throwing
+    return { data: null };
   }
 };
 
@@ -275,4 +278,37 @@ export const getInsightsByCategory = async (category, limit = 10) => {
     'pagination[limit]': limit.toString(),
   });
   return fetchAPI(`/insights?${queryParams}`);
+};
+
+/**
+ * Fetch portfolio categories from Strapi
+ */
+export const getPortfolioCategories = async () => {
+  try {
+    const queryParams = new URLSearchParams({
+      'sort[0]': 'order:asc',
+    });
+    const response = await fetchAPI(`/portfolio-categories?${queryParams}`);
+    return response.data || [];
+  } catch (error) {
+    console.error('Error fetching portfolio categories:', error);
+    return [];
+  }
+};
+
+/**
+ * Fetch workflow hero section data from Strapi
+ */
+export const getWorkflowHero = async () => {
+  try {
+    const queryParams = new URLSearchParams({
+      'populate[video][populate]': '*',
+      'populate[poster_image][populate]': '*',
+    });
+    const response = await fetchAPI(`/workflow-hero?${queryParams}`);
+    return response.data || null;
+  } catch (error) {
+    console.error('Error fetching workflow hero:', error);
+    return null;
+  }
 };

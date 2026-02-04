@@ -12,7 +12,7 @@ const whatsappNumber = contactData?.attributes?.whatsapp_number || '628539898981
 
 // Default fallback data
 const defaultHero = {
-  headline: "Semua Berawal\nDari Rumah\ndengan desain interior yang personal dan fungsional.",
+  headline: "Semua Berawal\nDari Rumah",
   background_url: "https://images.unsplash.com/photo-1758448755778-90ebf4d0f1e7?q=85&w=2070&fit=crop",
   is_video: false,
   cta_text: "Mulai Konsultasi",
@@ -107,33 +107,33 @@ const ctaUrl = hero.cta_type === 'whatsapp'
         })}
       </h1>
 
-      <!-- CTA Button - Beautiful with smooth animations, perfectly centered -->
+      <!-- CTA Button - Beautiful with smooth animations, mobile-optimized -->
       {hero.cta_type === 'whatsapp' ? (
         <a
           href={ctaUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[18px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-500 ease-out whitespace-nowrap overflow-hidden text-center"
+          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-4 md:py-3.5 text-[16px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 md:duration-500 ease-out overflow-hidden text-center min-w-[200px] md:min-w-0"
           data-hero-cta
         >
-          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-500 ease-out rounded-full"></span>
-          <span class="relative z-10 flex items-center justify-center gap-2 w-full">
-            <span class="transition-transform duration-500 group-hover:scale-105">{hero.cta_text}</span>
-            <svg class="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-300 md:duration-500 ease-out rounded-full"></span>
+          <span class="relative z-10 flex items-center justify-center gap-2">
+            <span class="transition-transform duration-300 md:duration-500 group-hover:scale-105">{hero.cta_text}</span>
+            <svg class="w-5 h-5 transition-transform duration-300 md:duration-500 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
             </svg>
           </span>
         </a>
       ) : (
         <a
           href={ctaUrl}
-          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[18px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-500 ease-out whitespace-nowrap overflow-hidden text-center"
+          class="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-4 md:py-3.5 text-[16px] md:text-[22.83px] font-medium text-white bg-white/10 backdrop-blur-sm border-2 border-white/80 rounded-full hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 md:duration-500 ease-out overflow-hidden text-center min-w-[200px] md:min-w-0"
           data-hero-cta
         >
-          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-500 ease-out rounded-full"></span>
-          <span class="relative z-10 flex items-center justify-center gap-2 w-full">
-            <span class="transition-transform duration-500 group-hover:scale-105">{hero.cta_text}</span>
-            <svg class="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <span class="absolute inset-0 bg-white/0 group-hover:bg-white transition-all duration-300 md:duration-500 ease-out rounded-full"></span>
+          <span class="relative z-10 flex items-center justify-center gap-2">
+            <span class="transition-transform duration-300 md:duration-500 group-hover:scale-105">{hero.cta_text}</span>
+            <svg class="w-5 h-5 transition-transform duration-300 md:duration-500 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
             </svg>
           </span>
