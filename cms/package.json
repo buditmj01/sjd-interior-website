@@ -10,7 +10,6 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "^4.25.23",
     "@strapi/plugin-i18n": "^4.25.23",
     "@strapi/plugin-users-permissions": "^4.25.23",
     "@strapi/strapi": "^4.25.23",
@@ -21,7 +20,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "5.3.4",
-    "styled-components": "5.3.6"
+    "styled-components": "5.3.3"
   },
   "author": {
     "name": "SJD Interior Design"
@@ -33,5 +32,11 @@
     "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "styled-components": {
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0"
+    }
+  }
 }

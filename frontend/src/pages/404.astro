@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+---
+
+<BaseLayout title="Halaman Tidak Ditemukan | SJD Interior Design">
+  <Header />
+
+  <main class="min-h-screen flex items-center justify-center bg-neutral-50 pt-20">
+    <div class="container mx-auto px-4 py-20 text-center">
+      <div class="max-w-2xl mx-auto">
+        <!-- 404 Number -->
+        <h1 class="text-[150px] md:text-[200px] font-bold text-neutral-200 leading-none select-none">
+          404
+        </h1>
+
+        <!-- Message -->
+        <div class="-mt-8 md:-mt-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
+            Halaman Tidak Ditemukan
+          </h2>
+          <p class="text-lg text-neutral-600 mb-8 max-w-md mx-auto">
+            Maaf, halaman yang Anda cari tidak ada atau telah dipindahkan.
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/"
+            class="inline-flex items-center justify-center px-8 py-4 bg-neutral-800 text-white font-medium rounded-full hover:bg-neutral-700 transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Kembali ke Beranda
+          </a>
+          <a
+            href="/hubungi-kami"
+            class="inline-flex items-center justify-center px-8 py-4 border-2 border-neutral-800 text-neutral-800 font-medium rounded-full hover:bg-neutral-800 hover:text-white transition-colors"
+          >
+            Hubungi Kami
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
