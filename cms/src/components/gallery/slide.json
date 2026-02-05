@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_gallery_slides",
+  "info": {
+    "displayName": "Gallery Slide",
+    "description": "Individual slide for the homepage gallery slideshow"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "title": {
+      "type": "string",
+      "required": false
+    },
+    "subtitle": {
+      "type": "string",
+      "required": false
+    },
+    "link_url": {
+      "type": "string",
+      "required": false
+    },
+    "link_text": {
+      "type": "string",
+      "required": false,
+      "default": "Lihat Detail"
+    }
+  }
+}

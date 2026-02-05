@@ -4,6 +4,7 @@ import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import CTASection from '../components/common/CTASection.astro';
 import { getContactInfo } from '../lib/getContactInfo.js';
+import { sanitizeText } from '../lib/sanitize.js';
 
 // Fetch contact info from Strapi
 const contactData = await getContactInfo();
@@ -217,7 +218,7 @@ const contact = {
                   </svg>
                   <div>
                     <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Alamat</p>
-                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={contact.address.replace(/\n/g, '<br/>')} />
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={sanitizeText(contact.address)} />
                   </div>
                 </div>
 
@@ -228,7 +229,7 @@ const contact = {
                   </svg>
                   <div>
                     <p class="text-[12px] md:text-[13px] lg:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-0.5 md:mb-1">Jam Operasional</p>
-                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={contact.working_hours.replace(/\n/g, '<br/>')} />
+                    <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-black leading-relaxed" set:html={sanitizeText(contact.working_hours)} />
                   </div>
                 </div>
               </div>

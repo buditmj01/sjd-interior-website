@@ -6,6 +6,7 @@ import CTASection from '../../components/common/CTASection.astro';
 import InsightCard from '../../components/common/InsightCard.astro';
 import { getInsights, getInsightBySlug } from '../../lib/getInsights';
 import { getStrapiMedia } from '../../lib/strapi';
+import { sanitize } from '../../lib/sanitize.js';
 
 // Generate static paths for SSG
 export async function getStaticPaths() {
@@ -185,7 +186,7 @@ if (!article) {
 
         <!-- Main Content from Strapi -->
         <div class="prose prose-sm md:prose-lg prose-p:text-[16px] md:prose-p:text-[18px] prose-p:leading-[1.8] prose-p:text-[#333] prose-headings:font-normal prose-headings:text-black prose-h2:text-[24px] md:prose-h2:text-[28px] lg:prose-h2:text-[32px] prose-h2:mb-4 md:prose-h2:mb-6 prose-h2:mt-8 md:prose-h2:mt-10 lg:prose-h2:mt-12 prose-h2:tracking-tight prose-h3:text-[20px] md:prose-h3:text-[22px] lg:prose-h3:text-[24px] prose-h3:mb-3 md:prose-h3:mb-4 prose-h3:mt-6 md:prose-h3:mt-7 lg:prose-h3:mt-8 prose-h3:tracking-tight prose-ul:space-y-2 md:prose-ul:space-y-3 prose-ol:space-y-2 md:prose-ol:space-y-3 prose-li:text-[16px] md:prose-li:text-[18px] prose-li:text-[#333] prose-strong:text-black prose-strong:font-bold prose-a:text-black prose-a:underline hover:prose-a:text-[#0096f7] prose-img:rounded-xl md:prose-img:rounded-2xl max-w-none">
-          <Fragment set:html={article.content} />
+          <Fragment set:html={sanitize(article.content)} />
         </div>
 
         <!-- Inline Images Grid -->

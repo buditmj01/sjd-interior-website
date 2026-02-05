@@ -1,0 +1,46 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepage_galleries",
+  "info": {
+    "singularName": "homepage-gallery",
+    "pluralName": "homepage-galleries",
+    "displayName": "Homepage Gallery",
+    "description": "Gallery slideshow displayed on homepage above Insight section"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "section_title": {
+      "type": "string",
+      "required": false,
+      "default": "Inspirasi Desain"
+    },
+    "section_subtitle": {
+      "type": "string",
+      "required": false,
+      "default": "Temukan inspirasi untuk ruang impian Anda"
+    },
+    "is_visible": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay_interval": {
+      "type": "integer",
+      "default": 5000,
+      "min": 2000,
+      "max": 15000
+    },
+    "slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "gallery.slide"
+    }
+  }
+}

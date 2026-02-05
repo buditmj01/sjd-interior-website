@@ -6,6 +6,7 @@ import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
 import { getProjects, getProjectBySlug } from '../../lib/strapi.js';
+import { sanitize } from '../../lib/sanitize.js';
 
 // Testimonials from Google Maps Reviews (same as home page)
 const testimonials = [
@@ -292,7 +293,7 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
                 class="prose prose-sm md:prose-lg prose-p:text-[15px] md:prose-p:text-[17px] prose-p:leading-[1.6] prose-p:text-[#333333] prose-p:font-normal prose-headings:font-light prose-headings:tracking-tight prose-h2:text-[18px] md:prose-h2:text-[22px] prose-h2:mt-4 md:prose-h2:mt-6 prose-h2:mb-2 md:prose-h2:mb-3 prose-h3:text-[16px] md:prose-h3:text-[18px] prose-h3:mt-3 md:prose-h3:mt-4 prose-h3:mb-2 prose-ul:list-disc prose-ul:pl-5 prose-li:text-[15px] md:prose-li:text-[17px] max-w-none pr-4 overflow-y-auto custom-secondary-scrollbar"
                 data-lenis-prevent
               >
-                <Fragment set:html={project.description} />
+                <Fragment set:html={sanitize(project.description)} />
               </div>
             </div>
 

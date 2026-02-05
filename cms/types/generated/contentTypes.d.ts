@@ -544,6 +544,52 @@ export interface ApiHeroBannerHeroBanner extends Schema.SingleType {
   };
 }
 
+export interface ApiHomepageGalleryHomepageGallery extends Schema.SingleType {
+  collectionName: 'homepage_galleries';
+  info: {
+    description: 'Gallery slideshow displayed on homepage above Insight section';
+    displayName: 'Homepage Gallery';
+    pluralName: 'homepage-galleries';
+    singularName: 'homepage-gallery';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    autoplay: Attribute.Boolean & Attribute.DefaultTo<true>;
+    autoplay_interval: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          max: 15000;
+          min: 2000;
+        },
+        number
+      > &
+      Attribute.DefaultTo<5000>;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::homepage-gallery.homepage-gallery',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    is_visible: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<true>;
+    section_subtitle: Attribute.String &
+      Attribute.DefaultTo<'Temukan inspirasi untuk ruang impian Anda'>;
+    section_title: Attribute.String & Attribute.DefaultTo<'Inspirasi Desain'>;
+    slides: Attribute.Component<'gallery.slide', true>;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::homepage-gallery.homepage-gallery',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiInsightInsight extends Schema.CollectionType {
   collectionName: 'insights';
   info: {
@@ -1329,6 +1375,7 @@ declare module '@strapi/types' {
       'api::faq.faq': ApiFaqFaq;
       'api::footer.footer': ApiFooterFooter;
       'api::hero-banner.hero-banner': ApiHeroBannerHeroBanner;
+      'api::homepage-gallery.homepage-gallery': ApiHomepageGalleryHomepageGallery;
       'api::insight.insight': ApiInsightInsight;
       'api::navigation.navigation': ApiNavigationNavigation;
       'api::portfolio-category.portfolio-category': ApiPortfolioCategoryPortfolioCategory;

@@ -2,6 +2,14 @@ module.exports = [
   'strapi::logger',
   'strapi::errors',
   {
+    name: 'global::rate-limit',
+    config: {
+      windowMs: 60000, // 1 minute
+      maxRequests: 100, // 100 requests per minute per IP/path
+      message: 'Too many requests, please try again later.',
+    },
+  },
+  {
     name: 'strapi::security',
     config: {
       contentSecurityPolicy: {
@@ -33,6 +41,14 @@ module.exports = [
           upgradeInsecureRequests: null,
         },
       },
+      xssFilter: true,
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+      },
+      frameguard: {
+        action: 'deny',
+      },
     },
   },
   {
@@ -46,9 +62,9 @@ module.exports = [
         'https://www.sjdinterior.com',
         'https://staging.sjdinterior.com',
       ],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+      methods: ['GET', 'POST', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-      keepHeaderOnError: true,
+      keepHeaderOnError: false,
     },
   },
   'strapi::poweredBy',

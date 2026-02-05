@@ -25,6 +25,21 @@ export interface FooterSocialLink extends Schema.Component {
   };
 }
 
+export interface GallerySlide extends Schema.Component {
+  collectionName: 'components_gallery_slides';
+  info: {
+    description: 'Individual slide for the homepage gallery slideshow';
+    displayName: 'Gallery Slide';
+  };
+  attributes: {
+    image: Attribute.Media<'images'> & Attribute.Required;
+    link_text: Attribute.String & Attribute.DefaultTo<'Lihat Detail'>;
+    link_url: Attribute.String;
+    subtitle: Attribute.String;
+    title: Attribute.String;
+  };
+}
+
 export interface NavigationMenuItem extends Schema.Component {
   collectionName: 'components_navigation_menu_items';
   info: {
@@ -84,6 +99,7 @@ declare module '@strapi/types' {
     export interface Components {
       'footer.link': FooterLink;
       'footer.social-link': FooterSocialLink;
+      'gallery.slide': GallerySlide;
       'navigation.menu-item': NavigationMenuItem;
       'settings.website-logos': SettingsWebsiteLogos;
       'shared.social-media': SharedSocialMedia;

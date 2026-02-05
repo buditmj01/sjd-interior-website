@@ -1,0 +1,313 @@
+---
+import { getHomepageGallery } from '../../lib/getHomepageGallery.js';
+
+const galleryData = await getHomepageGallery();
+
+// Default fallback data if CMS is not available
+const defaultGallery = {
+  sectionTitle: 'Inspirasi Desain',
+  sectionSubtitle: 'Temukan inspirasi untuk ruang impian Anda',
+  isVisible: true,
+  autoplay: true,
+  autoplayInterval: 5000,
+  slides: [
+    { image: '/images/portfolio-main.png', title: 'Modern Living Room', subtitle: 'Minimalis & Elegan', linkUrl: '/portfolio', linkText: 'Lihat Portfolio' },
+    { image: '/images/hero-background.jpg', title: 'Kitchen Design', subtitle: 'Fungsional & Stylish', linkUrl: '/portfolio', linkText: 'Lihat Portfolio' },
+    { image: '/images/workflow-design.png', title: 'Bedroom Interior', subtitle: 'Nyaman & Personal', linkUrl: '/portfolio', linkText: 'Lihat Portfolio' }
+  ]
+};
+
+const gallery = galleryData || defaultGallery;
+
+// Don't render if not visible or no slides
+const shouldRender = gallery.isVisible && gallery.slides.length > 0;
+---
+
+{shouldRender && (
+  <section class="py-16 md:py-20 lg:py-24 bg-white overflow-hidden">
+    <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
+      <!-- Section Header -->
+      {(gallery.sectionTitle || gallery.sectionSubtitle) && (
+        <div class="text-center mb-10 md:mb-12 lg:mb-16">
+          {gallery.sectionTitle && (
+            <h2 class="text-[clamp(36px,7vw,103px)] font-light text-black leading-[1.1] tracking-[-0.02em] px-4" data-animate-title>
+              {gallery.sectionTitle}
+            </h2>
+          )}
+          {gallery.sectionSubtitle && (
+            <p class="text-[16px] md:text-[20px] lg:text-[24px] font-light text-[#666] mt-4 md:mt-6" data-animate-subtitle>
+              {gallery.sectionSubtitle}
+            </p>
+          )}
+        </div>
+      )}
+
+      <!-- Slideshow Container -->
+      <div
+        class="relative w-full"
+        id="gallery-slideshow"
+        data-autoplay={gallery.autoplay.toString()}
+        data-interval={gallery.autoplayInterval.toString()}
+      >
+        <!-- Main Slide Area -->
+        <div class="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-[20px] md:rounded-[32px] overflow-hidden bg-[#f5f5f5]">
+          <!-- Slides -->
+          {gallery.slides.map((slide, index) => (
+            <div
+              class={`gallery-slide absolute inset-0 transition-opacity duration-700 ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              data-slide-index={index}
+            >
+              <!-- Image -->
+              <img
+                src={slide.image}
+                alt={slide.title || `Slide ${index + 1}`}
+                class="w-full h-full object-cover"
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+              <!-- Content Overlay -->
+              {(slide.title || slide.subtitle || slide.linkUrl) && (
+                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-14">
+                  <div class="max-w-2xl">
+                    {slide.subtitle && (
+                      <p class="text-[14px] md:text-[16px] lg:text-[18px] font-medium text-white/80 mb-2 md:mb-3 tracking-wide uppercase">
+                        {slide.subtitle}
+                      </p>
+                    )}
+                    {slide.title && (
+                      <h3 class="text-[28px] md:text-[40px] lg:text-[56px] font-light text-white leading-[1.1] tracking-[-0.02em] mb-4 md:mb-6">
+                        {slide.title}
+                      </h3>
+                    )}
+                    {slide.linkUrl && (
+                      <a
+                        href={slide.linkUrl}
+                        class="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 text-[14px] md:text-[16px] font-medium text-black bg-white rounded-full hover:bg-white/90 transition-all duration-300 hover:gap-3"
+                      >
+                        {slide.linkText}
+                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+
+          <!-- Navigation Arrows -->
+          {gallery.slides.length > 1 && (
+            <>
+              <button
+                class="gallery-nav gallery-prev absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
+                aria-label="Previous slide"
+              >
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <button
+                class="gallery-nav gallery-next absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
+                aria-label="Next slide"
+              >
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+
+        <!-- Dots Indicator -->
+        {gallery.slides.length > 1 && (
+          <div class="flex justify-center gap-2 md:gap-3 mt-6 md:mt-8">
+            {gallery.slides.map((_, index) => (
+              <button
+                class={`gallery-dot w-2.5 h-2.5 md:w-3 md:h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-black w-8 md:w-10' : 'bg-black/20 hover:bg-black/40'}`}
+                data-dot-index={index}
+                aria-label={`Go to slide ${index + 1}`}
+              ></button>
+            ))}
+          </div>
+        )}
+
+        <!-- Progress Bar (visible when autoplay) -->
+        {gallery.autoplay && gallery.slides.length > 1 && (
+          <div class="absolute bottom-0 left-0 right-0 h-1 bg-white/20 rounded-b-[20px] md:rounded-b-[32px] overflow-hidden">
+            <div class="gallery-progress h-full bg-white/60 w-0 transition-all"></div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  function initGallerySlideshow() {
+    const container = document.getElementById('gallery-slideshow');
+    if (!container) return;
+
+    const slides = container.querySelectorAll('.gallery-slide');
+    const dots = container.querySelectorAll('.gallery-dot');
+    const prevBtn = container.querySelector('.gallery-prev');
+    const nextBtn = container.querySelector('.gallery-next');
+    const progressBar = container.querySelector('.gallery-progress');
+
+    if (slides.length <= 1) return;
+
+    const autoplay = container.dataset.autoplay === 'true';
+    const interval = parseInt(container.dataset.interval || '5000', 10);
+
+    let currentIndex = 0;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+    let progressTimer: ReturnType<typeof setInterval> | null = null;
+
+    function goToSlide(index: number) {
+      // Normalize index
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+
+      // Update slides
+      slides.forEach((slide, i) => {
+        const slideEl = slide as HTMLElement;
+        if (i === index) {
+          slideEl.classList.remove('opacity-0', 'z-0');
+          slideEl.classList.add('opacity-100', 'z-10');
+        } else {
+          slideEl.classList.remove('opacity-100', 'z-10');
+          slideEl.classList.add('opacity-0', 'z-0');
+        }
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        const dotEl = dot as HTMLElement;
+        if (i === index) {
+          dotEl.classList.remove('bg-black/20', 'hover:bg-black/40');
+          dotEl.classList.add('bg-black', 'w-8', 'md:w-10');
+        } else {
+          dotEl.classList.remove('bg-black', 'w-8', 'md:w-10');
+          dotEl.classList.add('bg-black/20', 'hover:bg-black/40');
+        }
+      });
+
+      currentIndex = index;
+      resetProgress();
+    }
+
+    function nextSlide() {
+      goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentIndex - 1);
+    }
+
+    function resetProgress() {
+      if (!progressBar || !autoplay) return;
+
+      const bar = progressBar as HTMLElement;
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+
+      // Force reflow
+      bar.offsetHeight;
+
+      bar.style.transition = `width ${interval}ms linear`;
+      bar.style.width = '100%';
+    }
+
+    function startAutoplay() {
+      if (!autoplay) return;
+
+      stopAutoplay();
+      resetProgress();
+
+      autoplayTimer = setInterval(() => {
+        nextSlide();
+      }, interval);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Event listeners
+    prevBtn?.addEventListener('click', () => {
+      prevSlide();
+      startAutoplay(); // Restart autoplay after manual navigation
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      nextSlide();
+      startAutoplay();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        startAutoplay();
+      });
+    });
+
+    // Pause on hover
+    container.addEventListener('mouseenter', stopAutoplay);
+    container.addEventListener('mouseleave', startAutoplay);
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    container.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+        startAutoplay();
+      }
+    }, { passive: true });
+
+    // Keyboard navigation
+    container.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        prevSlide();
+        startAutoplay();
+      } else if (e.key === 'ArrowRight') {
+        nextSlide();
+        startAutoplay();
+      }
+    });
+
+    // Make container focusable
+    container.setAttribute('tabindex', '0');
+
+    // Start autoplay
+    startAutoplay();
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGallerySlideshow);
+  } else {
+    initGallerySlideshow();
+  }
+
+  // Re-initialize for Astro view transitions
+  document.addEventListener('astro:page-load', initGallerySlideshow);
+</script>

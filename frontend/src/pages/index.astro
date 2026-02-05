@@ -7,6 +7,7 @@ import InsightCard from '../components/common/InsightCard.astro';
 import PortfolioCard from '../components/common/PortfolioCard.astro';
 import Stats from '../components/home/Stats.astro';
 import Hero from '../components/home/Hero.astro';
+import GallerySlideshow from '../components/home/GallerySlideshow.astro';
 import { getInsights, getImageUrl } from '../lib/strapi';
 import { getProjects } from '../lib/getProjects';
 import { getStrapiMedia } from '../lib/strapi';
@@ -298,6 +299,9 @@ const testimonials = [
         </div>
       </div>
     </section>
+
+    <!-- Gallery Slideshow Section -->
+    <GallerySlideshow />
 
     <!-- Insight Section -->
     <section class="py-16 md:py-16 lg:py-20 bg-white">
