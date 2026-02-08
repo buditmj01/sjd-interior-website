@@ -3,10 +3,12 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 import preact from '@astrojs/preact';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact()],
+  site: 'https://sjdinterior.com',
+  integrations: [preact(), sitemap()],
   vite: {
     plugins: [tailwindcss()]
   }

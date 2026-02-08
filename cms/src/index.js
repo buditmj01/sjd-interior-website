@@ -1,4 +1,5 @@
 const { sampleAuthors, sampleProjects, sampleInsights } = require('./seed-data');
+const { registerRebuildTrigger } = require('./rebuild-trigger');
 
 module.exports = {
   /**
@@ -249,5 +250,8 @@ module.exports = {
       console.error('❌ Error configuring permissions:', error.message);
       console.error(error);
     }
+
+    // Register rebuild trigger for automatic frontend updates
+    registerRebuildTrigger(strapi);
   },
 };

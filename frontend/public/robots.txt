@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /404
+Disallow: /cms.sjdinterior.com/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /404
+
+Sitemap: https://sjdinterior.com/sitemap-index.xml

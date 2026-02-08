@@ -191,7 +191,7 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
 
 <BaseLayout
   title={`${project.title} - Portfolio SJD Interior`}
-  description={project.title}
+  description={`Proyek ${project.category_tag || 'interior'} ${project.title} di ${project.location}. ${project.theme} style, ${project.area}. Lihat hasil desain interior oleh SJD Interior.`}
 >
   <Header />
 

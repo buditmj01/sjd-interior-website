@@ -6,6 +6,8 @@ import { getSiteSettings } from '../lib/getSiteSettings.js';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, any>;
 }
 
 const logosData = await getWebsiteLogos();
@@ -17,8 +19,12 @@ const defaultSiteDescription = siteSettingsData?.siteDescription || 'Professiona
 
 const {
   title = defaultSiteName,
-  description = defaultSiteDescription
+  description = defaultSiteDescription,
+  ogImage,
+  jsonLd
 } = Astro.props;
+
+const ogImageUrl = ogImage || '/images/cta-background.png';
 
 // Use favicon if uploaded, otherwise use header logo, fallback to default
 const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
@@ -38,14 +44,29 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="author" content="SJD Interior Design" />
     <link rel="icon" type={faviconType} href={faviconUrl} />
+    <link rel="canonical" href={Astro.url.href} />
     <title>{title}</title>
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(ogImageUrl, Astro.url)} />
     <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content={defaultSiteName} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(ogImageUrl, Astro.url)} />
 
     <!-- Preconnect to improve performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,6 +74,73 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
 
     <!-- Google Font - Lexend -->
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "SJD Interior Design",
+        "url": "https://sjdinterior.com",
+        "inLanguage": "id-ID"
+      }
+    </script>
+
+    <!-- Structured Data - LocalBusiness -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "InteriorDesignBusiness",
+        "name": "SJD Interior Design",
+        "image": "https://sjdinterior.com/images/cta-background.png",
+        "@id": "https://sjdinterior.com/#business",
+        "url": "https://sjdinterior.com",
+        "telephone": "+6285398989810",
+        "priceRange": "$$",
+        "description": "Jasa desain interior profesional di Jabodetabek. Konsultasi, desain 3D, produksi furniture custom, hingga serah terima.",
+        "areaServed": {
+          "@type": "GeoCircle",
+          "geoMidpoint": {
+            "@type": "GeoCoordinates",
+            "latitude": -6.2345,
+            "longitude": 106.6789
+          },
+          "geoRadius": "60000"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Gading Serpong",
+          "addressLocality": "Tangerang",
+          "postalCode": "15810",
+          "addressRegion": "Banten",
+          "addressCountry": "ID"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -6.2345,
+          "longitude": 106.6789
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+          "opens": "09:00",
+          "closes": "17:00"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5.0",
+          "reviewCount": "16",
+          "bestRating": "5"
+        },
+        "sameAs": [
+          "https://www.instagram.com/sjd.interior/"
+        ]
+      }
+    </script>
+
+    {jsonLd && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    )}
   </head>
   <body class="antialiased">
     <slot />

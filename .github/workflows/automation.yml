@@ -101,6 +101,7 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            cms.sjdinterior.com/**
       
       - name: Deployment Summary
         run: |

@@ -6,10 +6,12 @@ const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
 
 export async function getFooter() {
   try {
-    const response = await fetch(`${STRAPI_URL}/api/footer?populate=*`);
+    const url = `${STRAPI_URL}/api/footer?populate=*`;
+    console.log('[DEBUG] Fetching footer from:', url);
+    const response = await fetch(url);
 
     if (!response.ok) {
-      console.warn('Failed to fetch footer from Strapi:', response.statusText);
+      console.warn('[DEBUG] Failed to fetch footer from Strapi:', response.status, response.statusText);
       return null;
     }
 

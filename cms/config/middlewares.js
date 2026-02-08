@@ -26,6 +26,7 @@ module.exports = [
             'cdn.jsdelivr.net',
             'strapi.io',
             'https://sjdinterior.com',
+            'https://cms.sjdinterior.com',
             'https://staging.sjdinterior.com',
           ],
           'media-src': [
@@ -36,6 +37,7 @@ module.exports = [
             'res.cloudinary.com',
             'market-assets.strapi.io',
             'https://sjdinterior.com',
+            'https://cms.sjdinterior.com',
             'https://staging.sjdinterior.com',
           ],
           upgradeInsecureRequests: null,
@@ -60,6 +62,7 @@ module.exports = [
         'http://127.0.0.1:4321',
         'https://sjdinterior.com',
         'https://www.sjdinterior.com',
+        'https://cms.sjdinterior.com',
         'https://staging.sjdinterior.com',
       ],
       methods: ['GET', 'POST', 'HEAD', 'OPTIONS'],
