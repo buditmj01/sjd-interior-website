@@ -10,6 +10,9 @@ on:
     branches: [ main ]
     paths:
       - 'frontend/**'
+  repository_dispatch:
+    types: [strapi-content-update]
+  workflow_dispatch:
 
 jobs:
   detect-changes:
@@ -30,7 +33,7 @@ jobs:
 
   build-frontend:
     needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true'
+    if: needs.detect-changes.outputs.frontend == 'true' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,9 +51,19 @@ jobs:
           npm ci
       
       - name: Build frontend
+        env:
+          PUBLIC_STRAPI_URL: https://cms.sjdinterior.com
+          PUBLIC_SITE_URL: https://sjdinterior.com
         run: |
           cd frontend
           npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 1
 
   deploy-staging:
     needs: [detect-changes, build-frontend]
@@ -66,15 +79,34 @@ jobs:
 
   deploy-production:
     needs: [detect-changes, build-frontend]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
       
-      - name: Deploy to Production
+      - name: Deploy to Production via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./frontend/dist/
+          server-dir: /public_html/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+      
+      - name: Deployment Summary
         run: |
-          echo "Deploying to production environment..."
-          # Add your production deployment commands here
+          echo "✅ Frontend deployed to https://sjdinterior.com"
+          echo "📦 Build triggered by: ${{ github.event_name }}"
+          echo "🔗 Commit: ${{ github.sha }}"
 
   notify-slack:
     needs: [deploy-staging, deploy-production]
