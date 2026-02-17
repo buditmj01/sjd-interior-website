@@ -21,6 +21,28 @@
       "type": "text",
       "default": "Professional interior design services",
       "required": true
+    },
+    "siteTagline": {
+      "type": "string"
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "googleAnalyticsId": {
+      "type": "string"
+    },
+    "maintenanceMode": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

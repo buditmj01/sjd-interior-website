@@ -59,9 +59,18 @@
       "allowedTypes": ["images"]
     },
     "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::portfolio-category.portfolio-category",
+      "inversedBy": "projects"
+    },
+    "author": {
       "type": "string",
-      "required": true,
-      "default": "rumah"
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "client_name": {
       "type": "string",

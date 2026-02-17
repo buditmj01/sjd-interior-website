@@ -48,6 +48,20 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="author" content="SJD Interior Design" />
+
+    <!-- Google Analytics -->
+    {import.meta.env.PUBLIC_GA_ID && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GA_ID}`}></script>
+        <script is:inline define:vars={{ gaId: import.meta.env.PUBLIC_GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+
     <link rel="icon" type={faviconType} href={faviconUrl} />
     <link rel="canonical" href={Astro.url.href} />
     <title>{title}</title>
@@ -145,12 +159,81 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
   <body class="antialiased">
     <slot />
 
-    <!-- Lenis Smooth Scroll Initialization -->
+    <!-- Lenis Smooth Scroll & Content Protection -->
     <script>
       import { initSmoothScroll, destroySmoothScroll } from '../scripts/scroll-init';
       
       // Initialize smooth scroll when DOM is ready
       let lenisInstance: ReturnType<typeof initSmoothScroll> = null;
+
+      // Anti-Copy & Image Protection
+      const initProtection = () => {
+        // Disable right-click on images and the whole body if needed
+        document.addEventListener('contextmenu', (e) => {
+          if ((e.target as HTMLElement).tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+          }
+        });
+
+        // Disable dragging of images
+        document.addEventListener('dragstart', (e) => {
+          if ((e.target as HTMLElement).tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+          }
+        });
+      };
+
+      // Smooth scroll for hash links
+      const initHashScroll = (lenis: any) => {
+        if (!lenis) return;
+
+        // Handle click on hash links
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          const link = target.closest('a');
+          
+          if (!link) return;
+
+          const href = link.getAttribute('href');
+          if (!href || !href.includes('#')) return;
+
+          const [url, hash] = href.split('#');
+          const currentUrl = window.location.pathname;
+
+          // If it's an internal hash link on the same page
+          if (url === '' || url === currentUrl || (url === '/' && currentUrl === '/')) {
+            const targetElement = document.getElementById(hash);
+            if (targetElement) {
+              e.preventDefault();
+              lenis.scrollTo(targetElement, {
+                offset: -100, // Offset for fixed header
+                duration: 1.5,
+                easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+              });
+              // Update URL without jump
+              history.pushState(null, '', `#${hash}`);
+            }
+          }
+        });
+
+        // Handle initial load with hash
+        if (window.location.hash) {
+          const hash = window.location.hash.substring(1);
+          const targetElement = document.getElementById(hash);
+          if (targetElement) {
+            // Small delay to ensure layout is ready
+            setTimeout(() => {
+              lenis.scrollTo(targetElement, {
+                offset: -100,
+                duration: 1,
+                immediate: false
+              });
+            }, 500);
+          }
+        }
+      };
 
       // Mark animations as loaded to prevent FOUC
       const markAnimationsLoaded = () => {
@@ -164,6 +247,8 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
       document.addEventListener('DOMContentLoaded', () => {
         lenisInstance = initSmoothScroll();
         markAnimationsLoaded();
+        initProtection();
+        initHashScroll(lenisInstance);
       });
 
       // Cleanup on page unload (for Astro view transitions)
@@ -179,7 +264,37 @@ const faviconType = logos.favicon?.data?.attributes?.mime || logos.logo?.data?.a
       document.addEventListener('astro:page-load', () => {
         lenisInstance = initSmoothScroll();
         markAnimationsLoaded();
+        initProtection();
+        initHashScroll(lenisInstance);
       });
     </script>
+
+    <style is:global>
+      /* Global Anti-Copy Protection */
+      body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Allow selection in form elements */
+      input, textarea, [contenteditable="true"] {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+
+      /* Protect images specifically */
+      img {
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+        pointer-events: auto; /* Keep hover effects working */
+      }
+    </style>
   </body>
 </html>

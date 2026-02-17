@@ -7,43 +7,57 @@ interface Props {
   location?: string;
   area?: string;
   style?: string;
+  categorySlug?: string;
 }
 
-const { title, category, image, slug, location, area, style, createdAt } = Astro.props;
+const { 
+  title, 
+  category = 'Uncategorized', 
+  image, 
+  slug, 
+  location, 
+  area, 
+  style, 
+  createdAt, 
+  categorySlug = (typeof category === 'string' ? category.toLowerCase() : 'uncategorized') 
+} = Astro.props;
 ---
 
-<article class="group h-full portfolio-item" data-category={category.toLowerCase()} data-date={createdAt}>
+<article class="group h-full portfolio-item" data-category={categorySlug} data-date={createdAt}>
   <a href={`/portfolio/${slug}`} class="block h-full">
-    <!-- Image Container - Taller aspect ratio -->
-    <div class="relative overflow-hidden rounded-[20px] aspect-[3/4]">
-      <img
-        src={image}
-        alt={title}
-        class="w-full h-full object-cover transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
-      />
+    <!-- Main Card Container with Lift and Shadow -->
+    <div class="relative overflow-hidden rounded-[12px] md:rounded-[20px] aspect-[3/4] transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.4)]">
+      <!-- Image Container -->
+      <div class="absolute inset-0 overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        />
+      </div>
 
       <!-- Gradient Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:from-black/90"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 group-hover:from-black/95"></div>
 
       <!-- Category Badge - Top left -->
-      <div class="absolute top-5 left-5">
-        <span class="inline-block px-4 py-2 text-[11px] font-medium text-white bg-white/15 backdrop-blur-md rounded-full uppercase tracking-wider border border-white/20 transition-all duration-300 ease-out group-hover:bg-white/25">
+      <div class="absolute top-3 left-3 md:top-5 md:left-5">
+        <span class="inline-block px-2.5 py-1 md:px-4 md:py-1.5 text-[9px] md:text-[11px] font-medium text-white bg-white/15 backdrop-blur-md rounded-full uppercase tracking-wider border border-white/20 transition-all duration-300 group-hover:bg-white/30 group-hover:border-white/40">
           {category}
         </span>
       </div>
 
       <!-- Content Overlay - Anchored to bottom -->
-      <div class="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
+      <div class="absolute inset-x-0 bottom-0 p-3 md:p-5 flex flex-col justify-end transition-transform duration-500 group-hover:translate-y-[-4px]">
         <!-- Title -->
-        <h3 class="text-[22px] font-medium text-white mb-2 leading-tight transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:-translate-y-1">
+        <h3 class="text-[14px] md:text-[18px] lg:text-[22px] font-medium text-white mb-1 md:mb-2 leading-tight transition-colors duration-300">
           {title}
         </h3>
 
         <!-- Info Row - Compact -->
-        <div class="flex flex-wrap items-center gap-3 text-[12px] text-white/80 transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] delay-[50ms] group-hover:-translate-y-1">
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 md:gap-3 text-[10px] md:text-[12px] text-white/80 transition-opacity duration-300">
           {location && (
-            <span class="flex items-center gap-1">
-              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center gap-0.5 md:gap-1">
+              <svg class="w-2.5 h-2.5 md:w-3.5 md:h-3.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -51,16 +65,16 @@ const { title, category, image, slug, location, area, style, createdAt } = Astro
             </span>
           )}
           {area && (
-            <span class="flex items-center gap-1">
-              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center gap-0.5 md:gap-1">
+              <svg class="w-2.5 h-2.5 md:w-3.5 md:h-3.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
               </svg>
               {area}
             </span>
           )}
           {style && (
-            <span class="flex items-center gap-1">
-              <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="hidden md:flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
               </svg>
               {style}
@@ -68,11 +82,11 @@ const { title, category, image, slug, location, area, style, createdAt } = Astro
           )}
         </div>
 
-        <!-- View Button - Hidden, shows on hover -->
-        <div class="max-h-0 overflow-hidden opacity-0 group-hover:max-h-[50px] group-hover:opacity-100 group-hover:mt-3 transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] delay-[100ms]">
-          <span class="inline-flex items-center gap-2 text-[13px] font-medium text-white transition-all duration-300 group-hover:gap-3">
+        <!-- View Button - Hidden on mobile, shows on desktop hover -->
+        <div class="hidden md:block overflow-hidden h-0 group-hover:h-8 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 mt-0 group-hover:mt-3">
+          <span class="inline-flex items-center gap-3 text-[13px] font-medium text-white">
             Lihat Project
-            <svg class="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </span>

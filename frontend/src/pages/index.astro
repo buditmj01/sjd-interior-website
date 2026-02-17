@@ -8,9 +8,12 @@ import PortfolioCard from '../components/common/PortfolioCard.astro';
 import Stats from '../components/home/Stats.astro';
 import Hero from '../components/home/Hero.astro';
 import GallerySlideshow from '../components/home/GallerySlideshow.astro';
-import { getInsights, getImageUrl } from '../lib/strapi';
-import { getProjects } from '../lib/getProjects';
-import { getStrapiMedia } from '../lib/strapi';
+import FAQSection from '../components/common/FAQSection.astro';
+import { getInsights, getImageUrl, getProjects, getStrapiMedia } from '../lib/strapi';
+import { getSiteSettings } from '../lib/getSiteSettings';
+
+// Fetch site settings for SEO
+const siteSettings = await getSiteSettings();
 
 // Format date to Indonesian (same as insight page)
 const formatDate = (dateString: string) => {
@@ -38,16 +41,16 @@ const insights = insightsResponse?.data?.map((insight: any) => ({
 })) || [];
 
 // Fetch latest portfolio projects from Strapi (limit 4 for homepage)
-const projectsData = await getProjects({ limit: 4, sort: 'publishedAt:desc' });
+const projectsResponse = await getProjects({ 'pagination[limit]': 4, 'sort[0]': 'createdAt:desc' });
 
 // Transform projects data for the component
-const portfolios = projectsData?.map((project: any) => {
+const portfolios = projectsResponse.data?.map((project: any) => {
   const attrs = project.attributes;
   const featuredImage = attrs.featured_image?.data ? getStrapiMedia(attrs.featured_image.data.attributes.url) : '/images/portfolio-main.png';
 
   return {
     title: attrs.title,
-    category: attrs.category?.toUpperCase() || 'PROJECT',
+    category: attrs.category?.data?.attributes?.label || 'PROJECT',
     location: attrs.location || '',
     area: attrs.area_size || '',
     style: attrs.theme || '',
@@ -96,8 +99,8 @@ const testimonials = [
 ---
 
 <BaseLayout
-  title="SJD Interior Design - Jasa Desain Interior Profesional Jabodetabek"
-  description="SJD Interior adalah solusi desain interior lengkap di Jabodetabek. Konsultasi gratis, desain 3D, produksi furniture custom, hingga serah terima. Garansi & harga transparan."
+  title={siteSettings.siteName}
+  description={siteSettings.siteDescription}
 >
   <Header />
 
@@ -313,7 +316,7 @@ const testimonials = [
           Insight untuk anda.
         </h2>
 
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-10 md:mb-10 lg:mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 lg:gap-6 mb-10 md:mb-10 lg:mb-12">
           {insights.map((insight) => (
             <InsightCard {...insight} />
           ))}
@@ -329,6 +332,9 @@ const testimonials = [
         </div>
       </div>
     </section>
+
+    <!-- FAQ Section -->
+    <FAQSection />
 
     <!-- CTA Section -->
     <CTASection />

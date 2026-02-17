@@ -87,18 +87,25 @@ const currentPath = Astro.url.pathname;
       </a>
 
       <!-- Desktop Navigation - matching Figma -->
-      <nav class="hidden lg:flex items-center gap-[19px]">
-        {navItems.map((item) => (
-          <a
-            href={item.url}
-            class:list={[
-              'text-[15px] font-normal hover:opacity-70 transition-opacity header-link',
-              currentPath === item.url ? 'opacity-70' : ''
-            ]}
-          >
-            {item.label}
-          </a>
-        ))}
+      <nav class="hidden lg:flex items-center gap-[10px] relative">
+        
+        {navItems.map((item) => {
+          const isActive = currentPath === item.url || 
+                          (item.url !== '/' && currentPath.startsWith(item.url)) ||
+                          (currentPath + '/').startsWith(item.url + '/');
+          
+          return (
+            <a
+              href={item.url}
+              class:list={[
+                'text-[15px] font-medium px-5 py-2 rounded-full transition-all duration-300 header-link border border-transparent',
+                isActive ? 'active' : ''
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })}
       </nav>
 
       <!-- CTA Button (Desktop) - Dynamic from Strapi -->
@@ -125,7 +132,7 @@ const currentPath = Astro.url.pathname;
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-button"
-        class="lg:hidden p-2 hover:text-primary transition-colors header-menu-btn"
+        class="lg:hidden p-2 transition-colors header-menu-btn"
         aria-label="Toggle mobile menu"
       >
         <svg class="w-6 h-6" id="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,9 +148,25 @@ const currentPath = Astro.url.pathname;
   <!-- Mobile Menu - Premium Full Screen Overlay -->
   <nav
     id="mobile-menu"
-    class="lg:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-xl transform translate-x-full transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)"
+    class="lg:hidden fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl transform translate-x-full transition-all duration-500 cubic-bezier"
     style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
   >
+    <!-- Mobile Menu Top Bar -->
+    <div class="absolute top-0 left-0 right-0 h-[110px] px-[42px] flex items-center justify-between z-50">
+      <button 
+        id="mobile-menu-back"
+        class="flex items-center gap-2 text-white/70 hover:text-white transition-all duration-700 group cursor-pointer transform -translate-x-8 opacity-0"
+        aria-label="Close menu"
+      >
+        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+          <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </div>
+        <span class="text-[15px] font-medium tracking-wide uppercase">Kembali</span>
+      </button>
+    </div>
+
     <div class="h-full flex flex-col justify-center px-8 relative">
       <!-- Background Abstract Shape (Optional premium touch) -->
       <div class="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -202,6 +225,7 @@ const currentPath = Astro.url.pathname;
   const mobileMenu = document.getElementById('mobile-menu');
   const menuIcon = document.getElementById('menu-icon');
   const closeIcon = document.getElementById('close-icon');
+  const backButton = document.getElementById('mobile-menu-back');
   const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
   let isMenuOpen = false;
@@ -223,6 +247,7 @@ const currentPath = Astro.url.pathname;
 
       // Animate Links In
       setTimeout(() => {
+        backButton?.classList.remove('-translate-x-8', 'opacity-0');
         mobileLinks.forEach((link) => {
           link.classList.remove('translate-y-8', 'opacity-0');
         });
@@ -241,6 +266,7 @@ const currentPath = Astro.url.pathname;
       document.body.style.overflow = '';
 
       // Reset Links (for next animation)
+      backButton?.classList.add('-translate-x-8', 'opacity-0');
       mobileLinks.forEach((link) => {
         link.classList.add('translate-y-8', 'opacity-0');
       });
@@ -248,6 +274,7 @@ const currentPath = Astro.url.pathname;
   };
 
   menuButton?.addEventListener('click', toggleMenu);
+  backButton?.addEventListener('click', toggleMenu);
 
   // Close mobile menu when clicking on a link
   mobileLinks.forEach(link => {
@@ -263,52 +290,49 @@ const currentPath = Astro.url.pathname;
     }
   });
 
-  // Smart header background detection
+  // Smart header background detection & scroll behavior
   const header = document.getElementById('main-header');
 
   if (header) {
-    // Function to check and update header
+    let lastScrollY = window.scrollY;
+
     const initializeHeader = () => {
-      // Check if page has a hero section (image/banner at top)
-      // Only look for explicit hero markers, not all sections
       const hasHeroSection = document.querySelector('[data-hero-section]');
       const shouldBeTransparent = !!hasHeroSection;
 
       const updateHeader = () => {
         const scrollY = window.scrollY;
-
-        // If menu is open, force transparent (dark overlay covers it) or keep it consistent
-        if (isMenuOpen) return;
-
+        
+        // Background Transition & Glassmorphism
         if (shouldBeTransparent) {
-          // Page has hero - use transparent mode at top
           if (scrollY > 100) {
-            header.classList.add('bg-white', 'shadow-sm');
-            header.classList.remove('bg-transparent', 'bg-black/90');
+            header.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-sm', 'scrolled', 'border-b', 'border-black/5');
+            header.classList.remove('bg-transparent');
           } else {
             header.classList.add('bg-transparent');
-            header.classList.remove('bg-white', 'shadow-sm', 'bg-black/90');
+            header.classList.remove('bg-white/80', 'backdrop-blur-md', 'shadow-sm', 'scrolled', 'border-b', 'border-black/5');
           }
         } else {
-          // No hero - always use white background
-          header.classList.add('bg-white', 'shadow-sm');
-          header.classList.remove('bg-transparent', 'bg-black/90');
+          header.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-sm', 'scrolled', 'border-b', 'border-black/5');
+          header.classList.remove('bg-transparent');
         }
+
+        // Header always stays visible
+        header.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+
+        lastScrollY = scrollY;
       };
 
-      // Initial check
       updateHeader();
-
-      // Listen to scroll events
       window.addEventListener('scroll', updateHeader, { passive: true });
     };
 
-    // Run immediately and also after DOM is fully loaded
     initializeHeader();
 
-    // Ensure it runs after all components are mounted
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializeHeader);
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeHeader();
+      });
     }
   }
 </script>
@@ -321,7 +345,19 @@ const currentPath = Astro.url.pathname;
 
   /* Header transitions */
   #main-header {
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.4s ease, 
+                box-shadow 0.4s ease, 
+                padding 0.4s ease;
+  }
+
+  /* Scrolled height refinement */
+  #main-header.scrolled .w-full > div {
+    height: 90px;
+  }
+  
+  #main-header:not(.scrolled) .w-full > div {
+    height: 110px;
+    transition: height 0.4s ease;
   }
 
   .header-logo,
@@ -338,18 +374,35 @@ const currentPath = Astro.url.pathname;
   }
 
   #main-header.bg-transparent .header-link:hover {
-    color: var(--color-primary, #0066ff);
+    color: white;
+    opacity: 0.8;
   }
 
-  /* Scrolled state (White background, Dark text) */
-  #main-header.bg-white .header-logo,
-  #main-header.bg-white .header-link,
-  #main-header.bg-white .header-menu-btn {
+  /* Scrolled state (Translucent background, Dark text) */
+  #main-header.scrolled .header-logo,
+  #main-header.scrolled .header-link,
+  #main-header.scrolled .header-menu-btn {
     color: #1a1a1a;
   }
 
-  #main-header.bg-white .header-link:hover {
-    opacity: 0.7;
+  /* Individual link hover - traditional style since indicator is removed */
+  .header-link:hover,
+  .header-link.active {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Transparent Header Hover */
+  #main-header.bg-transparent .header-link:hover,
+  #main-header.bg-transparent .header-link.active {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Scrolled/White Header Hover */
+  #main-header.scrolled .header-link:hover,
+  #main-header.scrolled .header-link.active {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
   }
   
   /* White button on transparent header */
@@ -363,12 +416,12 @@ const currentPath = Astro.url.pathname;
   }
 
   /* Black button on scrolled header */
-  #main-header.bg-white .header-cta-btn {
+  #main-header.scrolled .header-cta-btn {
     background-color: #000000;
     color: #ffffff;
   }
 
-  #main-header.bg-white .header-cta-btn:hover {
+  #main-header.scrolled .header-cta-btn:hover {
     background-color: #1a1a1a;
   }
 
@@ -391,12 +444,12 @@ const currentPath = Astro.url.pathname;
   }
 
   /* Scrolled state (white background) - show dark logo */
-  #main-header.bg-white .logo-dark {
+  #main-header.scrolled .logo-dark {
     opacity: 1;
     pointer-events: auto;
   }
 
-  #main-header.bg-white .logo-light {
+  #main-header.scrolled .logo-light {
     opacity: 0;
     pointer-events: none;
   }

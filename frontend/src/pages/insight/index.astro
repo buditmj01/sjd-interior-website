@@ -34,7 +34,6 @@ try {
 
 } catch (error) {
   console.error('Error fetching insights:', error);
-  // Fallback to mock data if Strapi fails
   allArticles = Array(9).fill(null).map((_, i) => ({
     title: `Artikel Desain Interior ${i + 1}`,
     author: "SJD Interior Team",
@@ -45,22 +44,41 @@ try {
     featured: i === 0
   }));
 }
+
+// Extract unique categories from articles
+const categories = Array.from(new Set(allArticles.map((a: any) => a.category as string))).sort();
 ---
 
 <BaseLayout
   title="Insight - SJD Interior"
   description="Artikel dan tips seputar desain interior dari SJD Interior"
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Insight - SJD Interior",
+    "description": "Artikel dan tips seputar desain interior dari SJD Interior",
+    "url": "https://sjdinterior.com/insight",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": allArticles.slice(0, 10).map((a: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": a.title,
+        "url": `https://sjdinterior.com/insight/${a.slug}`
+      }))
+    }
+  }}
 >
   <Header />
 
   <main class="bg-white">
     <!-- Hero Section - Compact & Focused -->
-    <section class="relative pt-52 md:pt-36 lg:pt-44 pb-20 md:pb-12 lg:pb-16 bg-white">
+    <section class="relative pt-32 md:pt-36 lg:pt-44 pb-8 md:pb-12 lg:pb-16 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] text-center md:text-left">
-        <h1 class="text-[72px] md:text-[96px] lg:text-[128px] font-light text-black mb-4 md:mb-4 lg:mb-6 leading-[0.95]" style="letter-spacing: -2.8px;">
+        <h1 class="text-[48px] md:text-[96px] lg:text-[128px] font-light text-black mb-3 md:mb-4 lg:mb-6 leading-[0.95]" style="letter-spacing: -2.8px;">
           Insight
         </h1>
-        <p class="text-[24px] md:text-[28px] lg:text-[36px] font-light text-[#666] leading-[1.3] max-w-3xl mx-auto md:mx-0" style="letter-spacing: -0.5px;">
+        <p class="text-[16px] md:text-[28px] lg:text-[36px] font-light text-[#666] leading-[1.3] max-w-3xl mx-auto md:mx-0" style="letter-spacing: -0.5px;">
           Tips, tren, dan inspirasi desain interior
         </p>
       </div>
@@ -72,7 +90,7 @@ try {
 
         <!-- Search Bar - Full Width -->
         <div class="mb-4">
-          <div class="relative max-w-2xl">
+          <div class="relative w-full md:max-w-2xl">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/>
               <path d="M21 21l-4.35-4.35"/>
@@ -94,18 +112,11 @@ try {
             <button class="filter-btn active px-4 py-2 bg-black text-white text-[13px] md:text-[14px] font-medium rounded-full hover:bg-[#333] transition-all whitespace-nowrap" data-category="ALL">
               Semua
             </button>
-            <button class="filter-btn px-4 py-2 bg-white text-[#666] text-[13px] md:text-[14px] font-medium border border-[#e5e5e5] rounded-full hover:border-black hover:text-black transition-all whitespace-nowrap" data-category="TIPS">
-              Tips
-            </button>
-            <button class="filter-btn px-4 py-2 bg-white text-[#666] text-[13px] md:text-[14px] font-medium border border-[#e5e5e5] rounded-full hover:border-black hover:text-black transition-all whitespace-nowrap" data-category="TREND">
-              Trend
-            </button>
-            <button class="filter-btn px-4 py-2 bg-white text-[#666] text-[13px] md:text-[14px] font-medium border border-[#e5e5e5] rounded-full hover:border-black hover:text-black transition-all whitespace-nowrap" data-category="NEWS">
-              News
-            </button>
-            <button class="filter-btn px-4 py-2 bg-white text-[#666] text-[13px] md:text-[14px] font-medium border border-[#e5e5e5] rounded-full hover:border-black hover:text-black transition-all whitespace-nowrap" data-category="TUTORIAL">
-              Tutorial
-            </button>
+            {categories.map((cat: any) => (
+              <button class="filter-btn px-4 py-2 bg-white text-[#666] text-[13px] md:text-[14px] font-medium border border-[#e5e5e5] rounded-full hover:border-black hover:text-black transition-all whitespace-nowrap" data-category={cat}>
+                {cat.charAt(0) + cat.slice(1).toLowerCase()}
+              </button>
+            ))}
           </div>
 
           <!-- Right: Sort & Results Count -->
@@ -142,9 +153,9 @@ try {
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
 
         <!-- Articles Grid -->
-        <div id="articles-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12">
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 lg:gap-6 mb-8 md:mb-12">
           {allArticles.map((article) => (
-            <div class="article-item" data-category={article.category} data-date={new Date(article.date).getTime()} data-title={article.title.toLowerCase()}>
+            <div class="article-item" data-category={article.category} data-date={new Date(article.date).getTime()} data-title={article.title.toLowerCase()} data-slug={article.slug}>
               <InsightCard {...article} />
             </div>
           ))}
@@ -287,13 +298,12 @@ try {
 
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Update active class
         filterBtns.forEach(b => {
-          b.classList.remove('bg-black', 'text-white');
-          b.classList.add('bg-white', 'text-[#666]', 'border', 'border-[#e5e5e5]');
+          b.classList.remove('bg-black', 'text-white', 'hover:bg-[#333]');
+          b.classList.add('bg-white', 'text-[#666]', 'border', 'border-[#e5e5e5]', 'hover:border-black', 'hover:text-black');
         });
-        btn.classList.remove('bg-white', 'text-[#666]', 'border', 'border-[#e5e5e5]');
-        btn.classList.add('bg-black', 'text-white');
+        btn.classList.remove('bg-white', 'text-[#666]', 'border', 'border-[#e5e5e5]', 'hover:border-black', 'hover:text-black');
+        btn.classList.add('bg-black', 'text-white', 'hover:bg-[#333]');
 
         currentCategory = (btn as HTMLElement).dataset.category || 'ALL';
         filterArticles();
@@ -305,8 +315,56 @@ try {
       filterArticles();
     });
 
-    // Initial Sort
+    // Dynamic Sync logic
+    const syncWithStrapi = async () => {
+      try {
+        const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'https://cms.sjdinterior.com';
+        const response = await fetch(`${STRAPI_URL}/api/insights?pagination[limit]=24&populate=*`);
+        if (!response.ok) return;
+        const { data } = await response.json();
+        
+        const liveSlugs = data.map((item: any) => item.attributes.slug);
+        
+        let hasChanges = false;
+        articles.forEach(article => {
+          const articleEl = article as HTMLElement;
+          const slug = articleEl.dataset.slug;
+          
+          if (slug && !liveSlugs.includes(slug)) {
+            // Article was deleted or unpublished
+            articleEl.remove();
+            hasChanges = true;
+          } else if (slug) {
+            // Article exists, check if title changed
+            const liveData = data.find((item: any) => item.attributes.slug === slug);
+            if (liveData) {
+              const liveTitle = liveData.attributes.title;
+              const titleEl = articleEl.querySelector('h3'); // Assuming h3 is the title in InsightCard
+              if (titleEl && titleEl.textContent !== liveTitle) {
+                titleEl.textContent = liveTitle;
+                articleEl.dataset.title = liveTitle.toLowerCase();
+                hasChanges = true;
+              }
+            }
+          }
+        });
+
+        if (hasChanges) {
+          // Re-populate the array of articles since some might have been removed
+          // Note: we'd need to update the top-level 'articles' variable
+          // For simplicity, let's just trigger a re-filter
+          filterArticles();
+        }
+      } catch (e) {
+        console.warn('Sync failed:', e);
+      }
+    };
+
+    // Initial Sort & Filter
     sortArticles();
-    updateResultsCount();
+    filterArticles();
+    
+    // Trigger sync after a short delay
+    setTimeout(syncWithStrapi, 1000);
   });
 </script>

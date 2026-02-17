@@ -72,100 +72,123 @@ const contact = {
             <p class="text-[16px] md:text-[17px] lg:text-[18px] font-light text-[#636363] mb-6 md:mb-7 lg:mb-8">
               Isi form di bawah ini dan tim kami akan segera menghubungi Anda.
             </p>
-            <form id="contact-form" class="space-y-4 md:space-y-5">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div>
-                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                    Nama Awal
+            <form id="contact-form" class="space-y-5 md:space-y-6" novalidate>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                <div class="form-group">
+                  <label for="nama-awal" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                    Nama Awal <span class="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="nama-awal"
+                    name="nama-awal"
                     placeholder="Budi"
-                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    required
+                    enterkeyhint="next"
+                    class="w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
                   />
+                  <span class="error-msg hidden text-[13px] text-red-500 mt-1">Nama awal wajib diisi</span>
                 </div>
-                <div>
-                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
+                <div class="form-group">
+                  <label for="nama-akhir" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
                     Nama Akhir <span class="text-[13px] md:text-[14px] font-light text-[#999]">(Opsional)</span>
                   </label>
                   <input
                     type="text"
                     id="nama-akhir"
+                    name="nama-akhir"
                     placeholder="Santoso"
-                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    enterkeyhint="next"
+                    class="w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
                   />
                 </div>
               </div>
 
-              <div>
-                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                  Estimasi Budget
+              <div class="form-group">
+                <label for="budget" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                  Estimasi Budget <span class="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   id="budget"
+                  name="budget"
                   inputmode="numeric"
                   placeholder="Rp 150.000.000"
-                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  required
+                  enterkeyhint="next"
+                  class="w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
                 />
+                <span class="error-msg hidden text-[13px] text-red-500 mt-1">Estimasi budget wajib diisi</span>
               </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div>
-                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                    Kapan Ingin Mulai
-                  </label>
-                  <input
-                    type="date"
-                    id="tanggal-mulai"
-                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
-                  />
-                </div>
-                <div>
-                  <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                    Telepon
-                  </label>
-                  <input
-                    type="tel"
-                    id="telepon"
-                    placeholder="0812 3456 7890"
-                    class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
-                  />
-                </div>
+              <div class="form-group">
+                <label for="tanggal-mulai" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                  Kapan Ingin Mulai <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="tanggal-mulai"
+                  name="tanggal-mulai"
+                  required
+                  class="date-input w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                />
+                <span class="error-msg hidden text-[13px] text-red-500 mt-1">Pilih rencana tanggal mulai</span>
               </div>
 
-              <div>
-                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                  Lokasi Proyek/Alamat
+              <div class="form-group">
+                <label for="telepon" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                  Telepon <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="telepon"
+                  name="telepon"
+                  placeholder="0812 3456 7890"
+                  required
+                  enterkeyhint="next"
+                  class="w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                />
+                <span class="error-msg hidden text-[13px] text-red-500 mt-1">Nomor telepon wajib diisi</span>
+              </div>
+
+              <div class="form-group">
+                <label for="lokasi" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                  Lokasi Proyek/Alamat <span class="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   id="lokasi"
+                  name="lokasi"
                   placeholder="Perumahan Griya Asri Blok C2 No. 15, Depok"
-                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  required
+                  enterkeyhint="next"
+                  class="w-full h-[48px] px-4 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
                 />
+                <span class="error-msg hidden text-[13px] text-red-500 mt-1">Lokasi proyek wajib diisi</span>
               </div>
 
-              <div>
-                <label class="block text-[16px] md:text-[17px] lg:text-[18px] font-normal text-[#212121] mb-1.5 md:mb-2">
-                  Pesan
+              <div class="form-group">
+                <label for="pesan" class="block text-[15px] md:text-[16px] font-medium text-[#212121] mb-1.5 md:mb-2">
+                  Pesan <span class="text-red-500">*</span>
                 </label>
                 <textarea
-                  rows="3"
+                  rows="4"
                   id="pesan"
+                  name="pesan"
                   placeholder="Saya ingin renovasi interior rumah tipe 45, fokus di ruang tamu dan dapur. Sudah ada denah rumah."
-                  class="w-full px-3 md:px-4 py-2.5 md:py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-[#f4f4f4] border border-[#949494] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black resize-none"
+                  required
+                  class="w-full px-4 py-3 text-[15px] md:text-[16px] font-light text-[#333] placeholder:font-light placeholder:text-[#c4c4c4] bg-white border border-[#d1d1d1] rounded-[8px] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all resize-none"
                 ></textarea>
+                <span class="error-msg hidden text-[13px] text-red-500 mt-1">Pesan wajib diisi</span>
               </div>
 
               <button
                 type="submit"
                 id="whatsapp-btn"
                 data-whatsapp-number={contact.whatsapp_number}
-                class="inline-flex items-center justify-center gap-2 w-full px-5 md:px-6 py-3 md:py-4 text-[15px] md:text-[16px] font-medium text-white bg-[#25D366] rounded-full hover:bg-[#1fb855] transition-all duration-200"
+                class="inline-flex items-center justify-center gap-2.5 w-full mt-2 px-6 py-4 text-[16px] md:text-[17px] font-semibold text-white bg-[#25D366] rounded-[12px] hover:bg-[#1fb855] active:scale-[0.98] transition-all duration-200 shadow-sm"
               >
-                <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Konsultasi via WhatsApp
@@ -288,16 +311,13 @@ const contact = {
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contact-form');
+    const form = document.getElementById('contact-form') as HTMLFormElement;
     const budgetInput = document.getElementById('budget') as HTMLInputElement;
 
     // Format number to Rupiah
     function formatRupiah(value: string): string {
-      // Remove non-numeric characters
       const number = value.replace(/\D/g, '');
       if (!number) return '';
-
-      // Format with thousand separators
       const formatted = new Intl.NumberFormat('id-ID').format(parseInt(number));
       return `Rp ${formatted}`;
     }
@@ -307,53 +327,86 @@ const contact = {
       const target = e.target as HTMLInputElement;
       const cursorPosition = target.selectionStart || 0;
       const oldLength = target.value.length;
-
       target.value = formatRupiah(target.value);
-
-      // Adjust cursor position
       const newLength = target.value.length;
       const newPosition = cursorPosition + (newLength - oldLength);
       target.setSelectionRange(newPosition, newPosition);
+      
+      // Clear error on input
+      if (target.value) {
+        hideError(target);
+      }
+    });
+
+    // Helper functions for error display
+    function showError(input: HTMLInputElement | HTMLTextAreaElement) {
+      const group = input.closest('.form-group');
+      const errorMsg = group?.querySelector('.error-msg');
+      input.classList.add('border-red-500');
+      input.classList.remove('border-[#d1d1d1]');
+      errorMsg?.classList.remove('hidden');
+    }
+
+    function hideError(input: HTMLInputElement | HTMLTextAreaElement) {
+      const group = input.closest('.form-group');
+      const errorMsg = group?.querySelector('.error-msg');
+      input.classList.remove('border-red-500');
+      input.classList.add('border-[#d1d1d1]');
+      errorMsg?.classList.add('hidden');
+    }
+
+    // Clear error classes on input
+    const inputs = form?.querySelectorAll('input, textarea');
+    inputs?.forEach(input => {
+      input.addEventListener('input', () => {
+        if ((input as any).value.trim() !== '') {
+          hideError(input as any);
+        }
+      });
     });
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Get WhatsApp number from button data attribute
       const whatsappBtn = document.getElementById('whatsapp-btn') as HTMLButtonElement;
       const whatsappNumber = whatsappBtn?.dataset.whatsappNumber || '6285398989810';
 
-      // Get form values
-      const namaAwal = (document.getElementById('nama-awal') as HTMLInputElement)?.value.trim() || '';
-      const namaAkhir = (document.getElementById('nama-akhir') as HTMLInputElement)?.value.trim() || '';
-      const budget = (document.getElementById('budget') as HTMLInputElement)?.value.trim() || '';
-      const tanggalMulai = (document.getElementById('tanggal-mulai') as HTMLInputElement)?.value || '';
-      const telepon = (document.getElementById('telepon') as HTMLInputElement)?.value.trim() || '';
-      const lokasi = (document.getElementById('lokasi') as HTMLInputElement)?.value.trim() || '';
-      const pesan = (document.getElementById('pesan') as HTMLTextAreaElement)?.value.trim() || '';
+      const namaAwalInput = document.getElementById('nama-awal') as HTMLInputElement;
+      const namaAkhirInput = document.getElementById('nama-akhir') as HTMLInputElement;
+      const budgetInput = document.getElementById('budget') as HTMLInputElement;
+      const tanggalMulaiInput = document.getElementById('tanggal-mulai') as HTMLInputElement;
+      const teleponInput = document.getElementById('telepon') as HTMLInputElement;
+      const lokasiInput = document.getElementById('lokasi') as HTMLInputElement;
+      const pesanInput = document.getElementById('pesan') as HTMLTextAreaElement;
 
-      // Validation - all fields required except namaAkhir
-      const requiredFields = [
-        { value: namaAwal, name: 'Nama Awal' },
-        { value: budget, name: 'Estimasi Budget' },
-        { value: tanggalMulai, name: 'Kapan Ingin Mulai' },
-        { value: telepon, name: 'Telepon' },
-        { value: lokasi, name: 'Lokasi Proyek' },
-        { value: pesan, name: 'Pesan' }
+      // Validation
+      const requiredInputs = [
+        namaAwalInput, budgetInput, tanggalMulaiInput, teleponInput, lokasiInput, pesanInput
       ];
 
-      const emptyFields = requiredFields.filter(field => !field.value);
+      let isValid = true;
+      requiredInputs.forEach(input => {
+        if (!input.value.trim()) {
+          showError(input);
+          isValid = false;
+        } else {
+          hideError(input);
+        }
+      });
 
-      if (emptyFields.length > 0) {
-        const fieldNames = emptyFields.map(f => f.name).join(', ');
-        alert(`Mohon lengkapi field berikut: ${fieldNames}`);
+      if (!isValid) {
+        // Scroll to first error
+        const firstError = form.querySelector('.border-red-500');
+        firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
 
-      // Format date if provided
-      let formattedDate = tanggalMulai;
-      if (tanggalMulai) {
-        const date = new Date(tanggalMulai);
+      // Build message
+      const fullName = namaAkhirInput.value.trim() ? `${namaAwalInput.value.trim()} ${namaAkhirInput.value.trim()}` : namaAwalInput.value.trim();
+      
+      let formattedDate = tanggalMulaiInput.value;
+      if (formattedDate) {
+        const date = new Date(formattedDate);
         formattedDate = date.toLocaleDateString('id-ID', {
           day: 'numeric',
           month: 'long',
@@ -361,25 +414,46 @@ const contact = {
         });
       }
 
-      // Build WhatsApp message
-      const fullName = namaAkhir ? `${namaAwal} ${namaAkhir}` : namaAwal;
       let message = `Halo SJD Interior,\n\nSaya ingin berkonsultasi mengenai proyek interior.\n\n`;
       message += `*Data Klien:*\n`;
       message += `Nama: ${fullName}\n`;
-      message += `Telepon: ${telepon}\n`;
-      message += `Lokasi Proyek: ${lokasi}\n\n`;
+      message += `Telepon: ${teleponInput.value.trim()}\n`;
+      message += `Lokasi Proyek: ${lokasiInput.value.trim()}\n\n`;
       message += `*Detail Proyek:*\n`;
-      message += `Estimasi Budget: ${budget}\n`;
+      message += `Estimasi Budget: ${budgetInput.value.trim()}\n`;
       message += `Rencana Mulai: ${formattedDate}\n\n`;
-      message += `*Pesan:*\n${pesan}\n\n`;
+      message += `*Pesan:*\n${pesanInput.value.trim()}\n\n`;
       message += `Terima kasih.`;
 
-      // Encode message for URL
       const encodedMessage = encodeURIComponent(message);
-
-      // Open WhatsApp with number from Strapi
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       window.open(whatsappUrl, '_blank');
     });
   });
 </script>
+
+<style>
+  /* Normalize date input height across all browsers/devices */
+  .date-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    min-height: 48px;
+    line-height: 48px;
+  }
+
+  /* Fix Safari/iOS date input inner padding */
+  .date-input::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
+  /* Ensure consistent calendar icon on WebKit browsers */
+  .date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 4px;
+  }
+  .date-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
+  }
+</style>

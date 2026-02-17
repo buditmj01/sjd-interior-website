@@ -9,7 +9,7 @@ export async function getInsights(options = {}) {
     limit = 25,
     featured = null,
     sort = 'publishedAt:desc',
-    populate = '*',
+    populate = 'author.photo,featured_image',
     excludeSlug = null
   } = options;
 

@@ -50,8 +50,17 @@ export const fetchAPI = async (endpoint, options = {}) => {
     },
   };
 
+  // Add a timeout to the fetch request
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
   try {
-    const response = await fetch(getStrapiURL(`/api${endpoint}`), mergedOptions);
+    const response = await fetch(getStrapiURL(`/api${endpoint}`), {
+      ...mergedOptions,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.warn(`Strapi API error: ${response.status} ${response.statusText} for ${endpoint}`);
@@ -311,4 +320,15 @@ export const getWorkflowHero = async () => {
     console.error('Error fetching workflow hero:', error);
     return null;
   }
+};
+
+/**
+ * Fetch a single author by ID
+ */
+export const getAuthorById = async (id) => {
+  const queryParams = new URLSearchParams({
+    populate: 'photo',
+  });
+  const response = await fetchAPI(`/authors/${id}?${queryParams}`);
+  return response.data;
 };

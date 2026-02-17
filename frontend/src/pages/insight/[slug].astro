@@ -7,20 +7,7 @@ import InsightCard from '../../components/common/InsightCard.astro';
 import { getInsights, getInsightBySlug } from '../../lib/getInsights';
 import { getStrapiMedia } from '../../lib/strapi';
 import { sanitize } from '../../lib/sanitize.js';
-
-// Generate static paths for SSG
-export async function getStaticPaths() {
-  try {
-    const insights = await getInsights({ limit: 100 });
-
-    return (insights || []).map((insight: any) => ({
-      params: { slug: insight.attributes.slug },
-    }));
-  } catch (error) {
-    console.error('Error fetching insights for static paths:', error);
-    return [];
-  }
-}
+import AuthorBio from '../../components/insight/AuthorBio';
 
 const { slug } = Astro.params;
 
@@ -81,7 +68,9 @@ try {
       excerpt: insight.attributes.excerpt,
       content: parsedContent,
       mainImage: mainImage,
-      contentImages: galleryImages
+      contentImages: galleryImages,
+      seo_title: insight.attributes.seo_title,
+      seo_description: insight.attributes.seo_description
     };
 
     // Fetch related insights (exclude current one by slug)
@@ -98,11 +87,13 @@ try {
         month: 'long',
         year: 'numeric'
       }) : '';
+      const authorPhoto = item.attributes.author?.data?.attributes?.photo?.data ? getStrapiMedia(item.attributes.author.data.attributes.photo.data.attributes.url) : null;
       const featuredImage = item.attributes.featured_image?.data ? getStrapiMedia(item.attributes.featured_image.data.attributes.url) : '/images/insight-card.jpg';
 
       return {
         title: item.attributes.title,
         author: authorName,
+        authorPhoto: authorPhoto,
         date: publishedDate,
         category: categoryMap[item.attributes.category] || item.attributes.category.toUpperCase(),
         image: featuredImage,
@@ -121,8 +112,28 @@ if (!article) {
 ---
 
 <BaseLayout
-  title={`${article.title} - Insight SJD Interior`}
-  description={article.excerpt || `${article.title} - Tips dan inspirasi desain interior dari SJD Interior Design.`}
+  title={article.seo_title || `${article.title} - Insight SJD Interior`}
+  description={article.seo_description || article.excerpt || `${article.title} - Tips dan inspirasi desain interior dari SJD Interior Design.`}
+  ogImage={article.mainImage}
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": article.title,
+    "image": article.mainImage,
+    "datePublished": insight.attributes.publishedAt || insight.attributes.createdAt,
+    "dateModified": insight.attributes.updatedAt,
+    "author": { "@type": "Person", "name": article.author.name },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SJD Interior Design",
+      "url": "https://sjdinterior.com"
+    },
+    "description": article.excerpt || article.title,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://sjdinterior.com/insight/${slug}`
+    }
+  }}
 >
   <Header />
 
@@ -200,28 +211,12 @@ if (!article) {
           </div>
         )}
 
-        <!-- Author Bio Section -->
-        <div class="mt-12 md:mt-14 lg:mt-16 pt-6 md:pt-7 lg:pt-8 border-t border-[#eee]">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-5 lg:gap-6 text-center sm:text-left">
-                <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-200 overflow-hidden">
-                    {article.author.photo ? (
-                      <img src={article.author.photo} alt={article.author.name} class="w-full h-full object-cover" />
-                    ) : (
-                      <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                      </svg>
-                    )}
-                </div>
-                <div>
-                    <p class="text-[11px] md:text-[12px] font-bold text-[#999] uppercase tracking-wider mb-1">Tentang Penulis</p>
-                    <h3 class="text-[18px] md:text-[20px] font-bold text-black mb-1.5 md:mb-2">{article.author.name}</h3>
-                    <p class="text-[13px] md:text-[14px] text-[#888] mb-1.5 md:mb-2">{article.author.job}</p>
-                    <p class="text-[14px] md:text-[15px] lg:text-[16px] text-[#666] leading-relaxed">
-                        {article.author.bio}
-                    </p>
-                </div>
-            </div>
-        </div>
+        <!-- Author Bio Section (Dynamic Island) -->
+        <AuthorBio 
+          authorId={insight.attributes.author?.data?.id} 
+          initialAuthor={article.author} 
+          client:visible 
+        />
       </div>
     </section>
 

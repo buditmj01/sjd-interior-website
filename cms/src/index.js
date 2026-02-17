@@ -223,6 +223,11 @@ module.exports = {
           'api::website-logos.website-logos.find',
           'api::faq.faq.find',
           'api::faq.faq.findOne',
+          'api::navigation.navigation.find',
+          'api::homepage-gallery.homepage-gallery.find',
+          'api::workflow-hero.workflow-hero.find',
+          'api::portfolio-category.portfolio-category.find',
+          'api::portfolio-category.portfolio-category.findOne',
         ];
 
         for (const actionPath of actionsToEnable) {

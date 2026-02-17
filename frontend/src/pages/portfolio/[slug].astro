@@ -5,7 +5,7 @@ import Footer from '../../components/common/Footer.astro';
 import CTASection from '../../components/common/CTASection.astro';
 import FAQSection from '../../components/common/FAQSection.astro';
 import PortfolioCard from '../../components/common/PortfolioCard.astro';
-import { getProjects, getProjectBySlug } from '../../lib/strapi.js';
+import { getProjects, getProjectBySlug, getStrapiMedia } from '../../lib/strapi.js';
 import { sanitize } from '../../lib/sanitize.js';
 
 // Testimonials from Google Maps Reviews (same as home page)
@@ -28,24 +28,6 @@ const testimonials = [
   { name: "Siti Hasanah", text: "Sangat di rekomendasikan bagi yang ingin membuat kitchenset, owner nya baikk sekali.", rating: 5 }
 ];
 
-// Generate static paths for SSG
-export async function getStaticPaths() {
-  try {
-    const projectsResponse = await getProjects();
-    const projects = projectsResponse.data || [];
-    
-    return projects.map((project: any) => {
-      return {
-        params: { slug: project.attributes.slug },
-      };
-    });
-  } catch (error) {
-    console.warn('Could not fetch projects from Strapi during build, using empty array:', error.message);
-    // Return empty array if Strapi is not available during build
-    return [];
-  }
-}
-
 const { slug } = Astro.params;
 
 import { marked } from 'marked';
@@ -62,14 +44,14 @@ try {
     'filters[slug][$ne]': slug,
     'pagination[limit]': 3
   });
-} catch (error) {
+} catch (error: any) {
   console.warn('Could not fetch data from Strapi, using mock data:', error.message);
   // Use mock data if Strapi is not available
   projectData = {
     attributes: {
       title: "Modern Tropical House",
       content: "## Hospitality dengan Sentuhan Lokal\n\nLobby hotel ini menggabungkan kemewahan dengan kearifan lokal Bali. Material natural seperti bambu, batu alam, dan kayu jati menciptakan ambiance yang warm yet luxurious.\n\n### Reception Area\n- Custom reception desk dari kayu jati reclaimed\n- Stone wall feature dengan water element\n- Balinese carving details\n- Soft lighting dengan warm tone\n\n### Lounge Area\n- Mix seating: sofa, armchair, daybed\n- Rattan furniture dengan cushion luxury\n- Indoor plants tropical\n- Open-air concept dengan retractable roof\n\n### Design Elements\n- Terrazzo flooring dengan pattern traditional\n- Woven pendant lights handmade\n- Art pieces dari local artisan\n- Natural ventilation maksimal",
-      category: "Retail Interior Design",
+      category: "Residensial",
       client_name: "Budi Triatmojo",
       location: "Bogor, Jawa Barat",
       area_size: "350 m²",
@@ -86,7 +68,7 @@ try {
       {
         attributes: {
           title: "Modern Tropical House",
-          category: "RUMAH TINGGAL",
+          category: "Residensial",
           location: "Jakarta Selatan",
           area_size: "350 m²",
           style: "Modern Minimalis",
@@ -97,7 +79,7 @@ try {
       {
         attributes: {
           title: "Cozy Scandinavian House",
-          category: "RUMAH TINGGAL",
+          category: "Residensial",
           location: "Bandung",
           area_size: "280 m²",
           style: "Scandinavian",
@@ -108,7 +90,7 @@ try {
       {
         attributes: {
           title: "Industrial Loft Office",
-          category: "OFFICE",
+          category: "Residensial",
           location: "Surabaya",
           area_size: "450 m²",
           style: "Industrial",
@@ -119,12 +101,6 @@ try {
     ] 
   };
 }
-
-// Fetch related projects (excluding the current project)
-const projectsResponse = await getProjects({
-  'filters[slug][$ne]': slug,
-  'pagination[limit]': 3
-});
 
 // Handle case where project is not found
 if (!projectData) {
@@ -159,13 +135,13 @@ const project = {
   title: projectData.attributes.title,
   category: "Portofolio",
   mainImage: projectData.attributes.featured_image?.data?.attributes?.url
-    ? `/uploads/${projectData.attributes.featured_image.data.attributes.url.split('/').pop()}`
+    ? getStrapiMedia(projectData.attributes.featured_image.data.attributes.url)
     : "/images/portfolio-main.png",
   images: projectData.attributes.gallery?.data?.map((img: any) =>
-    img?.attributes?.url ? `/uploads/${img.attributes.url.split('/').pop()}` : "/images/portfolio-main.png"
+    img?.attributes?.url ? getStrapiMedia(img.attributes.url) : "/images/portfolio-main.png"
   ) || ["/images/portfolio-main.png", "/images/portfolio-2.png", "/images/portfolio-3.png", "/images/portfolio-4.png"],
   description: parsedDescription,
-  category_tag: projectData.attributes.category,
+  category_tag: projectData.attributes.category?.data?.attributes?.label || 'Uncategorized',
   client: projectData.attributes.client_name || "Client",
   location: projectData.attributes.location || "Location",
   area: formatArea(projectData.attributes.area_size || ""),
@@ -178,12 +154,13 @@ const project = {
 
 const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
   title: proj.attributes.title,
-  category: proj.attributes.category?.toUpperCase() || "PROJECT",
+  category: proj.attributes.category?.data?.attributes?.label || "Uncategorized",
+  categorySlug: proj.attributes.category?.data?.attributes?.slug || "uncategorized",
   location: proj.attributes.location || "Location",
   area: proj.attributes.area_size || "Area",
   style: proj.attributes.style || "Design Style",
-  image: proj.attributes.featured_image?.data?.attributes?.url 
-    ? `/uploads/${proj.attributes.featured_image.data.attributes.url.split('/').pop()}`
+  image: proj.attributes.featured_image?.data?.attributes?.url
+    ? getStrapiMedia(proj.attributes.featured_image.data.attributes.url)
     : "/images/portfolio-main.png",
   slug: proj.attributes.slug
 })) || [];
@@ -192,16 +169,39 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
 <BaseLayout
   title={`${project.title} - Portfolio SJD Interior`}
   description={`Proyek ${project.category_tag || 'interior'} ${project.title} di ${project.location}. ${project.theme} style, ${project.area}. Lihat hasil desain interior oleh SJD Interior.`}
+  ogImage={project.mainImage}
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": project.title,
+    "image": project.mainImage,
+    "description": `Proyek ${project.category_tag} ${project.title} di ${project.location}. ${project.theme} style, ${project.area}.`,
+    "creator": {
+      "@type": "Organization",
+      "name": "SJD Interior Design",
+      "url": "https://sjdinterior.com"
+    },
+    "locationCreated": {
+      "@type": "Place",
+      "name": project.location
+    },
+    "genre": project.category_tag,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://sjdinterior.com/portfolio/${slug}`
+    }
+  }}
 >
   <Header />
 
   <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative h-[60vh] md:h-[70vh] min-h-[400px] md:min-h-[500px] max-h-[550px] md:max-h-[650px] w-full overflow-hidden">
+    <section data-hero-section class="relative h-[60vh] md:h-[70vh] min-h-[400px] md:min-h-[500px] max-h-[550px] md:max-h-[650px] w-full overflow-hidden">
       <img
         src={project.mainImage}
         alt={project.title}
         class="absolute inset-0 w-full h-full object-cover"
+        data-hero-image
       />
       <!-- Gradient Overlay -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent"></div>
@@ -209,10 +209,14 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
       <!-- Content - Bottom Left -->
       <div class="absolute bottom-[40px] md:bottom-[60px] left-0 right-0">
         <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-          <p class="text-[20px] md:text-[26px] lg:text-[32px] font-light text-white mb-2 md:mb-3" style="letter-spacing: -1.6px;">
+          <p class="text-[20px] md:text-[26px] lg:text-[32px] font-light text-white mb-2 md:mb-3 opacity-0" 
+             style="letter-spacing: -1.6px;"
+             data-hero-category>
             {project.category}
           </p>
-          <h1 class="text-[40px] md:text-[60px] lg:text-[80px] font-light text-white leading-[1]" style="letter-spacing: -2px; md:letter-spacing: -3px; lg:letter-spacing: -4px;">
+          <h1 class="text-[40px] md:text-[60px] lg:text-[80px] font-light text-white leading-[1] opacity-0" 
+              style="letter-spacing: -2px; md:letter-spacing: -3px; lg:letter-spacing: -4px;"
+              data-hero-title>
             {project.title}
           </h1>
         </div>
@@ -225,57 +229,99 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
         <div class="flex flex-col lg:flex-row gap-8 md:gap-10 lg:gap-12">
           <!-- Left Column - Images -->
           <div class="w-full lg:w-[55%] flex-shrink-0 space-y-4 md:space-y-6">
-            {project.images.map((image: any) => (
+            {project.images.map((image: any, index: number) => (
               <img
                 src={image}
-                alt={project.title}
-                class="w-full h-auto aspect-square object-cover rounded-lg"
+                alt={`${project.title} - ${index + 1}`}
+                class="w-full h-auto aspect-square object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity gallery-thumb"
+                data-gallery-index={index}
               />
             ))}
+          </div>
+
+          <!-- Fullscreen Gallery Lightbox -->
+          <div id="gallery-lightbox" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm hidden items-center justify-center">
+            <!-- Close Button -->
+            <button id="lightbox-close" class="absolute top-4 right-4 z-50 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/80 hover:text-white transition-colors" aria-label="Close">
+              <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+
+            <!-- Counter -->
+            <div class="absolute top-4 left-4 z-50 text-white/60 text-[14px] md:text-[16px] font-light">
+              <span id="lightbox-current">1</span> / <span id="lightbox-total">{project.images.length}</span>
+            </div>
+
+            <!-- Prev Button -->
+            <button id="lightbox-prev" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/70 hover:text-white transition-colors" aria-label="Previous">
+              <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+
+            <!-- Next Button -->
+            <button id="lightbox-next" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-50 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/70 hover:text-white transition-colors" aria-label="Next">
+              <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <!-- Image Container -->
+            <div class="w-full h-full flex items-center justify-center p-4 md:p-12 lg:p-16">
+              <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full object-contain transition-opacity duration-300" />
+            </div>
+
+            <!-- Dots -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-50">
+              {project.images.map((_: any, i: number) => (
+                <button class="lightbox-dot w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/30 transition-all" data-dot={i} aria-label={`Image ${i + 1}`}></button>
+              ))}
+            </div>
           </div>
 
           <!-- Right Column - Project Info -->
           <div class="flex-1 lg:sticky lg:top-[130px] self-start lg:max-h-[calc(100vh-160px)] flex flex-col">
             <!-- Project Meta Info - Moved to top for better scannability -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-4 md:gap-y-6 mb-6 md:mb-8 flex-shrink-0">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-4 md:gap-y-6 mb-6 md:mb-8 flex-shrink-0" data-animate-stagger>
               <!-- Kategori -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Kategori</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.category_tag}</p>
               </div>
 
               <!-- Klien -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Klien</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.client}</p>
               </div>
 
               <!-- Lokasi -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Lokasi</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.location}</p>
               </div>
 
               <!-- Luas Area -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Luas Area</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.area}</p>
               </div>
 
               <!-- Tahun -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Tahun</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.year}</p>
               </div>
 
               <!-- Budget -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Budget</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.budget}</p>
               </div>
 
               <!-- Tema Project -->
-              <div>
+              <div class="opacity-0">
                 <p class="text-[11px] font-medium text-[#888888] uppercase tracking-wider mb-1">Tema</p>
                 <p class="text-[14px] font-normal text-[#111111] leading-tight">{project.theme}</p>
               </div>
@@ -285,7 +331,7 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
             <div class="w-full h-[1px] bg-[#e5e5e5] mb-6 flex-shrink-0"></div>
 
             <!-- Description -->
-            <div class="flex-1 min-h-0 flex flex-col mb-6 md:mb-8">
+            <div class="flex-1 min-h-0 flex flex-col mb-6 md:mb-8 opacity-0" data-animate-up>
               <h2 class="text-[12px] md:text-[14px] font-medium text-[#888888] uppercase tracking-wider mb-3 md:mb-4 flex-shrink-0">
                 Deskripsi Proyek
               </h2>
@@ -425,4 +471,188 @@ const relatedProjects = projectsResponseData.data?.map((proj: any) => ({
     animation-play-state: paused;
   }
 </style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initPageAnimations() {
+    // Hero Animations
+    const heroTitle = document.querySelector('[data-hero-title]');
+    const heroCategory = document.querySelector('[data-hero-category]');
+    const heroImage = document.querySelector('[data-hero-image]');
+
+    if (heroTitle || heroCategory) {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 1.2 } });
+      
+      if (heroCategory) tl.fromTo(heroCategory, { y: 20, opacity: 0 }, { y: 0, opacity: 1 }, 0.2);
+      if (heroTitle) tl.fromTo(heroTitle, { y: 30, opacity: 0 }, { y: 0, opacity: 1 }, 0.4);
+    }
+
+    // Hero Parallax
+    if (heroImage) {
+      gsap.to(heroImage, {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '[data-hero-section]',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    }
+
+    // Project Info Stagger
+    const staggerItems = document.querySelectorAll('[data-animate-stagger] > div');
+    if (staggerItems.length > 0) {
+      gsap.fromTo(staggerItems, 
+        { y: 20, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '[data-animate-stagger]',
+            start: 'top 85%',
+          }
+        }
+      );
+    }
+
+    // Description Animation
+    const animateUp = document.querySelectorAll('[data-animate-up]');
+    animateUp.forEach(el => {
+      gsap.fromTo(el,
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+          }
+        }
+      );
+    });
+  }
+
+  function initGalleryLightbox() {
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+    const lightboxCurrent = document.getElementById('lightbox-current');
+    const lightboxDots = document.querySelectorAll('.lightbox-dot');
+    const thumbs = document.querySelectorAll('.gallery-thumb');
+
+    if (!lightbox || !lightboxImg || thumbs.length === 0) return;
+
+    const images: string[] = Array.from(thumbs).map(t => (t as HTMLImageElement).src);
+    let currentIndex = 0;
+
+    function showImage(index: number) {
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+      currentIndex = index;
+
+      lightboxImg.style.opacity = '0';
+      setTimeout(() => {
+        lightboxImg.src = images[index];
+        lightboxImg.alt = `Image ${index + 1}`;
+        lightboxImg.style.opacity = '1';
+      }, 150);
+
+      if (lightboxCurrent) lightboxCurrent.textContent = (index + 1).toString();
+
+      lightboxDots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.remove('bg-white/30');
+          dot.classList.add('bg-white', 'w-4', 'md:w-5');
+        } else {
+          dot.classList.add('bg-white/30');
+          dot.classList.remove('bg-white', 'w-4', 'md:w-5');
+        }
+      });
+    }
+
+    function openLightbox(index: number) {
+      showImage(index);
+      lightbox!.classList.remove('hidden');
+      lightbox!.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox!.classList.add('hidden');
+      lightbox!.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // Click thumbnail to open
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const index = parseInt((thumb as HTMLElement).dataset.galleryIndex || '0');
+        openLightbox(index);
+      });
+    });
+
+    // Navigation
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightboxPrev?.addEventListener('click', () => showImage(currentIndex - 1));
+    lightboxNext?.addEventListener('click', () => showImage(currentIndex + 1));
+
+    // Dot navigation
+    lightboxDots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const i = parseInt((dot as HTMLElement).dataset.dot || '0');
+        showImage(i);
+      });
+    });
+
+    // Click backdrop to close
+    lightbox!.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (lightbox!.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+      if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+    });
+
+    // Touch/swipe
+    let touchStartX = 0;
+    lightbox!.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox!.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? showImage(currentIndex + 1) : showImage(currentIndex - 1);
+      }
+    }, { passive: true });
+  }
+
+  function init() {
+    initGalleryLightbox();
+    initPageAnimations();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
 

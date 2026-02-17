@@ -50,18 +50,18 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
         data-interval={gallery.autoplayInterval.toString()}
       >
         <!-- Main Slide Area -->
-        <div class="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden bg-[#f5f5f5]">
+        <div class="relative aspect-[3/4] md:aspect-[21/9] w-full overflow-hidden bg-[#f5f5f5]">
           <!-- Slides -->
           {gallery.slides.map((slide, index) => (
             <div
               class={`gallery-slide absolute inset-0 transition-opacity duration-700 ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               data-slide-index={index}
             >
-              <!-- Image -->
+              <!-- Image with Ken Burns effect -->
               <img
                 src={slide.image}
                 alt={slide.title || `Slide ${index + 1}`}
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover gallery-slide-img"
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
 
@@ -70,25 +70,25 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
 
               <!-- Content Overlay -->
               {(slide.title || slide.subtitle || slide.linkUrl) && (
-                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-14">
+                <div class="absolute bottom-0 left-0 right-0 p-6 pb-8 md:p-10 lg:p-14">
                   <div class="max-w-2xl">
                     {slide.subtitle && (
-                      <p class="text-[14px] md:text-[16px] lg:text-[18px] font-medium text-white/80 mb-2 md:mb-3 tracking-wide uppercase">
+                      <p class="text-[12px] md:text-[16px] lg:text-[18px] font-medium text-white/80 mb-1 md:mb-3 tracking-wide uppercase">
                         {slide.subtitle}
                       </p>
                     )}
                     {slide.title && (
-                      <h3 class="text-[28px] md:text-[40px] lg:text-[56px] font-light text-white leading-[1.1] tracking-[-0.02em] mb-4 md:mb-6">
+                      <h3 class="text-[20px] md:text-[40px] lg:text-[56px] font-light text-white leading-[1.1] tracking-[-0.02em] mb-3 md:mb-6">
                         {slide.title}
                       </h3>
                     )}
                     {slide.linkUrl && (
                       <a
                         href={slide.linkUrl}
-                        class="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 text-[14px] md:text-[16px] font-medium text-black bg-white rounded-full hover:bg-white/90 transition-all duration-300 hover:gap-3"
+                        class="inline-flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 text-[12px] md:text-[16px] font-medium text-black bg-white rounded-full hover:bg-white/90 transition-all duration-300 hover:gap-3"
                       >
                         {slide.linkText}
-                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                         </svg>
                       </a>
@@ -99,22 +99,22 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
             </div>
           ))}
 
-          <!-- Navigation Arrows -->
+          <!-- Navigation Arrows - smaller on mobile -->
           {gallery.slides.length > 1 && (
             <>
               <button
-                class="gallery-nav gallery-prev absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
+                class="gallery-nav gallery-prev absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-14 md:h-14 bg-white/80 md:bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
                 aria-label="Previous slide"
               >
-                <svg class="w-5 h-5 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
               </button>
               <button
-                class="gallery-nav gallery-next absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
+                class="gallery-nav gallery-next absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-14 md:h-14 bg-white/80 md:bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
                 aria-label="Next slide"
               >
-                <svg class="w-5 h-5 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-6 md:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
@@ -164,14 +164,30 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
 
     let currentIndex = 0;
     let autoplayTimer: ReturnType<typeof setInterval> | null = null;
-    let progressTimer: ReturnType<typeof setInterval> | null = null;
+
+    // Ken Burns: smooth scale effect on active slide
+    function activateKenBurns(index: number) {
+      slides.forEach((slide, i) => {
+        const img = slide.querySelector('.gallery-slide-img') as HTMLElement;
+        if (!img) return;
+        if (i === index) {
+          img.style.transition = 'none';
+          img.style.transform = 'scale(1)';
+          // Force reflow
+          img.offsetHeight;
+          img.style.transition = `transform ${interval + 700}ms ease-out`;
+          img.style.transform = 'scale(1.08)';
+        } else {
+          img.style.transition = 'none';
+          img.style.transform = 'scale(1)';
+        }
+      });
+    }
 
     function goToSlide(index: number) {
-      // Normalize index
       if (index < 0) index = slides.length - 1;
       if (index >= slides.length) index = 0;
 
-      // Update slides
       slides.forEach((slide, i) => {
         const slideEl = slide as HTMLElement;
         if (i === index) {
@@ -183,7 +199,6 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
         }
       });
 
-      // Update dots
       dots.forEach((dot, i) => {
         const dotEl = dot as HTMLElement;
         if (i === index) {
@@ -197,39 +212,27 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
 
       currentIndex = index;
       resetProgress();
+      activateKenBurns(index);
     }
 
-    function nextSlide() {
-      goToSlide(currentIndex + 1);
-    }
-
-    function prevSlide() {
-      goToSlide(currentIndex - 1);
-    }
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function prevSlide() { goToSlide(currentIndex - 1); }
 
     function resetProgress() {
       if (!progressBar || !autoplay) return;
-
       const bar = progressBar as HTMLElement;
       bar.style.transition = 'none';
       bar.style.width = '0%';
-
-      // Force reflow
       bar.offsetHeight;
-
       bar.style.transition = `width ${interval}ms linear`;
       bar.style.width = '100%';
     }
 
     function startAutoplay() {
       if (!autoplay) return;
-
       stopAutoplay();
       resetProgress();
-
-      autoplayTimer = setInterval(() => {
-        nextSlide();
-      }, interval);
+      autoplayTimer = setInterval(nextSlide, interval);
     }
 
     function stopAutoplay() {
@@ -240,74 +243,46 @@ const shouldRender = gallery.isVisible && gallery.slides.length > 0;
     }
 
     // Event listeners
-    prevBtn?.addEventListener('click', () => {
-      prevSlide();
-      startAutoplay(); // Restart autoplay after manual navigation
-    });
-
-    nextBtn?.addEventListener('click', () => {
-      nextSlide();
-      startAutoplay();
-    });
-
+    prevBtn?.addEventListener('click', () => { prevSlide(); startAutoplay(); });
+    nextBtn?.addEventListener('click', () => { nextSlide(); startAutoplay(); });
     dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        goToSlide(index);
-        startAutoplay();
-      });
+      dot.addEventListener('click', () => { goToSlide(index); startAutoplay(); });
     });
 
-    // Pause on hover
     container.addEventListener('mouseenter', stopAutoplay);
     container.addEventListener('mouseleave', startAutoplay);
 
     // Touch/swipe support
     let touchStartX = 0;
-    let touchEndX = 0;
-
     container.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const diff = touchStartX - touchEndX;
-
+      const diff = touchStartX - e.changedTouches[0].screenX;
       if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
+        diff > 0 ? nextSlide() : prevSlide();
         startAutoplay();
       }
     }, { passive: true });
 
     // Keyboard navigation
+    container.setAttribute('tabindex', '0');
     container.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        prevSlide();
-        startAutoplay();
-      } else if (e.key === 'ArrowRight') {
-        nextSlide();
-        startAutoplay();
-      }
+      if (e.key === 'ArrowLeft') { prevSlide(); startAutoplay(); }
+      else if (e.key === 'ArrowRight') { nextSlide(); startAutoplay(); }
     });
 
-    // Make container focusable
-    container.setAttribute('tabindex', '0');
-
-    // Start autoplay
+    // Initialize Ken Burns on first slide and start autoplay
+    activateKenBurns(0);
     startAutoplay();
   }
 
-  // Initialize on page load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initGallerySlideshow);
   } else {
     initGallerySlideshow();
   }
 
-  // Re-initialize for Astro view transitions
   document.addEventListener('astro:page-load', initGallerySlideshow);
 </script>

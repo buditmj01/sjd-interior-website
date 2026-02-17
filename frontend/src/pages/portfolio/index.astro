@@ -14,7 +14,8 @@ try {
   const response = await getProjects({ 'pagination[limit]': 16, 'sort[0]': 'createdAt:desc' }); // Increased limit for 8 rows x 2 cols
   portfolios = response.data?.map((project) => ({
     title: project.attributes.title,
-    category: project.attributes.category?.toLowerCase() || 'rumah',
+    category: project.attributes.category?.data?.attributes?.label || 'Uncategorized',
+    categorySlug: project.attributes.category?.data?.attributes?.slug || 'uncategorized',
     location: project.attributes.location || 'Indonesia',
     area: project.attributes.area_size || '-',
     style: project.attributes.theme || 'Modern Minimalis',
@@ -27,7 +28,7 @@ try {
   // Fallback to mock data
   portfolios = Array(16).fill(null).map((_, i) => ({
     title: `Modern Tropical House ${i + 1}`,
-    category: i % 3 === 0 ? "rumah" : (i % 3 === 1 ? "kantor" : "komersial"),
+    category: i % 3 === 0 ? "Rumah" : (i % 3 === 1 ? "Kantor" : "Komersial"),
     location: "Jakarta Selatan",
     area: "350 m²",
     style: "Modern Minimalis",
@@ -43,9 +44,9 @@ try {
   const categoriesResponse = await getPortfolioCategories();
   if (categoriesResponse && Array.isArray(categoriesResponse)) {
     const dynamicCategories = categoriesResponse.map((cat) => ({
-      id: cat.attributes.slug,
+      id: cat.attributes.slug.toLowerCase(),
       label: cat.attributes.label,
-      slug: cat.attributes.slug
+      slug: cat.attributes.slug.toLowerCase()
     }));
     categories = [{ id: 'semua', label: 'Semua', slug: 'semua' }, ...dynamicCategories];
   }
@@ -69,21 +70,37 @@ const sortOptions = [
 <BaseLayout
   title="Portfolio - SJD Interior"
   description="Lihat koleksi proyek interior terbaik dari SJD Interior"
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Portfolio - SJD Interior",
+    "description": "Lihat koleksi proyek interior terbaik dari SJD Interior",
+    "url": "https://sjdinterior.com/portfolio",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": portfolios.slice(0, 10).map((p: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": p.title,
+        "url": `https://sjdinterior.com/portfolio/${p.slug}`
+      }))
+    }
+  }}
 >
   <Header />
   
   <main>
     <!-- Hero Section -->
-    <section class="relative pt-52 md:pt-40 lg:pt-44 pb-20 md:pb-16 lg:pb-20 bg-white">
+    <section class="relative pt-32 md:pt-36 lg:pt-44 pb-6 md:pb-10 lg:pb-16 bg-white">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px] text-center md:text-left">
-        <h1 class="text-[72px] md:text-[88px] lg:text-[128px] font-light text-black mb-8 md:mb-10 lg:mb-12 mx-auto md:mx-0" style="letter-spacing: -2.4px; line-height: 98.83%;">
+        <h1 class="text-[48px] md:text-[72px] lg:text-[128px] font-light text-black mb-4 md:mb-6 lg:mb-12 mx-auto md:mx-0" style="letter-spacing: -2.4px; line-height: 98.83%;">
           Koleksi Karya Pilihan Kami.
         </h1>
       </div>
     </section>
 
     <!-- Filter & Sort Section -->
-    <section class="pt-24 pb-5 md:pt-12 md:pb-8 lg:pt-14 lg:pb-10 bg-white sticky top-[60px] md:top-[80px] z-30 shadow-sm md:shadow-none transition-all duration-300 border-b border-[#e5e5e5]">
+    <section class="pt-6 pb-5 md:pt-8 md:pb-6 lg:pt-10 lg:pb-8 bg-white sticky top-[60px] md:top-[80px] z-30 shadow-sm md:shadow-none transition-all duration-300 border-b border-[#e5e5e5]">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
 
@@ -177,10 +194,10 @@ const sortOptions = [
     <!-- Portfolio Grid -->
     <section class="py-8 md:py-16 bg-white min-h-screen">
       <div class="w-full max-w-[1761px] mx-auto px-6 md:px-12 lg:px-[151px]">
-        <!-- Mobile 2 cols, Tablet 2 cols, Desktop 3 cols -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-8 portfolio-grid">
+        <!-- Mobile 2 cols, Tablet 2 cols, Desktop 4 cols -->
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 lg:gap-6 mb-8 portfolio-grid">
           {portfolios.map((portfolio) => (
-            <div class="portfolio-card-wrapper transition-all duration-500 opacity-100 scale-100">
+            <div class="portfolio-card-wrapper" data-slug={portfolio.slug} style="opacity:1">
               <PortfolioCard {...portfolio} />
             </div>
           ))}
@@ -195,13 +212,13 @@ const sortOptions = [
           <p class="text-[14px] md:text-[15px] text-[#999]">Coba ubah filter atau kategori</p>
         </div>
 
-        <div class="flex justify-center items-center gap-2 mb-12 md:mb-16" id="pagination-dots">
+        <div class="flex justify-center items-center gap-2 mb-6 md:mb-8 hidden" id="pagination-dots">
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-black rounded-full transition-all hover:scale-125 cursor-pointer"></div>
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
           <div class="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#e0e0e0] rounded-full transition-all hover:bg-[#ccc] cursor-pointer"></div>
         </div>
 
-        <div class="text-center mb-16 md:mb-20 lg:mb-24 hidden" id="load-more-container">
+        <div class="text-center mb-8 md:mb-10 lg:mb-12 hidden" id="load-more-container">
           <button class="inline-flex items-center gap-2 px-8 md:px-10 py-3 md:py-3.5 text-[15px] md:text-[16px] font-medium text-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
             <span>Muat Lebih Banyak</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,11 +226,11 @@ const sortOptions = [
             </svg>
           </button>
         </div>
-
-        <!-- Stats Section (Using Optimized Component) -->
-        <Stats />
       </div>
     </section>
+
+    <!-- Stats Section (Own container inside) -->
+    <Stats />
 
     <!-- FAQ Section -->
     <FAQSection />
@@ -334,10 +351,11 @@ const sortOptions = [
           sortLabel.textContent = `Urutkan: ${activeSort.textContent.trim()}`;
         }
 
-        // Apply filters and sorting
+        // Apply filters and sorting - normalize both sides (remove spaces/hyphens)
+        const normalize = (s) => s.toLowerCase().replace(/[\s\-]+/g, '');
         const visibleCards = cards.filter(card => {
-          const cardCategory = card.querySelector('.portfolio-item').getAttribute('data-category');
-          return currentCategory === 'semua' || cardCategory.includes(currentCategory);
+          const cardCategory = (card.querySelector('.portfolio-item')?.getAttribute('data-category') || '');
+          return currentCategory === 'semua' || normalize(cardCategory) === normalize(currentCategory);
         });
 
         // Sort visible cards
@@ -348,23 +366,8 @@ const sortOptions = [
         });
 
         // Animate out all cards
-        if (!isInitial) {
-           gsap.to(cards, {
-            opacity: 0,
-            scale: 0.95,
-            y: 20,
-            duration: 0.3,
-            stagger: 0.02,
-            ease: "power2.inOut",
-            onComplete: () => {
-              cards.forEach(card => card.style.display = 'none');
-              showFiltered();
-            }
-          });
-        } else {
-          cards.forEach(card => card.style.display = 'none');
-          showFiltered();
-        }
+        cards.forEach(card => card.style.display = 'none');
+        showFiltered();
 
         function showFiltered() {
           const emptyState = document.getElementById('empty-state');
@@ -398,21 +401,10 @@ const sortOptions = [
 
             visibleCards.forEach(card => {
               card.style.display = 'block';
+              card.style.opacity = '1';
+              card.style.transform = 'none';
               grid.appendChild(card); // Re-append in sorted order
             });
-
-            gsap.fromTo(visibleCards,
-              { opacity: 0, scale: 0.9, y: 30 },
-              {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                duration: 0.5,
-                stagger: 0.08,
-                ease: "power3.out",
-                clearProps: "all"
-              }
-            );
           }
         }
 
@@ -452,8 +444,72 @@ const sortOptions = [
         });
       });
 
+      // Dynamic Sync logic
+      const syncWithStrapi = async () => {
+        try {
+          const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'https://cms.sjdinterior.com';
+          const response = await fetch(`${STRAPI_URL}/api/projects?pagination[limit]=24&populate=*`);
+          if (!response.ok) return;
+          const { data } = await response.json();
+          
+          const liveSlugs = data.map((item: any) => item.attributes.slug);
+          
+          let hasChanges = false;
+          cards.forEach(card => {
+            const cardEl = card as HTMLElement;
+            const slug = cardEl.dataset.slug;
+            
+            if (slug && !liveSlugs.includes(slug)) {
+              // Project was deleted or unpublished
+              cardEl.remove();
+              hasChanges = true;
+            } else if (slug) {
+              // Project exists, check if title changed
+              const liveData = data.find((item: any) => item.attributes.slug === slug);
+              if (liveData) {
+                const attrs = liveData.attributes;
+                const liveTitle = attrs.title;
+                const liveCategoryLabel = attrs.category?.data?.attributes?.label || 'Uncategorized';
+                const liveCategorySlug = attrs.category?.data?.attributes?.slug || 'uncategorized';
+
+                const titleEl = cardEl.querySelector('h3');
+                if (titleEl && titleEl.textContent !== liveTitle) {
+                  titleEl.textContent = liveTitle;
+                  hasChanges = true;
+                }
+
+                // Sync Category
+                const itemEl = cardEl.querySelector('.portfolio-item');
+                if (itemEl) {
+                  const currentCategorySlug = itemEl.getAttribute('data-category');
+                  if (currentCategorySlug !== liveCategorySlug) {
+                    itemEl.setAttribute('data-category', liveCategorySlug);
+                    hasChanges = true;
+                  }
+
+                  const categorySpan = itemEl.querySelector('span'); // The category badge
+                  if (categorySpan && categorySpan.textContent?.trim() !== liveCategoryLabel) {
+                    categorySpan.textContent = liveCategoryLabel;
+                    hasChanges = true;
+                  }
+                }
+              }
+            }
+          });
+
+          if (hasChanges) {
+            updateUI();
+          }
+        } catch (e) {
+          console.warn('Sync failed:', e);
+        }
+      };
+
       // Initial run
       updateUI(true);
+      
+      // Trigger sync after a short delay
+      setTimeout(syncWithStrapi, 1000);
     }
 
     // Run on load and on Astro swap (if using View Transitions)

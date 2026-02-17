@@ -50,8 +50,8 @@ const defaultContactData = {
 const footer = footerData?.attributes || defaultFooterData;
 const contact = contactData?.attributes || defaultContactData;
 
-const sitemapLinks = footer.navigation_links || defaultFooterData.navigation_links;
-const serviceLinks = footer.service_links || defaultFooterData.service_links;
+const sitemapLinks = footer.navigation_links?.length > 0 ? footer.navigation_links : defaultFooterData.navigation_links;
+const serviceLinks = footer.service_links?.length > 0 ? footer.service_links : defaultFooterData.service_links;
 
 // Construct WhatsApp URL from contact info
 const whatsappUrl = `https://wa.me/${contact.whatsapp_number}?text=Halo%20SJD%20Interior%2C%20saya%20ingin%20berkonsultasi%20tentang%20proyek%20interior%20saya.`;

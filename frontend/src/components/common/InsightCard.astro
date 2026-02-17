@@ -13,22 +13,24 @@ const { title, author, authorPhoto, date, category, image, slug } = Astro.props;
 ---
 
 <article class="group h-full">
-  <a href={`/insight/${slug}`} class="block h-full flex flex-col">
-    <!-- Image Container - optimized aspect ratio for 2-column mobile -->
-    <div class="overflow-hidden rounded-t-[12px] md:rounded-t-[14px] aspect-[4/3] md:aspect-[471/317]">
-      <img
-        src={image}
-        alt={title}
-        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-      />
-    </div>
+  <a href={`/insight/${slug}`} class="block h-full">
+    <!-- Mobile: Horizontal card | Tablet+: Vertical card -->
+    <div class="flex flex-row md:flex-col h-[116px] md:h-full bg-white border border-[#e5e5e5] rounded-[10px] md:rounded-[14px] overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:border-black/10">
+      <!-- Image -->
+      <div class="w-[116px] flex-shrink-0 md:w-full overflow-hidden relative">
+        <img
+          src={image}
+          alt={title}
+          class="w-full h-full md:h-auto md:aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        />
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
+      </div>
 
-    <!-- Content Container - flexible height with proper spacing -->
-    <div class="bg-white border border-black/50 rounded-b-[12px] md:rounded-b-[14px] p-3 md:p-6 lg:p-8 flex flex-col justify-between flex-1">
-      <div class="flex-1">
+      <!-- Content -->
+      <div class="flex-1 p-2.5 md:p-4 lg:p-6 flex flex-col min-w-0 bg-white">
         <!-- Author -->
-        <div class="flex items-center gap-1.5 md:gap-3 mb-2 md:mb-3 lg:mb-4">
-          <div class="w-[18px] h-[18px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
+        <div class="flex items-center gap-1.5 md:gap-2 mb-1 md:mb-2 lg:mb-3">
+          <div class="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full bg-gray-100 overflow-hidden flex-shrink-0 border border-black/5">
             {authorPhoto ? (
               <img src={authorPhoto} alt={author} class="w-full h-full object-cover" />
             ) : (
@@ -39,27 +41,25 @@ const { title, author, authorPhoto, date, category, image, slug } = Astro.props;
               </svg>
             )}
           </div>
-          <span class="text-[9px] md:text-[11.5px] lg:text-[13.18px] font-normal text-[#969696] leading-tight truncate">
+          <span class="text-[9px] md:text-[11px] lg:text-[13px] font-normal text-[#969696] leading-tight truncate transition-colors duration-300 group-hover:text-[#666]">
             {author}
           </span>
         </div>
 
-        <!-- Title - optimized for 2-column mobile -->
-        <h3 class="text-[13px] md:text-[21px] lg:text-[26.49px] font-light text-[#222222] leading-[1.35] md:leading-[1.25] lg:leading-[1.235] tracking-tight md:tracking-[-0.8px] lg:tracking-[-1.32px] line-clamp-3 mb-2 md:mb-3">
+        <!-- Title -->
+        <h3 class="text-[12px] md:text-[15px] lg:text-[20px] font-light text-[#222] leading-[1.3] tracking-tight line-clamp-2 md:line-clamp-3 flex-1 transition-colors duration-300 group-hover:text-black">
           {title}
         </h3>
-      </div>
 
-      <!-- Category & Date - optimized spacing for mobile -->
-      <div class="flex flex-col md:flex-row md:flex-wrap items-start md:items-center gap-1.5 md:gap-3 lg:gap-4 mt-auto pt-2">
-        <div class="flex items-center justify-center px-[6px] py-[3px] md:px-[8px] md:py-[6px] lg:px-[10px] lg:py-[8px] border md:border-[1.5px] lg:border-2 border-[#5e5151] rounded-full">
-          <span class="text-[8px] md:text-[11px] lg:text-[12.31px] font-medium text-black leading-none uppercase">
+        <!-- Category & Date -->
+        <div class="flex items-center gap-1.5 md:gap-2 mt-auto flex-wrap pt-2">
+          <span class="inline-flex px-1.5 py-0.5 md:px-2.5 md:py-1 text-[7px] md:text-[10px] lg:text-[11px] font-medium text-black uppercase border border-[#5e5151] rounded-full leading-none transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:border-black">
             {category}
           </span>
+          <span class="text-[8px] md:text-[11px] lg:text-[14px] font-light text-[#2b2b2b] leading-tight">
+            {date}
+          </span>
         </div>
-        <span class="text-[9px] md:text-[13px] lg:text-[16.66px] font-light text-[#2b2b2b] leading-tight">
-          {date}
-        </span>
       </div>
     </div>
   </a>
