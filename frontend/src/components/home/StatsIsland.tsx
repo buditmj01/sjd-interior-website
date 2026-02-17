@@ -134,7 +134,7 @@ export default function StatsIsland({ stats }: StatsIslandProps) {
                                 data-stat-number
                                 data-value={stat.number}
                             >
-                                0
+                                {stat.number}
                             </div>
                             <div
                                 class="text-[14px] md:text-[18px] font-light text-[#666] md:text-black leading-tight tracking-[-0.5px] md:tracking-[-1.4px]"

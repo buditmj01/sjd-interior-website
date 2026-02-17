@@ -7,4 +7,4 @@ User-agent: Googlebot
 Allow: /
 Disallow: /404
 
-Sitemap: https://sjdinterior.com/sitemap-index.xml
+Sitemap: https://sjdinterior.com/sitemap.xml
